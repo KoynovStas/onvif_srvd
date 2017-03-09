@@ -9,6 +9,9 @@
 
 #include "daemon.h"
 
+// ---- gsoap ----
+#include "soapDeviceBindingService.h"
+
 
 
 

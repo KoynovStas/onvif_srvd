@@ -44,8 +44,11 @@ GCC              =  g++
 # Add your source files to the list.
 # Supported *.c  *.cpp  *.S files.
 # For other file types write a template rule for build, see below.
-SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c         \
-           $(COMMON_DIR)/daemon.c
+SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
+           $(COMMON_DIR)/daemon.c                           \
+           $(GSOAP_DIR)/stdsoap2.cpp                        \
+           $(GENERATED_DIR)/soapC.cpp                       \
+           $(GENERATED_DIR)/soapDeviceBindingService.cpp
 
 
 
@@ -145,7 +148,7 @@ distclean: clean
 
 
 
-.depend: cmd  = echo "  [depend]  $(var)" &&
+.depend: cmd  = echo " $(SOURCES)  [depend]  $(var)" &&
 .depend: cmd += $(GCC) $(CFLAGS) -MT ".depend $(basename $(var)).o $(basename $(var))_$(DEBUG_SUFFIX).o"  -MM $(var) >> .depend;
 .depend: $(SOURCES)
 	@rm -f .depend

@@ -76,30 +76,30 @@ WSDL_FILES = $(wildcard wsdl/*.wsdl wsdl/*.xsd)
 
 
 .PHONY: all
-all: generate debug release
+all: debug release
 
 
 
 .PHONY: release
 release: CFLAGS := -s  $(CFLAGS)
-release: $(DAEMON_NAME)
+release: generate $(DAEMON_NAME)
 
 
 
 .PHONY: debug
 debug: DAEMON_NO_CLOSE_STDIO = 1
 debug: CFLAGS := -DDEBUG  -g  $(CFLAGS)
-debug: $(DAEMON_NAME)_$(DEBUG_SUFFIX)
+debug: generate $(DAEMON_NAME)_$(DEBUG_SUFFIX)
 
 
 
 # release
-$(DAEMON_NAME): .depend $(OBJECTS)
+$(DAEMON_NAME): $(OBJECTS)
 	$(call build_bin, $(OBJECTS))
 
 
 # debug
-$(DAEMON_NAME)_$(DEBUG_SUFFIX): .depend $(DEBUG_OBJECTS)
+$(DAEMON_NAME)_$(DEBUG_SUFFIX): $(DEBUG_OBJECTS)
 	$(call build_bin, $(DEBUG_OBJECTS))
 
 
@@ -166,20 +166,20 @@ include $(wildcard .depend)
 
 # ---- gSOAP ----
 
-generated/onvif.h:
+$(GENERATED_DIR)/onvif.h:
 	@$(build_gsoap)
 	@mkdir -p $(GENERATED_DIR)
 	$(WSDL2H) -d -t ./wsdl/typemap.dat  -o $@  $(WSDL_FILES)
 
 
 
-generated/soapC.cpp: $(GENERATED_DIR)/onvif.h
+$(GENERATED_DIR)/soapC.cpp: $(GENERATED_DIR)/onvif.h
 	$(SOAPCPP2) -j -L -x -S -d $(GENERATED_DIR) -I$(GSOAP_DIR):$(GSOAP_IMPORT_DIR) $<
 
 
 
 .PHONY: generate
-generate: $(GENERATED_DIR)/soapC.cpp
+generate: $(GENERATED_DIR)/soapC.cpp .depend
 
 
 

@@ -10,6 +10,7 @@ DAEMON_NO_CLOSE_STDIO = 0
 
 
 GSOAP_DIR         = ./gsoap-2.8/gsoap
+GSOAP_CUSTOM_DIR  = ./gsoap-2.8/gsoap/custom
 GSOAP_PLUGIN_DIR  = $(GSOAP_DIR)/plugin
 GSOAP_IMPORT_DIR  = $(GSOAP_DIR)/import
 
@@ -33,7 +34,7 @@ CFLAGS           += -DDAEMON_NO_CLOSE_STDIO=$(DAEMON_NO_CLOSE_STDIO)
 
 CFLAGS           += -I$(COMMON_DIR)
 CFLAGS           += -I$(GENERATED_DIR)
-CFLAGS           += -I$(GSOAP_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
+CFLAGS           += -I$(GSOAP_DIR) -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
 CFLAGS           += -O2  -Wall  -pipe
 
 GCC              =  g++
@@ -48,6 +49,8 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
            $(COMMON_DIR)/daemon.c                           \
            $(COMMON_DIR)/ServiceDevice.cpp                  \
            $(GSOAP_DIR)/stdsoap2.cpp                        \
+           $(GSOAP_DIR)/dom.cpp                             \
+           $(GSOAP_CUSTOM_DIR)/duration.c                   \
            $(GENERATED_DIR)/soapC.cpp                       \
            $(GENERATED_DIR)/soapDeviceBindingService.cpp
 

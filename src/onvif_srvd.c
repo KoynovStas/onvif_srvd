@@ -10,6 +10,7 @@
 #include "daemon.h"
 
 // ---- gsoap ----
+#include "DeviceBinding.nsmap"
 #include "soapDeviceBindingService.h"
 
 

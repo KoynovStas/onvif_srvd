@@ -46,6 +46,7 @@ GCC              =  g++
 # For other file types write a template rule for build, see below.
 SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
            $(COMMON_DIR)/daemon.c                           \
+           $(COMMON_DIR)/ServiceDevice.cpp                  \
            $(GSOAP_DIR)/stdsoap2.cpp                        \
            $(GENERATED_DIR)/soapC.cpp                       \
            $(GENERATED_DIR)/soapDeviceBindingService.cpp
@@ -148,7 +149,7 @@ distclean: clean
 
 
 
-.depend: cmd  = echo " $(SOURCES)  [depend]  $(var)" &&
+.depend: cmd  = echo "  [depend]  $(var)" &&
 .depend: cmd += $(GCC) $(CFLAGS) -MT ".depend $(basename $(var)).o $(basename $(var))_$(DEBUG_SUFFIX).o"  -MM $(var) >> .depend;
 .depend: $(SOURCES)
 	@rm -f .depend

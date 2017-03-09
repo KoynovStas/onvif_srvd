@@ -63,8 +63,13 @@ DEBUG_OBJECTS := $(patsubst %.o, %_$(DEBUG_SUFFIX).o, $(OBJECTS) )
 
 
 
+WSDL_FILES = $(wildcard wsdl/*.wsdl wsdl/*.xsd)
+
+
+
+
 .PHONY: all
-all: debug release
+all: generate debug release
 
 
 
@@ -149,6 +154,25 @@ distclean: clean
 
 
 include $(wildcard .depend)
+
+
+
+# ---- gSOAP ----
+
+generated/onvif.h:
+	@$(build_gsoap)
+	@mkdir -p $(GENERATED_DIR)
+	$(WSDL2H) -d -t ./wsdl/typemap.dat  -o $@  $(WSDL_FILES)
+
+
+
+generated/soapC.cpp: $(GENERATED_DIR)/onvif.h
+	$(SOAPCPP2) -j -L -x -S -d $(GENERATED_DIR) -I$(GSOAP_DIR):$(GSOAP_IMPORT_DIR) $<
+
+
+
+.PHONY: generate
+generate: $(GENERATED_DIR)/soapC.cpp
 
 
 

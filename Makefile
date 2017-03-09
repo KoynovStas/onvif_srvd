@@ -127,7 +127,15 @@ clean:
 	-@rm -f $(OBJECTS)
 	-@rm -f $(DEBUG_OBJECTS)
 	-@rm -f .depend
+	-@rm -f -d -R $(GENERATED_DIR)
 	-@rm -f *.*~
+
+
+
+.PHONY: distclean
+distclean: clean
+	-@rm -f -d -R SDK
+	-@rm -f -d -R gsoap-2.8
 
 
 
@@ -167,9 +175,10 @@ endef
 help:
 	@echo "make [command]"
 	@echo "command is:"
-	@echo "   all     -  build daemon in release and debug mode"
-	@echo "   debug   -  build in debug mode (#define DEBUG 1)"
-	@echo "   release -  build in release mode (strip)"
-	@echo "   clean   -  remove all generated files"
-	@echo "   help    -  this help"
+	@echo "   all       -  build daemon in release and debug mode"
+	@echo "   debug     -  build in debug mode (#define DEBUG 1)"
+	@echo "   release   -  build in release mode (strip)"
+	@echo "   clean     -  remove all generated files"
+	@echo "   distclean -  clean + remove all SDK files"
+	@echo "   help      -  this help"
 

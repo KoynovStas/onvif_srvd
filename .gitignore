@@ -1,0 +1,45 @@
+# Object files
+*.o
+*.o.*
+*.ko
+*.obj
+*.elf
+
+
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+
+
+# Shared objects
+*.so
+*.so.*
+
+
+
+# Binary files
+onvif_srvd
+onvif_srvd_debug
+
+
+
+# SDK files
+SDK/
+gsoap-2.8/
+generated/
+
+
+# Temp files
+*.*~
+*.pid
+*.log
+*.depend
+
+
+
+# Files that we don't want to ignore
+!.gitignore

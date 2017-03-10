@@ -8,6 +8,7 @@
 
 
 #include "daemon.h"
+#include "smacros.h"
 
 // ---- gsoap ----
 #include "DeviceBinding.nsmap"
@@ -243,13 +244,30 @@ int main(int argc, char *argv[])
     while( !daemon_info.terminated )
     {
 
-        // Here а routine of daemon
+        // wait new client
+        if( !soap_valid_socket(soap_accept(soap)) )
+        {
+            soap_stream_fault(soap, std::cerr);
+            return EXIT_FAILURE;
+        }
 
-        printf("%s: daemon is run\n", DAEMON_NAME);
-        sleep(10);
+
+        // process service
+        if( soap_begin_serve(soap) )
+        {
+            soap_stream_fault(soap, std::cerr);
+        }
+        FOREACH_SERVICE(DISPATCH_SERVICE, soap)
+        else
+        {
+            DEBUG_MSG("Unknown service\n");
+        }
     }
 
 
+    soap_destroy(soap);
+    soap_end(soap);
+    soap_free(soap);
 
     return EXIT_SUCCESS; // good job (we interrupted (finished) main loop)
 }

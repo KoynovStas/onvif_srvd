@@ -57,15 +57,20 @@ static const struct option long_opts[] =
 
 
 
+struct soap *soap;
+
+
+
+
+
 void daemon_exit_handler(int sig)
 {
-
     //Here we release resources
+
+    daemon_info.terminated = 1;    //set flag for exit from main loop
 
 
     unlink(daemon_info.pid_file);
-
-    _exit(EXIT_FAILURE);
 }
 
 
@@ -164,7 +169,23 @@ void init(void *data)
     init_signals();
 
 
-    //Here is your code to initialize
+    //init gsoap
+    soap = soap_new();
+
+    if(!soap)
+        daemon_error_exit("Can't get mem for SOAP\n");
+
+
+    soap->bind_flags = SO_REUSEADDR;
+
+    if( !soap_valid_socket(soap_bind(soap, NULL, 1000, 10)) )
+    {
+        soap_stream_fault(soap, std::cerr);
+        exit(EXIT_FAILURE);
+    }
+
+    soap->send_timeout = 3; // timeout in sec
+    soap->recv_timeout = 3; // timeout in sec
 }
 
 

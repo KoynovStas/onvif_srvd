@@ -57,7 +57,49 @@ static const struct option long_opts[] =
 
 
 
+#define FOREACH_SERVICE(APPLY,soap)                     \
+        APPLY(DeviceBindingService, soap)               \
+
+
+
+/*
+ * If you need support for other services,
+ * add the desired option to the macro FOREACH_SERVICE.
+ *
+ * Note: Do not forget to add the gsoap binding class for the service,
+ * and the implementation methods for it, like for DeviceBindingService
+
+
+        APPLY(MediaBindingService, soap)                \
+        APPLY(ImagingBindingService,soap)               \
+        APPLY(PTZBindingService,soap)                   \
+        APPLY(RecordingBindingService,soap)             \
+        APPLY(ReplayBindingService,soap)                \
+        APPLY(SearchBindingService,soap)                \
+        APPLY(ReceiverBindingService,soap)              \
+        APPLY(DisplayBindingService,soap)               \
+        APPLY(EventBindingService,soap)                 \
+        APPLY(PullPointSubscriptionBindingService,soap) \
+        APPLY(NotificationProducerBindingService,soap)  \
+        APPLY(SubscriptionManagerBindingService,soap)   \
+*/
+
+
+#define DECLARE_SERVICE(service,soap) service service ## _inst(soap);
+
+#define DISPATCH_SERVICE(service,soap)                                   \
+                else if (service ## _inst.dispatch() != SOAP_NO_METHOD) {\
+                    soap_send_fault(soap);                               \
+                    soap_stream_fault(soap, std::cerr);                  \
+                }
+
+
+
+
 struct soap *soap;
+
+
+FOREACH_SERVICE(DECLARE_SERVICE, soap)
 
 
 

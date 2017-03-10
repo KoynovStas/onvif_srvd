@@ -100,9 +100,6 @@ static const struct option long_opts[] =
 struct soap *soap;
 
 
-FOREACH_SERVICE(DECLARE_SERVICE, soap)
-
-
 
 
 
@@ -239,6 +236,8 @@ int main(int argc, char *argv[])
     processing_cmd(argc, argv);
     daemonize2(init, NULL);
 
+
+    FOREACH_SERVICE(DECLARE_SERVICE, soap)
 
 
     while( !daemon_info.terminated )

@@ -107,10 +107,15 @@ void daemon_exit_handler(int sig)
 {
     //Here we release resources
 
-    daemon_info.terminated = 1;    //set flag for exit from main loop
+    soap_destroy(soap);
+    soap_end(soap);
+    soap_free(soap);
 
 
     unlink(daemon_info.pid_file);
+
+
+    exit(EXIT_SUCCESS); // good job (we interrupted (finished) main loop)
 }
 
 
@@ -240,7 +245,7 @@ int main(int argc, char *argv[])
     FOREACH_SERVICE(DECLARE_SERVICE, soap)
 
 
-    while( !daemon_info.terminated )
+    while( true )
     {
 
         // wait new client
@@ -264,9 +269,6 @@ int main(int argc, char *argv[])
     }
 
 
-    soap_destroy(soap);
-    soap_end(soap);
-    soap_free(soap);
 
     return EXIT_SUCCESS; // good job (we interrupted (finished) main loop)
 }

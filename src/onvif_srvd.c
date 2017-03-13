@@ -107,7 +107,7 @@ static const struct option long_opts[] =
 
 
 
-#define FOREACH_SERVICE(APPLY,soap)                     \
+#define FOREACH_SERVICE(APPLY, soap)                    \
         APPLY(DeviceBindingService, soap)               \
 
 
@@ -120,24 +120,24 @@ static const struct option long_opts[] =
  * and the implementation methods for it, like for DeviceBindingService
 
 
-        APPLY(MediaBindingService, soap)                \
-        APPLY(ImagingBindingService,soap)               \
-        APPLY(PTZBindingService,soap)                   \
-        APPLY(RecordingBindingService,soap)             \
-        APPLY(ReplayBindingService,soap)                \
-        APPLY(SearchBindingService,soap)                \
-        APPLY(ReceiverBindingService,soap)              \
-        APPLY(DisplayBindingService,soap)               \
-        APPLY(EventBindingService,soap)                 \
-        APPLY(PullPointSubscriptionBindingService,soap) \
-        APPLY(NotificationProducerBindingService,soap)  \
-        APPLY(SubscriptionManagerBindingService,soap)   \
+        APPLY(MediaBindingService, soap)                 \
+        APPLY(ImagingBindingService, soap)               \
+        APPLY(PTZBindingService, soap)                   \
+        APPLY(RecordingBindingService, soap)             \
+        APPLY(ReplayBindingService, soap)                \
+        APPLY(SearchBindingService, soap)                \
+        APPLY(ReceiverBindingService, soap)              \
+        APPLY(DisplayBindingService, soap)               \
+        APPLY(EventBindingService, soap)                 \
+        APPLY(PullPointSubscriptionBindingService, soap) \
+        APPLY(NotificationProducerBindingService, soap)  \
+        APPLY(SubscriptionManagerBindingService, soap)   \
 */
 
 
-#define DECLARE_SERVICE(service,soap) service service ## _inst(soap);
+#define DECLARE_SERVICE(service, soap) service service ## _inst(soap);
 
-#define DISPATCH_SERVICE(service,soap)                                   \
+#define DISPATCH_SERVICE(service, soap)                                  \
                 else if (service ## _inst.dispatch() != SOAP_NO_METHOD) {\
                     soap_send_fault(soap);                               \
                     soap_stream_fault(soap, std::cerr);                  \

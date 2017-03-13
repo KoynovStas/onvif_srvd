@@ -39,6 +39,7 @@ static const char *help_str =
         "       --user     [value]     Set user name for Services (default = admin)\n"
         "       --password [value]     Set user password for Services (default = admin)\n"
         "       --model    [value]     Set model device for Services (default = Model)\n"
+        "       --scope    [value]     Set scope for Services (default don't set)\n"
         "       --hardware_id  [value] Set Hardware ID of device (default = HardwareID)\n"
         "       --serial_num   [value] Set Serial number of device (default = SerialNumber)\n"
         "       --firmware_ver [value] Set firmware version of device (default = FirmwareVersion)\n"
@@ -68,7 +69,8 @@ namespace LongOpts
         model,
         firmware_ver,
         serial_num,
-        hardware_id
+        hardware_id,
+        scope
     };
 }
 
@@ -96,6 +98,7 @@ static const struct option long_opts[] =
     { "firmware_ver", required_argument, NULL, LongOpts::firmware_ver  },
     { "serial_num",   required_argument, NULL, LongOpts::serial_num    },
     { "hardware_id",  required_argument, NULL, LongOpts::hardware_id   },
+    { "scope",        required_argument, NULL, LongOpts::scope         },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -272,6 +275,10 @@ void processing_cmd(int argc, char *argv[])
 
             case LongOpts::hardware_id:
                         service_ctx.hardware_id = optarg;
+                        break;
+
+            case LongOpts::scope:
+                        service_ctx.scope.push_back(optarg);
                         break;
 
             default:

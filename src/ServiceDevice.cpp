@@ -9,6 +9,7 @@
 
 
 #include "soapDeviceBindingService.h"
+#include "ServiceContext.h"
 #include "smacros.h"
 
 
@@ -34,6 +35,15 @@ int DeviceBindingService::GetServiceCapabilities(_tds__GetServiceCapabilities *t
 int DeviceBindingService::GetDeviceInformation(_tds__GetDeviceInformation *tds__GetDeviceInformation, _tds__GetDeviceInformationResponse &tds__GetDeviceInformationResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    tds__GetDeviceInformationResponse.Manufacturer    = ctx->manufacturer;
+    tds__GetDeviceInformationResponse.Model           = ctx->model;
+    tds__GetDeviceInformationResponse.FirmwareVersion = ctx->firmware_version;
+    tds__GetDeviceInformationResponse.SerialNumber    = ctx->serial_number;
+    tds__GetDeviceInformationResponse.HardwareId      = ctx->hardware_id;
+
     return SOAP_OK;
 }
 

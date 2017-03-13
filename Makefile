@@ -47,6 +47,7 @@ GCC              =  g++
 # For other file types write a template rule for build, see below.
 SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
            $(COMMON_DIR)/daemon.c                           \
+           $(COMMON_DIR)/ServiceContext.cpp                 \
            $(COMMON_DIR)/ServiceDevice.cpp                  \
            $(GSOAP_DIR)/stdsoap2.cpp                        \
            $(GSOAP_DIR)/dom.cpp                             \

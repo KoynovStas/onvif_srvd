@@ -36,6 +36,7 @@ static const char *help_str =
         "       --pid_file [value]     Set pid file name\n"
         "       --log_file [value]     Set log file name\n"
         "       --port     [value]     Set socket port for Services (default = 1000)\n"
+        "       --user     [value]     Set user name for Services (default = user)\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -53,6 +54,7 @@ static const struct option long_opts[] =
     { "pid_file",     required_argument, NULL,  3  },
     { "log_file",     required_argument, NULL,  4  },
     { "port",         required_argument, NULL,  5  },
+    { "user",         required_argument, NULL,  6  },
 
     { NULL,           no_argument,       NULL,  0  }
 };
@@ -205,6 +207,10 @@ void processing_cmd(int argc, char *argv[])
 
             case 5:     // --port
                         service_ctx.port = atoi(optarg);
+                        break;
+
+            case 6:     // --user
+                        service_ctx.user = optarg;
                         break;
 
             default:

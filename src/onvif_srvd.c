@@ -39,6 +39,7 @@ static const char *help_str =
         "       --user     [value]     Set user name for Services (default = admin)\n"
         "       --password [value]     Set user password for Services (default = admin)\n"
         "       --model    [value]     Set model device for Services (default = Model)\n"
+        "       --firmware_ver [value] Set firmware version of device (default = FirmwareVersion)\n"
         "       --manufacturer [value] Set manufacturer for Services (default = Manufacturer)\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
@@ -62,7 +63,8 @@ namespace LongOpts
         user,
         password,
         manufacturer,
-        model
+        model,
+        firmware_ver
     };
 }
 
@@ -87,6 +89,7 @@ static const struct option long_opts[] =
     { "password",     required_argument, NULL, LongOpts::password      },
     { "manufacturer", required_argument, NULL, LongOpts::manufacturer  },
     { "model",        required_argument, NULL, LongOpts::model         },
+    { "firmware_ver", required_argument, NULL, LongOpts::firmware_ver  },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -253,8 +256,12 @@ void processing_cmd(int argc, char *argv[])
                         service_ctx.model = optarg;
                         break;
 
+            case LongOpts::firmware_ver:
+                        service_ctx.firmware_version = optarg;
+                        break;
+
             default:
-                  break;
+                        break;
         }
 
         opt = getopt_long(argc, argv, short_opts, long_opts, &long_index);

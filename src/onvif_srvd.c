@@ -226,7 +226,7 @@ void init(void *data)
 
     soap->bind_flags = SO_REUSEADDR;
 
-    if( !soap_valid_socket(soap_bind(soap, NULL, 1000, 10)) )
+    if( !soap_valid_socket(soap_bind(soap, NULL, service_ctx.port, 10)) )
     {
         soap_stream_fault(soap, std::cerr);
         exit(EXIT_FAILURE);
@@ -234,6 +234,10 @@ void init(void *data)
 
     soap->send_timeout = 3; // timeout in sec
     soap->recv_timeout = 3; // timeout in sec
+
+
+    //save pointer of service_ctx in soap
+    soap->user = (void*)&service_ctx;
 }
 
 

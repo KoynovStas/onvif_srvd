@@ -38,6 +38,7 @@ static const char *help_str =
         "       --port     [value]     Set socket port for Services (default = 1000)\n"
         "       --user     [value]     Set user name for Services (default = admin)\n"
         "       --password [value]     Set user password for Services (default = admin)\n"
+        "       --model    [value]     Set model device for Services (default = Model)\n"
         "       --manufacturer [value] Set manufacturer for Services (default = Manufacturer)\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
@@ -60,7 +61,8 @@ namespace LongOpts
         port,
         user,
         password,
-        manufacturer
+        manufacturer,
+        model
     };
 }
 
@@ -84,6 +86,7 @@ static const struct option long_opts[] =
     { "user",         required_argument, NULL, LongOpts::user          },
     { "password",     required_argument, NULL, LongOpts::password      },
     { "manufacturer", required_argument, NULL, LongOpts::manufacturer  },
+    { "model",        required_argument, NULL, LongOpts::model         },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -244,6 +247,10 @@ void processing_cmd(int argc, char *argv[])
 
             case LongOpts::manufacturer:
                         service_ctx.manufacturer = optarg;
+                        break;
+
+            case LongOpts::model:
+                        service_ctx.model = optarg;
                         break;
 
             default:

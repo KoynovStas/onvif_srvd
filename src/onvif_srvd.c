@@ -35,6 +35,7 @@ static const char *help_str =
         "       --no_close             Don't close standart IO files\n"
         "       --pid_file [value]     Set pid file name\n"
         "       --log_file [value]     Set log file name\n"
+        "       --port     [value]     Set socket port for Services (default = 1000)\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -51,6 +52,7 @@ static const struct option long_opts[] =
     { "no_close",     no_argument,       NULL,  2  },
     { "pid_file",     required_argument, NULL,  3  },
     { "log_file",     required_argument, NULL,  4  },
+    { "port",         required_argument, NULL,  5  },
 
     { NULL,           no_argument,       NULL,  0  }
 };
@@ -199,6 +201,10 @@ void processing_cmd(int argc, char *argv[])
 
             case 4:     // --log_file
                         daemon_info.log_file = optarg;
+                        break;
+
+            case 5:     // --port
+                        service_ctx.port = atoi(optarg);
                         break;
 
             default:

@@ -38,6 +38,7 @@ static const char *help_str =
         "       --port     [value]     Set socket port for Services (default = 1000)\n"
         "       --user     [value]     Set user name for Services (default = admin)\n"
         "       --password [value]     Set user password for Services (default = admin)\n"
+        "       --manufacturer [value] Set manufacturer for Services (default = Manufacturer)\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -58,7 +59,8 @@ namespace LongOpts
         //ONVIF Service options (context)
         port,
         user,
-        password
+        password,
+        manufacturer
     };
 }
 
@@ -70,19 +72,20 @@ static const char *short_opts = "hv";
 static const struct option long_opts[] =
 {
     //daemon options
-    { "version",      no_argument,       NULL, 'v'                 },
-    { "help",         no_argument,       NULL, 'h'                 },
-    { "no_chdir",     no_argument,       NULL, LongOpts::no_chdir  },
-    { "no_close",     no_argument,       NULL, LongOpts::no_close  },
-    { "pid_file",     required_argument, NULL, LongOpts::pid_file  },
-    { "log_file",     required_argument, NULL, LongOpts::log_file  },
+    { "version",      no_argument,       NULL, 'v'                     },
+    { "help",         no_argument,       NULL, 'h'                     },
+    { "no_chdir",     no_argument,       NULL, LongOpts::no_chdir      },
+    { "no_close",     no_argument,       NULL, LongOpts::no_close      },
+    { "pid_file",     required_argument, NULL, LongOpts::pid_file      },
+    { "log_file",     required_argument, NULL, LongOpts::log_file      },
 
     //ONVIF Service options (context)
-    { "port",         required_argument, NULL, LongOpts::port      },
-    { "user",         required_argument, NULL, LongOpts::user      },
-    { "password",     required_argument, NULL, LongOpts::password  },
+    { "port",         required_argument, NULL, LongOpts::port          },
+    { "user",         required_argument, NULL, LongOpts::user          },
+    { "password",     required_argument, NULL, LongOpts::password      },
+    { "manufacturer", required_argument, NULL, LongOpts::manufacturer  },
 
-    { NULL,           no_argument,       NULL, 0                   }
+    { NULL,           no_argument,       NULL, 0                       }
 };
 
 
@@ -237,6 +240,10 @@ void processing_cmd(int argc, char *argv[])
 
             case LongOpts::password:
                         service_ctx.password = optarg;
+                        break;
+
+            case LongOpts::manufacturer:
+                        service_ctx.manufacturer = optarg;
                         break;
 
             default:

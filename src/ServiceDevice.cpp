@@ -27,6 +27,11 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
 int DeviceBindingService::GetServiceCapabilities(_tds__GetServiceCapabilities *tds__GetServiceCapabilities, _tds__GetServiceCapabilitiesResponse &tds__GetServiceCapabilitiesResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    tds__GetServiceCapabilitiesResponse.Capabilities = ctx->getDeviceServiceCapabilities(this->soap);
+
     return SOAP_OK;
 }
 

@@ -9,6 +9,7 @@
 
 #include "daemon.h"
 #include "smacros.h"
+#include "ServiceContext.h"
 
 // ---- gsoap ----
 #include "DeviceBinding.nsmap"
@@ -98,6 +99,8 @@ static const struct option long_opts[] =
 
 
 struct soap *soap;
+
+ServiceContext service_ctx;
 
 
 

@@ -43,22 +43,46 @@ static const char *help_str =
 
 
 
+
+// indexes for long_opt function
+namespace LongOpts
+{
+    enum
+    {
+        //daemon options
+        no_chdir = 1,
+        no_close,
+        pid_file,
+        log_file,
+
+        //ONVIF Service options (context)
+        port,
+        user,
+        password
+    };
+}
+
+
+
 static const char *short_opts = "hv";
 
 
 static const struct option long_opts[] =
 {
-    { "version",      no_argument,       NULL, 'v' },
-    { "help",         no_argument,       NULL, 'h' },
-    { "no_chdir",     no_argument,       NULL,  1  },
-    { "no_close",     no_argument,       NULL,  2  },
-    { "pid_file",     required_argument, NULL,  3  },
-    { "log_file",     required_argument, NULL,  4  },
-    { "port",         required_argument, NULL,  5  },
-    { "user",         required_argument, NULL,  6  },
-    { "password",     required_argument, NULL,  7  },
+    //daemon options
+    { "version",      no_argument,       NULL, 'v'                 },
+    { "help",         no_argument,       NULL, 'h'                 },
+    { "no_chdir",     no_argument,       NULL, LongOpts::no_chdir  },
+    { "no_close",     no_argument,       NULL, LongOpts::no_close  },
+    { "pid_file",     required_argument, NULL, LongOpts::pid_file  },
+    { "log_file",     required_argument, NULL, LongOpts::log_file  },
 
-    { NULL,           no_argument,       NULL,  0  }
+    //ONVIF Service options (context)
+    { "port",         required_argument, NULL, LongOpts::port      },
+    { "user",         required_argument, NULL, LongOpts::user      },
+    { "password",     required_argument, NULL, LongOpts::password  },
+
+    { NULL,           no_argument,       NULL, 0                   }
 };
 
 
@@ -184,38 +208,34 @@ void processing_cmd(int argc, char *argv[])
                         exit_if_not_daemonized(EXIT_FAILURE);
                         break;
 
-//            case 0:     // long options
-//                        if( strcmp( "name_options", long_opts[long_index].name ) == 0 )
-//                        {
-//                            //Processing of "name_options"
-//                            break;
-//                        }
 
-            case 1:     // --no_chdir
+            case LongOpts::no_chdir:
                         daemon_info.no_chdir = 1;
                         break;
 
-            case 2:     // --no_close
+            case LongOpts::no_close:
                         daemon_info.no_close_stdio = 1;
                         break;
 
-            case 3:     // --pid_file
+            case LongOpts::pid_file:
                         daemon_info.pid_file = optarg;
                         break;
 
-            case 4:     // --log_file
+            case LongOpts::log_file:
                         daemon_info.log_file = optarg;
                         break;
 
-            case 5:     // --port
+
+            //ONVIF Service options (context)
+            case LongOpts::port:
                         service_ctx.port = atoi(optarg);
                         break;
 
-            case 6:     // --user
+            case LongOpts::user:
                         service_ctx.user = optarg;
                         break;
 
-            case 7:     // --password
+            case LongOpts::password:
                         service_ctx.password = optarg;
                         break;
 

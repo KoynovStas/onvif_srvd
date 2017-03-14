@@ -65,6 +65,20 @@ int DeviceBindingService::SetSystemDateAndTime(_tds__SetSystemDateAndTime *tds__
 int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__GetSystemDateAndTime, _tds__GetSystemDateAndTimeResponse &tds__GetSystemDateAndTimeResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+
+    const time_t  timestamp = time(NULL);
+    struct tm    *tm        = gmtime(&timestamp);
+
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime                    = soap_new_tt__SystemDateTime(this->soap);
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DateTimeType      = tt__SetDateTimeType__Manual;
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DaylightSavings   = tm->tm_isdst;
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->TimeZone          = soap_new_tt__TimeZone(this->soap);
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->TimeZone->TZ      = tm->tm_zone;
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime       = soap_new_tt__DateTime(this->soap);
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Time = soap_new_req_tt__Time(this->soap, tm->tm_hour, tm->tm_min  , tm->tm_sec );
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Date = soap_new_req_tt__Date(this->soap, tm->tm_year, tm->tm_mon+1, tm->tm_mday);
+
     return SOAP_OK;
 }
 

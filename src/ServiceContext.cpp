@@ -23,6 +23,30 @@ ServiceContext::ServiceContext():
 
 
 
+std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip)
+{
+    char server_ip[INET_ADDRSTRLEN];
+
+
+    for(size_t i = 0; i < eth_ifs.size(); ++i)
+    {
+        uint32_t if_ip, if_mask;
+        eth_ifs[i].get_ip(&if_ip);
+        eth_ifs[i].get_mask(&if_mask);
+
+        if( (if_ip & if_mask) == (client_ip & if_mask) )
+        {
+            eth_ifs[i].get_ip(server_ip);
+            return server_ip;
+        }
+    }
+
+
+    return "127.0.0.1";  //localhost
+}
+
+
+
 tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soap *soap)
 {
     tds__DeviceServiceCapabilities *capabilities = soap_new_tds__DeviceServiceCapabilities(soap);

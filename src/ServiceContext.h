@@ -36,6 +36,8 @@ class ServiceContext
         std::vector<Eth_Dev_Param> eth_ifs; //ethernet interfaces
 
 
+        std::string getServerIpFromClientIp(uint32_t client_ip);
+
 
         // service capabilities
         tds__DeviceServiceCapabilities* getDeviceServiceCapabilities(struct soap* soap);

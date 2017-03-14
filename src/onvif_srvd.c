@@ -278,7 +278,7 @@ void processing_cmd(int argc, char *argv[])
                         break;
 
             case LongOpts::scope:
-                        service_ctx.scope.push_back(optarg);
+                        service_ctx.scopes.push_back(optarg);
                         break;
 
             default:

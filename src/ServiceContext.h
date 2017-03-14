@@ -29,7 +29,7 @@ class ServiceContext
         std::string serial_number;
         std::string hardware_id;
 
-        std::vector<std::string> scope;
+        std::vector<std::string> scopes;
 
 
         // service capabilities

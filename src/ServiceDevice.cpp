@@ -19,6 +19,25 @@
 int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds__GetServicesResponse &tds__GetServicesResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+
+    //Device Service
+    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
+    tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/device/wsdl";
+    tds__GetServicesResponse.Service.back()->XAddr      = ctx->getXAddr(this->soap);
+    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 5);
+    if( tds__GetServices->IncludeCapability )
+    {
+        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
+        tds__DeviceServiceCapabilities *capabilities                 = ctx->getDeviceServiceCapabilities(this->soap);
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "tds:Capabilities", capabilities, capabilities->soap_type());
+    }
+
+
+
     return SOAP_OK;
 }
 

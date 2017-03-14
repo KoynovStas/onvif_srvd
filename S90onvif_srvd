@@ -1,10 +1,19 @@
 #! /bin/sh
 
-DAEMON=onvif_srvd
+DAEMON=onvif_srvd_debug
 DAEMON_PATH=.
 PID_FILE=$DAEMON.pid
 
-DAEMON_ARGS=""
+DAEMON_ARGS="--pid_file $PID_FILE"
+
+
+# ONVIF Device Service param (more details see help)
+DAEMON_ARGS="$DAEMON_ARGS --ifs eth0"
+DAEMON_ARGS="$DAEMON_ARGS --scope onvif://www.onvif.org/name/TestDev"
+DAEMON_ARGS="$DAEMON_ARGS --scope onvif://www.onvif.org/location/Unknow"
+DAEMON_ARGS="$DAEMON_ARGS --scope onvif://www.onvif.org/Profile/Streaming"
+DAEMON_ARGS="$DAEMON_ARGS --scope onvif://www.onvif.org/Profile/S"
+
 
 
 

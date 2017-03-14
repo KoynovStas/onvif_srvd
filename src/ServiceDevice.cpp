@@ -129,6 +129,15 @@ int DeviceBindingService::GetSystemSupportInformation(_tds__GetSystemSupportInfo
 int DeviceBindingService::GetScopes(_tds__GetScopes *tds__GetScopes, _tds__GetScopesResponse &tds__GetScopesResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    for(size_t i = 0; i < ctx->scopes.size(); ++i)
+    {
+        tds__GetScopesResponse.Scopes.push_back(soap_new_req_tt__Scope(soap, tt__ScopeDefinition__Fixed, ctx->scopes[i]));
+    }
+
     return SOAP_OK;
 }
 

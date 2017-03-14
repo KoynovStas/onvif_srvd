@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "soapH.h"
+#include "eth_dev_param.h"
 
 
 
@@ -30,6 +31,10 @@ class ServiceContext
         std::string hardware_id;
 
         std::vector<std::string> scopes;
+
+
+        std::vector<Eth_Dev_Param> eth_ifs; //ethernet interfaces
+
 
 
         // service capabilities

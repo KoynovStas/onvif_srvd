@@ -40,6 +40,7 @@ static const char *help_str =
         "       --password     [value] Set user password for Services (default = admin)\n"
         "       --model        [value] Set model device for Services  (default = Model)\n"
         "       --scope        [value] Set scope for Services         (default don't set)\n"
+        "       --ifs          [value] Set Net interfaces for work    (default don't set)\n"
         "       --hardware_id  [value] Set Hardware ID of device      (default = HardwareID)\n"
         "       --serial_num   [value] Set Serial number of device    (default = SerialNumber)\n"
         "       --firmware_ver [value] Set firmware version of device (default = FirmwareVersion)\n"
@@ -70,7 +71,8 @@ namespace LongOpts
         firmware_ver,
         serial_num,
         hardware_id,
-        scope
+        scope,
+        ifs
     };
 }
 
@@ -99,6 +101,7 @@ static const struct option long_opts[] =
     { "serial_num",   required_argument, NULL, LongOpts::serial_num    },
     { "hardware_id",  required_argument, NULL, LongOpts::hardware_id   },
     { "scope",        required_argument, NULL, LongOpts::scope         },
+    { "ifs",          required_argument, NULL, LongOpts::ifs           },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -279,6 +282,14 @@ void processing_cmd(int argc, char *argv[])
 
             case LongOpts::scope:
                         service_ctx.scopes.push_back(optarg);
+                        break;
+
+            case LongOpts::ifs:
+                        service_ctx.eth_ifs.push_back(Eth_Dev_Param());
+
+                        if( service_ctx.eth_ifs.back().open(optarg) != 0 )
+                            daemon_error_exit("Can't open ethernet interface: %s - %m\n", optarg);
+
                         break;
 
             default:

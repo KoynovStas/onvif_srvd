@@ -85,9 +85,17 @@ int Eth_Dev_Param::open(const char *dev_name)
 
 
     strncpy(_ifr.ifr_name, dev_name, IFNAMSIZ);
+
+
+    // try get flags for interface
+    if( ioctl(_sd, SIOCGIFFLAGS, &_ifr) == -1 )
+    {
+       this->close();
+       return -1;     //can't get flags
+    }
+
+
     _opened = true;
-
-
     return 0; //good job
 }
 

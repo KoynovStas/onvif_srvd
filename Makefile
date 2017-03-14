@@ -35,7 +35,7 @@ CFLAGS           += -DDAEMON_NO_CLOSE_STDIO=$(DAEMON_NO_CLOSE_STDIO)
 CFLAGS           += -I$(COMMON_DIR)
 CFLAGS           += -I$(GENERATED_DIR)
 CFLAGS           += -I$(GSOAP_DIR) -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
-CFLAGS           += -O2  -Wall  -pipe
+CFLAGS           += -std=c++11 -O2  -Wall  -pipe
 
 GCC              =  g++
 

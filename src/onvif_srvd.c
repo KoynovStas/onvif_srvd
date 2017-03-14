@@ -303,12 +303,20 @@ void processing_cmd(int argc, char *argv[])
 
 
 
-void init(void *data)
+void check_service_ctx(void)
 {
-    init_signals();
+    if(service_ctx.eth_ifs.empty())
+        daemon_error_exit("Error: not set no one ehternet interface more details see opt --ifs\n");
 
 
-    //init gsoap
+    if(service_ctx.scopes.empty())
+        daemon_error_exit("Error: not set scopes more details see opt --scope\n");
+}
+
+
+
+void init_gsoap(void)
+{
     soap = soap_new();
 
     if(!soap)
@@ -329,6 +337,15 @@ void init(void *data)
 
     //save pointer of service_ctx in soap
     soap->user = (void*)&service_ctx;
+}
+
+
+
+void init(void *data)
+{
+    init_signals();
+    check_service_ctx();
+    init_gsoap();
 }
 
 

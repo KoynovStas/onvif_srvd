@@ -226,6 +226,15 @@ int DeviceBindingService::SetRemoteUser(_tds__SetRemoteUser *tds__SetRemoteUser,
 int DeviceBindingService::GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsersResponse &tds__GetUsersResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    if( !ctx->user.empty() )
+    {
+        tds__GetUsersResponse.User.push_back(soap_new_tt__User(this->soap));
+        tds__GetUsersResponse.User.back()->Username = ctx->user;
+    }
+
     return SOAP_OK;
 }
 

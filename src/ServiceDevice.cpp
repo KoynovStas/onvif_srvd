@@ -317,6 +317,33 @@ int DeviceBindingService::GetWsdlUrl(_tds__GetWsdlUrl *tds__GetWsdlUrl, _tds__Ge
 int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabilities, _tds__GetCapabilitiesResponse &tds__GetCapabilitiesResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+
+    tds__GetCapabilitiesResponse.Capabilities = soap_new_tt__Capabilities(this->soap);
+    std::vector<tt__CapabilityCategory>& categories(tds__GetCapabilities->Category);
+    if(categories.empty())
+    {
+        categories.push_back(tt__CapabilityCategory__All);
+    }
+
+    for(tt__CapabilityCategory category : categories)
+    {
+        if(!tds__GetCapabilitiesResponse.Capabilities->Device && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__Device) ) )
+        {
+            tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = ctx->getXAddr(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->System = soap_new_tt__SystemCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(this->soap, 2, 0));
+            tds__GetCapabilitiesResponse.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->IO = soap_new_tt__IOCapabilities(this->soap);
+        }
+
+    }
+
     return SOAP_OK;
 }
 

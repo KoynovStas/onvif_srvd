@@ -1,5 +1,8 @@
 #include <arpa/inet.h>
 
+#include <sstream>
+
+
 #include "ServiceContext.h"
 
 
@@ -43,6 +46,17 @@ std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip)
 
 
     return "127.0.0.1";  //localhost
+}
+
+
+
+std::string ServiceContext::getXAddr(soap *soap)
+{
+    std::ostringstream os;
+
+    os << "http://" << getServerIpFromClientIp(htonl(soap->ip)) << ":" << port;
+
+    return os.str();
 }
 
 

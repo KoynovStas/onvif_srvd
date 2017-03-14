@@ -37,6 +37,7 @@ class ServiceContext
 
 
         std::string getServerIpFromClientIp(uint32_t client_ip);
+        std::string getXAddr(struct soap* soap);
 
 
         // service capabilities

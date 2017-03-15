@@ -54,7 +54,9 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
            $(GSOAP_DIR)/dom.cpp                             \
            $(GSOAP_CUSTOM_DIR)/duration.c                   \
            $(GENERATED_DIR)/soapC.cpp                       \
-           $(GENERATED_DIR)/soapDeviceBindingService.cpp
+           $(GENERATED_DIR)/soapDeviceBindingService.cpp    \
+           $(GENERATED_DIR)/soapMediaBindingService.cpp
+
 
 
 

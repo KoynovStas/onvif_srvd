@@ -49,7 +49,8 @@ static const char *help_str =
         "       --name         [value] Set Name for Profile Media Services\n"
         "       --width        [value] Set Width for Profile Media Services\n"
         "       --height       [value] Set Height for Profile Media Services\n"
-        "       --url          [value] Set URL for Profile Media Services\n\n"
+        "       --url          [value] Set URL for Profile Media Services\n"
+        "       --type         [value] Set Type for Profile Media Services\n\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -83,7 +84,8 @@ namespace LongOpts
         name,
         width,
         height,
-        url
+        url,
+        type
     };
 }
 
@@ -119,6 +121,7 @@ static const struct option long_opts[] =
     { "width",         required_argument, NULL, LongOpts::width        },
     { "height",        required_argument, NULL, LongOpts::height       },
     { "url",           required_argument, NULL, LongOpts::url          },
+    { "type",          required_argument, NULL, LongOpts::type         },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -337,6 +340,13 @@ void processing_cmd(int argc, char *argv[])
             case LongOpts::url:
                         if( !profile.set_url(optarg) )
                             daemon_error_exit("Can't set URL for Profile: %s\n", profile.get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::type:
+                        if( !profile.set_type(optarg) )
+                            daemon_error_exit("Can't set type for Profile: %s\n", profile.get_cstr_err());
 
                         break;
 

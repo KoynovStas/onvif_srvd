@@ -48,7 +48,8 @@ static const char *help_str =
         "       --manufacturer [value] Set manufacturer for Services  (default = Manufacturer)\n\n"
         "       --name         [value] Set Name for Profile Media Services\n"
         "       --width        [value] Set Width for Profile Media Services\n"
-        "       --height       [value] Set Height for Profile Media Services\n\n"
+        "       --height       [value] Set Height for Profile Media Services\n"
+        "       --url          [value] Set URL for Profile Media Services\n\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -81,7 +82,8 @@ namespace LongOpts
         //Media Profile for ONVIF Media Service
         name,
         width,
-        height
+        height,
+        url
     };
 }
 
@@ -116,6 +118,7 @@ static const struct option long_opts[] =
     { "name",          required_argument, NULL, LongOpts::name         },
     { "width",         required_argument, NULL, LongOpts::width        },
     { "height",        required_argument, NULL, LongOpts::height       },
+    { "url",           required_argument, NULL, LongOpts::url          },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -327,6 +330,13 @@ void processing_cmd(int argc, char *argv[])
             case LongOpts::height:
                         if( !profile.set_height(optarg) )
                             daemon_error_exit("Can't set height for Profile: %s\n", profile.get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::url:
+                        if( !profile.set_url(optarg) )
+                            daemon_error_exit("Can't set URL for Profile: %s\n", profile.get_cstr_err());
 
                         break;
 

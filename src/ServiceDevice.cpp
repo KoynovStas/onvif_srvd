@@ -23,11 +23,14 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
+    std::string XAddr = ctx->getXAddr(this->soap);
+
+
 
     //Device Service
     tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
     tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/device/wsdl";
-    tds__GetServicesResponse.Service.back()->XAddr      = ctx->getXAddr(this->soap);
+    tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
     tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 5);
     if( tds__GetServices->IncludeCapability )
     {
@@ -36,6 +39,17 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
         tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "tds:Capabilities", capabilities, capabilities->soap_type());
     }
 
+
+    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
+    tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/media/wsdl";
+    tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
+    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 6);
+    if (tds__GetServices->IncludeCapability)
+    {
+        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
+        trt__Capabilities *capabilities                              = ctx->getMediaServiceCapabilities(this->soap);
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "trt:Capabilities", capabilities, capabilities->soap_type());
+    }
 
 
     return SOAP_OK;

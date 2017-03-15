@@ -50,6 +50,7 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
            $(COMMON_DIR)/eth_dev_param.cpp                  \
            $(COMMON_DIR)/ServiceContext.cpp                 \
            $(COMMON_DIR)/ServiceDevice.cpp                  \
+           $(COMMON_DIR)/ServiceMedia.cpp                   \
            $(GSOAP_DIR)/stdsoap2.cpp                        \
            $(GSOAP_DIR)/dom.cpp                             \
            $(GSOAP_CUSTOM_DIR)/duration.c                   \

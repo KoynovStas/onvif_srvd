@@ -133,3 +133,126 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
     return capabilities;
 }
 
+
+
+
+// ------------------------------- StreamProfile -------------------------------
+
+
+
+
+bool StreamProfile::set_name(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Name is empty";
+        return false;
+    }
+
+
+    name = new_val;
+    return true;
+}
+
+
+
+bool StreamProfile::set_width(const char *new_val)
+{
+
+    std::istringstream ss(new_val);
+    int tmp_val;
+    ss >> tmp_val;
+
+
+    if( (tmp_val < 100) || (tmp_val >= 10000) )
+    {
+        str_err = "width is bad, correct range: 100-10000";
+        return false;
+    }
+
+
+    width = tmp_val;
+    return true;
+}
+
+
+
+bool StreamProfile::set_height(const char *new_val)
+{
+    std::istringstream ss(new_val);
+    int tmp_val;
+    ss >> tmp_val;
+
+
+    if( (tmp_val < 100) || (tmp_val >= 10000) )
+    {
+        str_err = "height is bad, correct range: 100-10000";
+        return false;
+    }
+
+
+    height = tmp_val;
+    return true;
+}
+
+
+
+bool StreamProfile::set_url(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "URL is empty";
+        return false;
+    }
+
+
+    url = new_val;
+    return true;
+}
+
+
+
+bool StreamProfile::set_type(const char *new_val)
+{
+    std::string new_type(new_val);
+
+
+    if( new_type == "JPEG" )
+        type = tt__VideoEncoding__JPEG;
+    else if( new_type == "MPEG4" )
+        type = tt__VideoEncoding__MPEG4;
+    else if( new_type == "H264" )
+        type = tt__VideoEncoding__H264;
+    else
+    {
+        str_err = "type dont support";
+        return false;
+    }
+
+
+    return true;
+}
+
+
+
+void StreamProfile::clear()
+{
+    name.clear();
+    url.clear();
+
+    width  = -1;
+    height = -1;
+    type   = -1;
+}
+
+
+
+bool StreamProfile::is_valid()
+{
+    return ( !name.empty()  &&
+             !url.empty()   &&
+             (width  != -1) &&
+             (height != -1) &&
+             (type   != -1)
+           );
+}

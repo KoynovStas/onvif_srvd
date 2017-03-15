@@ -12,9 +12,47 @@
 
 
 
+class StreamProfile
+{
+    public:
+
+        StreamProfile() { clear(); }
+
+        //methods for parsing opt from cmd
+        bool set_name  (const char *new_val);
+        bool set_width (const char *new_val);
+        bool set_height(const char *new_val);
+        bool set_url   (const char *new_val);
+        bool set_type  (const char *new_val);
+
+        std::string get_str_err() { return str_err;         }
+        const char *get_cstr_err(){ return str_err.c_str(); }
+
+        void clear(void);
+        bool is_valid(void);
+
+
+
+    private:
+
+        std::string  name;
+        int          width;
+        int          height;
+        std::string  url;
+        int          type;
+
+
+        std::string  str_err;
+};
+
+
+
+
+
 class ServiceContext
 {
     public:
+
         ServiceContext();
 
 

@@ -46,6 +46,7 @@ static const char *help_str =
         "       --serial_num   [value] Set Serial number of device    (default = SerialNumber)\n"
         "       --firmware_ver [value] Set firmware version of device (default = FirmwareVersion)\n"
         "       --manufacturer [value] Set manufacturer for Services  (default = Manufacturer)\n\n"
+        "       --name         [value] Set Name for Profile Media Services\n\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -73,7 +74,10 @@ namespace LongOpts
         serial_num,
         hardware_id,
         scope,
-        ifs
+        ifs,
+
+        //Media Profile for ONVIF Media Service
+        name
     };
 }
 
@@ -103,6 +107,9 @@ static const struct option long_opts[] =
     { "hardware_id",  required_argument, NULL, LongOpts::hardware_id   },
     { "scope",        required_argument, NULL, LongOpts::scope         },
     { "ifs",          required_argument, NULL, LongOpts::ifs           },
+
+    //Media Profile for ONVIF Media Service
+    { "name",          required_argument, NULL, LongOpts::name         },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -202,6 +209,8 @@ void processing_cmd(int argc, char *argv[])
     int opt, long_index;
 
 
+    StreamProfile  profile;
+
 
     opt = getopt_long(argc, argv, short_opts, long_opts, &long_index);
     while( opt != -1 )
@@ -292,6 +301,15 @@ void processing_cmd(int argc, char *argv[])
                             daemon_error_exit("Can't open ethernet interface: %s - %m\n", optarg);
 
                         break;
+
+
+            //Media Profile for ONVIF Media Service
+            case LongOpts::name:
+                        if( !profile.set_name(optarg) )
+                            daemon_error_exit("Can't set name for Profile: %s\n", profile.get_cstr_err());
+
+                        break;
+
 
             default:
                         break;

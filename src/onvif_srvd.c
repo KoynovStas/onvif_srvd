@@ -28,8 +28,8 @@ static const char *help_str =
 #else
         " Build  mode:  release\n"
 #endif
-        " Build  date:  "__DATE__"\n"
-        " Build  time:  "__TIME__"\n\n"
+        " Build  date:  " __DATE__ "\n"
+        " Build  time:  " __TIME__ "\n\n"
         "Options:                      description:\n\n"
         "       --no_chdir             Don't change the directory to '/'\n"
         "       --no_close             Don't close standart IO files\n"

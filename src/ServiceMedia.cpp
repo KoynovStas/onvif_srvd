@@ -19,6 +19,12 @@
 int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *trt__GetServiceCapabilities, _trt__GetServiceCapabilitiesResponse &trt__GetServiceCapabilitiesResponse)
 {
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    trt__GetServiceCapabilitiesResponse.Capabilities = ctx->getMediaServiceCapabilities(this->soap);
+
+
     return SOAP_OK;
 }
 

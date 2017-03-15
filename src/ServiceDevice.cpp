@@ -335,6 +335,9 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
+    std::string XAddr = ctx->getXAddr(this->soap);
+
+
 
     tds__GetCapabilitiesResponse.Capabilities = soap_new_tt__Capabilities(this->soap);
     std::vector<tt__CapabilityCategory>& categories(tds__GetCapabilities->Category);
@@ -343,12 +346,13 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
         categories.push_back(tt__CapabilityCategory__All);
     }
 
+
     for(tt__CapabilityCategory category : categories)
     {
         if(!tds__GetCapabilitiesResponse.Capabilities->Device && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__Device) ) )
         {
             tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(this->soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = ctx->getXAddr(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = XAddr;
             tds__GetCapabilitiesResponse.Capabilities->Device->System = soap_new_tt__SystemCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(this->soap, 2, 0));
             tds__GetCapabilitiesResponse.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(this->soap);
@@ -356,7 +360,16 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
             tds__GetCapabilitiesResponse.Capabilities->Device->IO = soap_new_tt__IOCapabilities(this->soap);
         }
 
+
+        if(!tds__GetCapabilitiesResponse.Capabilities->Media && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__Media) ) )
+        {
+            tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(this->soap);
+        }
+
     }
+
 
     return SOAP_OK;
 }

@@ -46,7 +46,8 @@ static const char *help_str =
         "       --serial_num   [value] Set Serial number of device    (default = SerialNumber)\n"
         "       --firmware_ver [value] Set firmware version of device (default = FirmwareVersion)\n"
         "       --manufacturer [value] Set manufacturer for Services  (default = Manufacturer)\n\n"
-        "       --name         [value] Set Name for Profile Media Services\n\n"
+        "       --name         [value] Set Name for Profile Media Services\n"
+        "       --width        [value] Set Width for Profile Media Services\n\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 
@@ -77,7 +78,8 @@ namespace LongOpts
         ifs,
 
         //Media Profile for ONVIF Media Service
-        name
+        name,
+        width
     };
 }
 
@@ -110,6 +112,7 @@ static const struct option long_opts[] =
 
     //Media Profile for ONVIF Media Service
     { "name",          required_argument, NULL, LongOpts::name         },
+    { "width",         required_argument, NULL, LongOpts::width        },
 
     { NULL,           no_argument,       NULL, 0                       }
 };
@@ -307,6 +310,12 @@ void processing_cmd(int argc, char *argv[])
             case LongOpts::name:
                         if( !profile.set_name(optarg) )
                             daemon_error_exit("Can't set name for Profile: %s\n", profile.get_cstr_err());
+
+                        break;
+
+            case LongOpts::width:
+                        if( !profile.set_width(optarg) )
+                            daemon_error_exit("Can't set width for Profile: %s\n", profile.get_cstr_err());
 
                         break;
 

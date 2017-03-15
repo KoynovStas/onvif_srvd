@@ -117,3 +117,19 @@ tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soa
     return capabilities;
 }
 
+
+
+trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
+{
+    trt__Capabilities *capabilities = soap_new_trt__Capabilities(soap);
+
+    capabilities->ProfileCapabilities = soap_new_trt__ProfileCapabilities(soap);
+    capabilities->ProfileCapabilities->MaximumNumberOfProfiles =  soap_new_ptr(soap, 1);
+
+    capabilities->StreamingCapabilities = soap_new_trt__StreamingCapabilities(soap);
+    capabilities->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
+
+
+    return capabilities;
+}
+

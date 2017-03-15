@@ -42,7 +42,7 @@ class ServiceContext
 
         // service capabilities
         tds__DeviceServiceCapabilities* getDeviceServiceCapabilities(struct soap* soap);
-//        trt__Capabilities*  getMediaServiceCapabilities    (struct soap* soap);
+        trt__Capabilities*  getMediaServiceCapabilities    (struct soap* soap);
 //        timg__Capabilities* getImagingServiceCapabilities  (struct soap* soap);
 //        trc__Capabilities*  getRecordingServiceCapabilities(struct soap* soap);
 //        tse__Capabilities*  getSearchServiceCapabilities   (struct soap* soap);

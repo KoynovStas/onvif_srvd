@@ -14,6 +14,7 @@
 // ---- gsoap ----
 #include "DeviceBinding.nsmap"
 #include "soapDeviceBindingService.h"
+#include "soapMediaBindingService.h"
 
 
 
@@ -112,7 +113,7 @@ static const struct option long_opts[] =
 
 #define FOREACH_SERVICE(APPLY, soap)                    \
         APPLY(DeviceBindingService, soap)               \
-
+        APPLY(MediaBindingService, soap)                \
 
 
 /*
@@ -123,7 +124,7 @@ static const struct option long_opts[] =
  * and the implementation methods for it, like for DeviceBindingService
 
 
-        APPLY(MediaBindingService, soap)                 \
+
         APPLY(ImagingBindingService, soap)               \
         APPLY(PTZBindingService, soap)                   \
         APPLY(RecordingBindingService, soap)             \

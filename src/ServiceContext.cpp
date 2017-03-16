@@ -163,6 +163,51 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 
 
 
+tt__VideoSourceConfiguration* StreamProfile::get_video_src_cnf(struct soap *soap)
+{
+    tt__VideoSourceConfiguration* src_cfg = soap_new_tt__VideoSourceConfiguration(soap);
+
+    src_cfg->token       = name;
+    src_cfg->SourceToken = name;
+    src_cfg->Bounds      = soap_new_req_tt__IntRectangle(soap, 0, 0, width, height);
+
+    return src_cfg;
+}
+
+
+
+tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soap)
+{
+    tt__VideoEncoderConfiguration* enc_cfg = soap_new_tt__VideoEncoderConfiguration(soap);
+
+    enc_cfg->Name               = name;
+    enc_cfg->token              = name;
+    enc_cfg->Resolution         = soap_new_req_tt__VideoResolution(soap, width, height);
+    enc_cfg->RateControl        = soap_new_req_tt__VideoRateControl(soap, 0, 0, 0);
+    enc_cfg->Multicast          = soap_new_tt__MulticastConfiguration(soap);
+    enc_cfg->Multicast->Address = soap_new_tt__IPAddress(soap);
+    enc_cfg->Encoding           = static_cast<tt__VideoEncoding>(type);
+
+    return enc_cfg;
+}
+
+
+
+tt__Profile* StreamProfile::get_profile(struct soap *soap)
+{
+    tt__Profile* profile = soap_new_tt__Profile(soap);
+
+    profile->Name  = name;
+    profile->token = name;
+
+    profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
+    profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);
+
+    return profile;
+}
+
+
+
 bool StreamProfile::set_name(const char *new_val)
 {
     if(!new_val)

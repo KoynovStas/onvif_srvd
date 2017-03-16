@@ -27,6 +27,9 @@ class StreamProfile
 
 
 
+        tt__Profile* get_profile(struct soap *soap);
+
+
 
         //methods for parsing opt from cmd
         bool set_name  (const char *new_val);
@@ -37,11 +40,10 @@ class StreamProfile
 
 
         std::string get_str_err()  const { return str_err;         }
-        const char *get_cstr_err() const { return str_err.c_str(); }
+        const char* get_cstr_err() const { return str_err.c_str(); }
 
         void clear(void);
         bool is_valid(void) const;
-
 
 
     private:
@@ -54,6 +56,10 @@ class StreamProfile
 
 
         std::string  str_err;
+
+
+        tt__VideoSourceConfiguration*  get_video_src_cnf(struct soap *soap);
+        tt__VideoEncoderConfiguration* get_video_enc_cfg(struct soap *soap);
 };
 
 
@@ -91,7 +97,7 @@ class ServiceContext
 
 
         std::string get_str_err() { return str_err;         }
-        const char *get_cstr_err(){ return str_err.c_str(); }
+        const char* get_cstr_err(){ return str_err.c_str(); }
 
 
         bool add_profile(const StreamProfile& profile);

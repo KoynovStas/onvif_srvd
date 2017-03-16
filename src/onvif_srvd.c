@@ -34,8 +34,8 @@ static const char *help_str =
         "Options:                      description:\n\n"
         "       --no_chdir             Don't change the directory to '/'\n"
         "       --no_close             Don't close standart IO files\n"
-        "       --pid_file [value]     Set pid file name\n"
-        "       --log_file [value]     Set log file name\n\n"
+        "       --pid_file     [value] Set pid file name\n"
+        "       --log_file     [value] Set log file name\n\n"
         "       --port         [value] Set socket port for Services   (default = 1000)\n"
         "       --user         [value] Set user name for Services     (default = admin)\n"
         "       --password     [value] Set user password for Services (default = admin)\n"
@@ -49,8 +49,10 @@ static const char *help_str =
         "       --name         [value] Set Name for Profile Media Services\n"
         "       --width        [value] Set Width for Profile Media Services\n"
         "       --height       [value] Set Height for Profile Media Services\n"
-        "       --url          [value] Set URL for Profile Media Services\n"
-        "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n\n"
+        "       --url          [value] Set URL (or template URL) for Profile Media Services\n"
+        "                              in template mode %s will be changed to IP of interfase (see opt ifs)\n"
+        "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n"
+        "                              It is also a sign of the end of the profile parameters\n\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 

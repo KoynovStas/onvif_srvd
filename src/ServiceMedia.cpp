@@ -593,8 +593,25 @@ int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(_trt__GetGua
 
 int MediaBindingService::GetStreamUri(_trt__GetStreamUri *trt__GetStreamUri, _trt__GetStreamUriResponse &trt__GetStreamUriResponse)
 {
-    DEBUG_MSG("Media: %s\n", __FUNCTION__);
-    return SOAP_OK;
+    DEBUG_MSG("Media: %s   for profile:%s\n", __FUNCTION__, trt__GetStreamUri->ProfileToken.c_str());
+
+
+    int ret = SOAP_FAULT;
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto profiles       = ctx->get_profiles();
+    auto it             = profiles.find(trt__GetStreamUri->ProfileToken);
+
+
+    if( it != profiles.end() )
+    {
+        trt__GetStreamUriResponse.MediaUri = soap_new_tt__MediaUri(this->soap);
+        trt__GetStreamUriResponse.MediaUri->Uri = ctx->get_stream_uri(it->second.get_url(), htonl(this->soap->ip));
+        ret = SOAP_OK;
+    }
+
+
+    return ret;
 }
 
 

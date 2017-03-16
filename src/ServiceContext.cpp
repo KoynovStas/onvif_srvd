@@ -61,6 +61,28 @@ std::string ServiceContext::getXAddr(soap *soap)
 
 
 
+bool ServiceContext::add_profile(const StreamProfile &profile)
+{
+    if( !profile.is_valid() )
+    {
+        str_err = "profile has unset parameters";
+        return false;
+    }
+
+
+    if( profiles.find(profile.get_name()) != profiles.end() )
+    {
+        str_err = "profile: " + profile.get_name() +  " already exist";
+        return false;
+    }
+
+
+    profiles[profile.get_name()] = profile;
+    return true;
+}
+
+
+
 tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soap *soap)
 {
     tds__DeviceServiceCapabilities *capabilities = soap_new_tds__DeviceServiceCapabilities(soap);
@@ -247,7 +269,7 @@ void StreamProfile::clear()
 
 
 
-bool StreamProfile::is_valid()
+bool StreamProfile::is_valid() const
 {
     return ( !name.empty()  &&
              !url.empty()   &&

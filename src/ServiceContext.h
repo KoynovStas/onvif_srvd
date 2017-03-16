@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "soapH.h"
 #include "eth_dev_param.h"
@@ -18,6 +19,15 @@ class StreamProfile
 
         StreamProfile() { clear(); }
 
+        std::string  get_name  (void) const { return name;   }
+        int          get_width (void) const { return width;  }
+        int          get_height(void) const { return height; }
+        std::string  get_url   (void) const { return url;    }
+        int          get_type  (void) const { return type;   }
+
+
+
+
         //methods for parsing opt from cmd
         bool set_name  (const char *new_val);
         bool set_width (const char *new_val);
@@ -25,11 +35,12 @@ class StreamProfile
         bool set_url   (const char *new_val);
         bool set_type  (const char *new_val);
 
-        std::string get_str_err() { return str_err;         }
-        const char *get_cstr_err(){ return str_err.c_str(); }
+
+        std::string get_str_err()  const { return str_err;         }
+        const char *get_cstr_err() const { return str_err.c_str(); }
 
         void clear(void);
-        bool is_valid(void);
+        bool is_valid(void) const;
 
 
 
@@ -78,6 +89,14 @@ class ServiceContext
         std::string getXAddr(struct soap* soap);
 
 
+
+        std::string get_str_err() { return str_err;         }
+        const char *get_cstr_err(){ return str_err.c_str(); }
+
+
+        bool add_profile(const StreamProfile& profile);
+
+
         // service capabilities
         tds__DeviceServiceCapabilities* getDeviceServiceCapabilities(struct soap* soap);
         trt__Capabilities*  getMediaServiceCapabilities    (struct soap* soap);
@@ -89,6 +108,12 @@ class ServiceContext
 //        tev__Capabilities*  getEventServiceCapabilities    (struct soap* soap);
 //        tls__Capabilities*  getDisplayServiceCapabilities  (struct soap* soap);
 //        tmd__Capabilities*  getDeviceIOServiceCapabilities (struct soap* soap);
+
+    private:
+
+        std::map<std::string, StreamProfile> profiles;
+
+        std::string  str_err;
 };
 
 

@@ -348,6 +348,11 @@ void processing_cmd(int argc, char *argv[])
                         if( !profile.set_type(optarg) )
                             daemon_error_exit("Can't set type for Profile: %s\n", profile.get_cstr_err());
 
+                        if( !service_ctx.add_profile(profile) )
+                            daemon_error_exit("Can't add Profile: %s\n", service_ctx.get_cstr_err());
+
+                        profile.clear(); //now we can add new profile (just uses one variable)
+
                         break;
 
 

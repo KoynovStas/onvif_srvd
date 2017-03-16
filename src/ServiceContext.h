@@ -92,16 +92,19 @@ class ServiceContext
         std::vector<Eth_Dev_Param> eth_ifs; //ethernet interfaces
 
 
-        std::string getServerIpFromClientIp(uint32_t client_ip);
-        std::string getXAddr(struct soap* soap);
+        std::string getServerIpFromClientIp(uint32_t client_ip) const;
+        std::string getXAddr(struct soap* soap) const;
 
 
 
-        std::string get_str_err() { return str_err;         }
-        const char* get_cstr_err(){ return str_err.c_str(); }
+        std::string get_str_err() const { return str_err;         }
+        const char* get_cstr_err()const { return str_err.c_str(); }
 
 
         bool add_profile(const StreamProfile& profile);
+
+
+        std::string get_stream_uri(const std::string& profile_url, uint32_t client_ip) const;
 
 
         const std::map<std::string, StreamProfile> &get_profiles(void) { return profiles; }

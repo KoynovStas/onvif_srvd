@@ -26,7 +26,7 @@ ServiceContext::ServiceContext():
 
 
 
-std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip)
+std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip) const
 {
     char server_ip[INET_ADDRSTRLEN];
 
@@ -50,7 +50,7 @@ std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip)
 
 
 
-std::string ServiceContext::getXAddr(soap *soap)
+std::string ServiceContext::getXAddr(soap *soap) const
 {
     std::ostringstream os;
 
@@ -79,6 +79,23 @@ bool ServiceContext::add_profile(const StreamProfile &profile)
 
     profiles[profile.get_name()] = profile;
     return true;
+}
+
+
+
+std::string ServiceContext::get_stream_uri(const std::string &profile_url, uint32_t client_ip) const
+{
+    std::string uri(profile_url);
+    std::string template_str("%s");
+
+
+    auto it = uri.find(template_str, 0);
+
+    if( it != std::string::npos )
+        uri.replace(it, template_str.size(), getServerIpFromClientIp(client_ip));
+
+
+    return uri;
 }
 
 

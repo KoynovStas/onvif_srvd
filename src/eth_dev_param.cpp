@@ -151,7 +151,7 @@ int Eth_Dev_Param::set_ip(uint32_t IP)
 
 
 
-int Eth_Dev_Param::get_ip(char *IP)
+int Eth_Dev_Param::get_ip(char *IP) const
 {
     if( !is_open() || !IP )
         return -1;
@@ -172,7 +172,7 @@ int Eth_Dev_Param::get_ip(char *IP)
 
 
 
-int Eth_Dev_Param::get_ip(uint32_t *IP)
+int Eth_Dev_Param::get_ip(uint32_t *IP) const
 {
     if( !is_open() || !IP )
         return -1;
@@ -229,7 +229,7 @@ int Eth_Dev_Param::set_mask(uint32_t mask)
 
 
 
-int Eth_Dev_Param::get_mask(char *mask)
+int Eth_Dev_Param::get_mask(char *mask) const
 {
     if( !is_open() || !mask )
         return -1;
@@ -250,7 +250,7 @@ int Eth_Dev_Param::get_mask(char *mask)
 
 
 
-int Eth_Dev_Param::get_mask(uint32_t *mask)
+int Eth_Dev_Param::get_mask(uint32_t *mask) const
 {
     if( !is_open() || !mask )
         return -1;
@@ -269,7 +269,7 @@ int Eth_Dev_Param::get_mask(uint32_t *mask)
 
 
 
-int Eth_Dev_Param::get_mask_prefix()
+int Eth_Dev_Param::get_mask_prefix() const
 {
     int prefix = 0;
     uint32_t mask;
@@ -321,7 +321,7 @@ int Eth_Dev_Param::set_gateway(uint32_t gateway)
 
 
 
-int Eth_Dev_Param::get_gateway(char *gateway)
+int Eth_Dev_Param::get_gateway(char *gateway) const
 {
     if( !is_open() || !gateway )
         return -1;
@@ -346,7 +346,7 @@ int Eth_Dev_Param::get_gateway(char *gateway)
 
 
 
-int Eth_Dev_Param::get_gateway(uint32_t *gateway)
+int Eth_Dev_Param::get_gateway(uint32_t *gateway) const
 {
     if( !is_open() || !gateway )
         return -1;
@@ -449,7 +449,7 @@ int Eth_Dev_Param::set_hwaddr(const uint8_t *hwaddr)
 
 
 
-int Eth_Dev_Param::get_hwaddr(char *hwaddr)
+int Eth_Dev_Param::get_hwaddr(char *hwaddr) const
 {
     if( !is_open() || !hwaddr )
         return -1;
@@ -475,7 +475,7 @@ int Eth_Dev_Param::get_hwaddr(char *hwaddr)
 
 
 
-int Eth_Dev_Param::get_hwaddr(uint8_t *hwaddr)
+int Eth_Dev_Param::get_hwaddr(uint8_t *hwaddr) const
 {
     if( !is_open() || !hwaddr )
         return -1;
@@ -497,7 +497,7 @@ int Eth_Dev_Param::get_hwaddr(uint8_t *hwaddr)
 
 
 
-int Eth_Dev_Param::run_shell_cmd(const char *cmd)
+int Eth_Dev_Param::run_shell_cmd(const char *cmd) const
 {
     FILE *ptr;
 

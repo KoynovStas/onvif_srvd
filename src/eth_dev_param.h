@@ -50,41 +50,41 @@ class Eth_Dev_Param
          Eth_Dev_Param();
         ~Eth_Dev_Param();
 
-        bool is_open(){ return _opened; }
+        bool is_open() const { return _opened; }
 
         int open(const char *dev_name);
         void close();
 
-        const char *dev_name(){ return _ifr.ifr_name; }
+        const char *dev_name() const { return _ifr.ifr_name; }
 
 
         int set_ip(const char *IP);
         int set_ip(uint32_t IP);
 
-        int get_ip(char *IP);
-        int get_ip(uint32_t *IP);
+        int get_ip(char *IP) const;
+        int get_ip(uint32_t *IP) const;
 
 
         int set_mask(const char *mask);
         int set_mask(uint32_t mask);
 
-        int get_mask(char *mask);
-        int get_mask(uint32_t *mask);
-        int get_mask_prefix();
+        int get_mask(char *mask) const;
+        int get_mask(uint32_t *mask) const;
+        int get_mask_prefix() const;
 
 
         int set_gateway(const char *gateway);
         int set_gateway(uint32_t gateway);
 
-        int get_gateway(char *gateway);
-        int get_gateway(uint32_t *gateway);
+        int get_gateway(char *gateway) const;
+        int get_gateway(uint32_t *gateway) const;
 
 
         int set_hwaddr(const char *hwaddr);
         int set_hwaddr(const uint8_t *hwaddr);
 
-        int get_hwaddr(char *hwaddr);
-        int get_hwaddr(uint8_t *hwaddr);
+        int get_hwaddr(char *hwaddr) const;
+        int get_hwaddr(uint8_t *hwaddr) const;
 
 
     private:
@@ -92,7 +92,7 @@ class Eth_Dev_Param
         bool         _opened;
         struct ifreq _ifr;
 
-        int run_shell_cmd(const char *cmd);
+        int run_shell_cmd(const char *cmd) const;
 };
 
 

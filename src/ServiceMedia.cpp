@@ -77,8 +77,23 @@ int MediaBindingService::CreateProfile(_trt__CreateProfile *trt__CreateProfile, 
 
 int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__GetProfileResponse &trt__GetProfileResponse)
 {
-    DEBUG_MSG("Media: %s\n", __FUNCTION__);
-    return SOAP_OK;
+    DEBUG_MSG("Media: %s   get profile:%s\n", __FUNCTION__, trt__GetProfile->ProfileToken.c_str());
+
+    int ret = SOAP_FAULT;
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto profiles       = ctx->get_profiles();
+    auto it             = profiles.find(trt__GetProfile->ProfileToken);
+
+
+    if( it != profiles.end() )
+    {
+        trt__GetProfileResponse.Profile = it->second.get_profile(this->soap);
+        ret = SOAP_OK;
+    }
+
+
+    return ret;
 }
 
 

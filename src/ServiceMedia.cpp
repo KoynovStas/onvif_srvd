@@ -86,6 +86,19 @@ int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__Get
 int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__GetProfilesResponse &trt__GetProfilesResponse)
 {
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        trt__GetProfilesResponse.Profiles.push_back(it->second.get_profile(this->soap));
+    }
+
+
     return SOAP_OK;
 }
 

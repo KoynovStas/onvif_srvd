@@ -33,6 +33,19 @@ int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *tr
 int MediaBindingService::GetVideoSources(_trt__GetVideoSources *trt__GetVideoSources, _trt__GetVideoSourcesResponse &trt__GetVideoSourcesResponse)
 {
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        trt__GetVideoSourcesResponse.VideoSources.push_back(it->second.get_video_src(this->soap));
+    }
+
+
     return SOAP_OK;
 }
 

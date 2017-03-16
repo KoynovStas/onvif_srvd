@@ -27,7 +27,8 @@ class StreamProfile
 
 
 
-        tt__Profile* get_profile(struct soap *soap);
+        tt__Profile*     get_profile(struct soap *soap);
+        tt__VideoSource* get_video_src(struct soap *soap);
 
 
 

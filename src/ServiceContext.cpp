@@ -208,6 +208,19 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap)
 
 
 
+tt__VideoSource* StreamProfile::get_video_src(soap *soap)
+{
+    tt__VideoSource* video_src = soap_new_tt__VideoSource(soap);
+
+    video_src->token      = name;
+    video_src->Resolution = soap_new_req_tt__VideoResolution(soap, width, height);
+    video_src->Imaging    = soap_new_tt__ImagingSettings(soap);
+
+    return video_src;
+}
+
+
+
 bool StreamProfile::set_name(const char *new_val)
 {
     if(!new_val)

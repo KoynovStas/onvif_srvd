@@ -50,7 +50,7 @@ static const char *help_str =
         "       --width        [value] Set Width for Profile Media Services\n"
         "       --height       [value] Set Height for Profile Media Services\n"
         "       --url          [value] Set URL for Profile Media Services\n"
-        "       --type         [value] Set Type for Profile Media Services\n\n"
+        "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n\n"
         "  -v   --version              Display daemon version information\n"
         "  -h,  --help                 Display this information\n\n";
 

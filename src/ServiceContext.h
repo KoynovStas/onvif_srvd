@@ -27,8 +27,8 @@ class StreamProfile
 
 
 
-        tt__Profile*     get_profile(struct soap *soap);
-        tt__VideoSource* get_video_src(struct soap *soap);
+        tt__Profile*     get_profile(struct soap *soap) const;
+        tt__VideoSource* get_video_src(struct soap *soap) const;
 
 
 
@@ -59,8 +59,8 @@ class StreamProfile
         std::string  str_err;
 
 
-        tt__VideoSourceConfiguration*  get_video_src_cnf(struct soap *soap);
-        tt__VideoEncoderConfiguration* get_video_enc_cfg(struct soap *soap);
+        tt__VideoSourceConfiguration*  get_video_src_cnf(struct soap *soap) const;
+        tt__VideoEncoderConfiguration* get_video_enc_cfg(struct soap *soap) const;
 };
 
 
@@ -103,6 +103,8 @@ class ServiceContext
 
         bool add_profile(const StreamProfile& profile);
 
+
+        const std::map<std::string, StreamProfile> &get_profiles(void) { return profiles; }
 
         // service capabilities
         tds__DeviceServiceCapabilities* getDeviceServiceCapabilities(struct soap* soap);

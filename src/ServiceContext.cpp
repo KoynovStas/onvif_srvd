@@ -163,7 +163,7 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 
 
 
-tt__VideoSourceConfiguration* StreamProfile::get_video_src_cnf(struct soap *soap)
+tt__VideoSourceConfiguration* StreamProfile::get_video_src_cnf(struct soap *soap) const
 {
     tt__VideoSourceConfiguration* src_cfg = soap_new_tt__VideoSourceConfiguration(soap);
 
@@ -176,7 +176,7 @@ tt__VideoSourceConfiguration* StreamProfile::get_video_src_cnf(struct soap *soap
 
 
 
-tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soap)
+tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soap) const
 {
     tt__VideoEncoderConfiguration* enc_cfg = soap_new_tt__VideoEncoderConfiguration(soap);
 
@@ -193,7 +193,7 @@ tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soa
 
 
 
-tt__Profile* StreamProfile::get_profile(struct soap *soap)
+tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 {
     tt__Profile* profile = soap_new_tt__Profile(soap);
 
@@ -208,7 +208,7 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap)
 
 
 
-tt__VideoSource* StreamProfile::get_video_src(soap *soap)
+tt__VideoSource* StreamProfile::get_video_src(soap *soap) const
 {
     tt__VideoSource* video_src = soap_new_tt__VideoSource(soap);
 

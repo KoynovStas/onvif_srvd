@@ -375,6 +375,10 @@ void check_service_ctx(void)
 
     if(service_ctx.scopes.empty())
         daemon_error_exit("Error: not set scopes more details see opt --scope\n");
+
+
+    if(service_ctx.get_profiles().empty())
+        daemon_error_exit("Error: not set no one profile more details see --help\n");
 }
 
 

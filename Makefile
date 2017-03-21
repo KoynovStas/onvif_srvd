@@ -42,6 +42,30 @@ GCC              =  g++
 
 
 
+
+# To build a daemon with WS-Security support, 
+# call make with the WSSE_ON=1 parameter
+# example:
+# make WSSE_ON=1 all
+ifdef WSSE_ON
+CFLAGS       += -DWITH_OPENSSL -lssl -lcrypto -lz
+
+
+WSSE_SOURCES  = $(GSOAP_PLUGIN_DIR)/wsseapi.c \
+                $(GSOAP_PLUGIN_DIR)/mecevp.c  \
+                $(GSOAP_PLUGIN_DIR)/smdevp.c  \
+                $(GSOAP_PLUGIN_DIR)/wsaapi.c
+
+
+WSSE_IMPORT   = echo '\#import "wsse.h" ' >> $@
+endif
+
+
+
+
+
+
+
 # Add your source files to the list.
 # Supported *.c  *.cpp  *.S files.
 # For other file types write a template rule for build, see below.
@@ -56,7 +80,8 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
            $(GSOAP_CUSTOM_DIR)/duration.c                   \
            $(GENERATED_DIR)/soapC.cpp                       \
            $(GENERATED_DIR)/soapDeviceBindingService.cpp    \
-           $(GENERATED_DIR)/soapMediaBindingService.cpp
+           $(GENERATED_DIR)/soapMediaBindingService.cpp     \
+           $(WSSE_SOURCES)
 
 
 
@@ -175,6 +200,8 @@ $(GENERATED_DIR)/onvif.h:
 	@$(build_gsoap)
 	@mkdir -p $(GENERATED_DIR)
 	$(WSDL2H) -d -t ./wsdl/typemap.dat  -o $@  $(WSDL_FILES)
+	$(WSSE_IMPORT)
+
 
 
 

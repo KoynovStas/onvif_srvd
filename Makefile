@@ -64,23 +64,26 @@ endif
 
 
 
+# We can't use wildcard func, this files will be generated
+SOAP_SERVICE_SRC = $(GENERATED_DIR)/soapDeviceBindingService.cpp \
+                   $(GENERATED_DIR)/soapMediaBindingService.cpp
+
 
 
 # Add your source files to the list.
 # Supported *.c  *.cpp  *.S files.
 # For other file types write a template rule for build, see below.
-SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c                   \
-           $(COMMON_DIR)/daemon.c                           \
-           $(COMMON_DIR)/eth_dev_param.cpp                  \
-           $(COMMON_DIR)/ServiceContext.cpp                 \
-           $(COMMON_DIR)/ServiceDevice.cpp                  \
-           $(COMMON_DIR)/ServiceMedia.cpp                   \
-           $(GSOAP_DIR)/stdsoap2.cpp                        \
-           $(GSOAP_DIR)/dom.cpp                             \
-           $(GSOAP_CUSTOM_DIR)/duration.c                   \
-           $(GENERATED_DIR)/soapC.cpp                       \
-           $(GENERATED_DIR)/soapDeviceBindingService.cpp    \
-           $(GENERATED_DIR)/soapMediaBindingService.cpp     \
+SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c         \
+           $(COMMON_DIR)/daemon.c                 \
+           $(COMMON_DIR)/eth_dev_param.cpp        \
+           $(COMMON_DIR)/ServiceContext.cpp       \
+           $(COMMON_DIR)/ServiceDevice.cpp        \
+           $(COMMON_DIR)/ServiceMedia.cpp         \
+           $(GSOAP_DIR)/stdsoap2.cpp              \
+           $(GSOAP_DIR)/dom.cpp                   \
+           $(GSOAP_CUSTOM_DIR)/duration.c         \
+           $(GENERATED_DIR)/soapC.cpp             \
+           $(SOAP_SERVICE_SRC)                    \
            $(WSSE_SOURCES)
 
 
@@ -112,24 +115,24 @@ all: debug release
 
 .PHONY: release
 release: CFLAGS := -s  $(CFLAGS)
-release: generate $(DAEMON_NAME)
+release: $(DAEMON_NAME)
 
 
 
 .PHONY: debug
 debug: DAEMON_NO_CLOSE_STDIO = 1
 debug: CFLAGS := -DDEBUG  -g  $(CFLAGS)
-debug: generate $(DAEMON_NAME)_$(DEBUG_SUFFIX)
+debug: $(DAEMON_NAME)_$(DEBUG_SUFFIX)
 
 
 
 # release
-$(DAEMON_NAME): $(OBJECTS)
+$(DAEMON_NAME): .depend $(OBJECTS)
 	$(call build_bin, $(OBJECTS))
 
 
 # debug
-$(DAEMON_NAME)_$(DEBUG_SUFFIX): $(DEBUG_OBJECTS)
+$(DAEMON_NAME)_$(DEBUG_SUFFIX): .depend $(DEBUG_OBJECTS)
 	$(call build_bin, $(DEBUG_OBJECTS))
 
 
@@ -184,13 +187,15 @@ distclean: clean
 
 .depend: cmd  = echo "  [depend]  $(var)" &&
 .depend: cmd += $(GCC) $(CFLAGS) -MT ".depend $(basename $(var)).o $(basename $(var))_$(DEBUG_SUFFIX).o"  -MM $(var) >> .depend;
-.depend: $(SOURCES)
-	@rm -f .depend
+.depend: $(GENERATED_DIR)/soapC.cpp
+	-@rm -f .depend
 	@echo "Generating dependencies..."
 	@$(foreach var, $(SOURCES), $(cmd))
 
 
 include $(wildcard .depend)
+
+
 
 
 
@@ -204,14 +209,15 @@ $(GENERATED_DIR)/onvif.h:
 
 
 
-
 $(GENERATED_DIR)/soapC.cpp: $(GENERATED_DIR)/onvif.h
 	$(SOAPCPP2) -j -L -x -S -d $(GENERATED_DIR) -I$(GSOAP_DIR):$(GSOAP_IMPORT_DIR) $<
 
 
 
-.PHONY: generate
-generate: $(GENERATED_DIR)/soapC.cpp .depend
+# This targets is needed for parallel work of make
+$(SOAP_SERVICE_SRC): $(GENERATED_DIR)/soapC.cpp
+$(DEBUG_OBJECTS): $(GENERATED_DIR)/soapC.cpp
+$(OBJECTS): $(GENERATED_DIR)/soapC.cpp
 
 
 

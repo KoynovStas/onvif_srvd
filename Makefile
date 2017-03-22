@@ -64,6 +64,14 @@ endif
 
 
 
+
+
+SOAP_SRC = $(GSOAP_DIR)/stdsoap2.cpp        \
+           $(GSOAP_DIR)/dom.cpp             \
+           $(GSOAP_CUSTOM_DIR)/duration.c
+
+
+
 # We can't use wildcard func, this files will be generated
 SOAP_SERVICE_SRC = $(GENERATED_DIR)/soapDeviceBindingService.cpp \
                    $(GENERATED_DIR)/soapMediaBindingService.cpp
@@ -79,10 +87,8 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c         \
            $(COMMON_DIR)/ServiceContext.cpp       \
            $(COMMON_DIR)/ServiceDevice.cpp        \
            $(COMMON_DIR)/ServiceMedia.cpp         \
-           $(GSOAP_DIR)/stdsoap2.cpp              \
-           $(GSOAP_DIR)/dom.cpp                   \
-           $(GSOAP_CUSTOM_DIR)/duration.c         \
            $(GENERATED_DIR)/soapC.cpp             \
+           $(SOAP_SRC)                            \
            $(SOAP_SERVICE_SRC)                    \
            $(WSSE_SOURCES)
 
@@ -215,9 +221,7 @@ $(GENERATED_DIR)/soapC.cpp: $(GENERATED_DIR)/onvif.h
 
 
 # This targets is needed for parallel work of make
-$(SOAP_SERVICE_SRC): $(GENERATED_DIR)/soapC.cpp
-$(DEBUG_OBJECTS): $(GENERATED_DIR)/soapC.cpp
-$(OBJECTS): $(GENERATED_DIR)/soapC.cpp
+$(OBJECTS) $(DEBUG_OBJECTS) $(SOAP_SRC) $(SOAP_SERVICE_SRC) $(WSSE_SOURCES): $(GENERATED_DIR)/soapC.cpp
 
 
 
@@ -246,7 +250,7 @@ define build_gsoap
     # get archive
     if [ ! -f SDK/gsoap.zip ]; then \
         mkdir -p SDK; \
-        wget -O ./SDK/gsoap.zip.tmp "https://vorboss.dl.sourceforge.net/project/gsoap2/gsoap-2.8/gsoap_2.8.43.zip"; \
+        wget -O ./SDK/gsoap.zip.tmp "https://sourceforge.net/projects/gsoap2/files/gsoap-2.8/gsoap_2.8.44.zip/download" && \
         mv ./SDK/gsoap.zip.tmp ./SDK/gsoap.zip; \
     fi
 
@@ -258,7 +262,7 @@ define build_gsoap
     # build
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
          cd gsoap-2.8; \
-         ./configure; \
+         ./configure && \
          make; \
          cd ..;\
     fi

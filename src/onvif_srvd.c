@@ -64,6 +64,9 @@ namespace LongOpts
 {
     enum
     {
+        version = 'v',
+        help    = 'h',
+
         //daemon options
         no_chdir = 1,
         no_close,
@@ -98,9 +101,11 @@ static const char *short_opts = "hv";
 
 static const struct option long_opts[] =
 {
+
+    { "version",      no_argument,       NULL, LongOpts::version       },
+    { "help",         no_argument,       NULL, LongOpts::help          },
+
     //daemon options
-    { "version",      no_argument,       NULL, 'v'                     },
-    { "help",         no_argument,       NULL, 'h'                     },
     { "no_chdir",     no_argument,       NULL, LongOpts::no_chdir      },
     { "no_close",     no_argument,       NULL, LongOpts::no_close      },
     { "pid_file",     required_argument, NULL, LongOpts::pid_file      },
@@ -125,7 +130,7 @@ static const struct option long_opts[] =
     { "url",           required_argument, NULL, LongOpts::url          },
     { "type",          required_argument, NULL, LongOpts::type         },
 
-    { NULL,           no_argument,       NULL, 0                       }
+    { NULL,           no_argument,       NULL,  0                      }
 };
 
 
@@ -232,28 +237,22 @@ void processing_cmd(int argc, char *argv[])
         switch( opt )
         {
 
-            case 'v':
+            case LongOpts::version:
                         printf("%s  version  %d.%d.%d\n", DAEMON_NAME, DAEMON_MAJOR_VERSION,
                                                                        DAEMON_MINOR_VERSION,
                                                                        DAEMON_PATCH_VERSION);
                         exit_if_not_daemonized(EXIT_SUCCESS);
                         break;
 
-            case 'h':
-
+            case LongOpts::help:
                         printf(help_str, DAEMON_NAME, DAEMON_MAJOR_VERSION,
                                                       DAEMON_MINOR_VERSION,
                                                       DAEMON_PATCH_VERSION);
                         exit_if_not_daemonized(EXIT_SUCCESS);
                         break;
 
-            case '?':
-            case ':':
-                        printf("for more detail see help\n\n");
-                        exit_if_not_daemonized(EXIT_FAILURE);
-                        break;
 
-
+                 //daemon options
             case LongOpts::no_chdir:
                         daemon_info.no_chdir = 1;
                         break;
@@ -359,6 +358,8 @@ void processing_cmd(int argc, char *argv[])
 
 
             default:
+                        printf("for more detail see help\n\n");
+                        exit_if_not_daemonized(EXIT_FAILURE);
                         break;
         }
 

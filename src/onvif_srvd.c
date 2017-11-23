@@ -22,8 +22,8 @@
 
 static const char *help_str =
         " ===============  Help  ===============\n"
-        " Daemon name:  %s\n"
-        " Daemon  ver:  %d.%d.%d\n"
+        " Daemon name:  " DAEMON_NAME          "\n"
+        " Daemon  ver:  " DAEMON_VERSION_STR   "\n"
 #ifdef  DEBUG
         " Build  mode:  debug\n"
 #else
@@ -33,6 +33,7 @@ static const char *help_str =
         " Build  time:  " __TIME__ "\n\n"
         "Options:                      description:\n\n"
         "       --no_chdir             Don't change the directory to '/'\n"
+        "       --no_fork              Don't do fork\n"
         "       --no_close             Don't close standart IO files\n"
         "       --pid_file     [value] Set pid file name\n"
         "       --log_file     [value] Set log file name\n\n"
@@ -53,8 +54,8 @@ static const char *help_str =
         "                              in template mode %s will be changed to IP of interfase (see opt ifs)\n"
         "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n"
         "                              It is also a sign of the end of the profile parameters\n\n"
-        "  -v   --version              Display daemon version information\n"
-        "  -h,  --help                 Display this information\n\n";
+        "  -v,  --version              Display daemon version\n"
+        "  -h,  --help                 Display this help\n\n";
 
 
 
@@ -69,6 +70,7 @@ namespace LongOpts
 
         //daemon options
         no_chdir = 1,
+        no_fork,
         no_close,
         pid_file,
         log_file,
@@ -101,12 +103,12 @@ static const char *short_opts = "hv";
 
 static const struct option long_opts[] =
 {
-
     { "version",      no_argument,       NULL, LongOpts::version       },
     { "help",         no_argument,       NULL, LongOpts::help          },
 
     //daemon options
     { "no_chdir",     no_argument,       NULL, LongOpts::no_chdir      },
+    { "no_fork",      no_argument,       NULL, LongOpts::no_fork       },
     { "no_close",     no_argument,       NULL, LongOpts::no_close      },
     { "pid_file",     required_argument, NULL, LongOpts::pid_file      },
     { "log_file",     required_argument, NULL, LongOpts::log_file      },
@@ -176,7 +178,7 @@ static const struct option long_opts[] =
 
 
 
-struct soap *soap;
+static struct soap *soap;
 
 ServiceContext service_ctx;
 
@@ -203,7 +205,6 @@ void daemon_exit_handler(int sig)
 
 void init_signals(void)
 {
-
     struct sigaction sa;
 
     memset(&sa, 0, sizeof(sa));
@@ -212,42 +213,34 @@ void init_signals(void)
         daemon_error_exit("Can't set daemon_exit_handler: %m\n");
 
 
-
     signal(SIGCHLD, SIG_IGN); // ignore child
     signal(SIGTSTP, SIG_IGN); // ignore tty signals
     signal(SIGTTOU, SIG_IGN);
     signal(SIGTTIN, SIG_IGN);
-    signal(SIGHUP, SIG_IGN);
+    signal(SIGHUP,  SIG_IGN);
 }
 
 
 
 void processing_cmd(int argc, char *argv[])
 {
-
-    int opt, long_index;
-
+    int opt;
 
     StreamProfile  profile;
 
 
-    opt = getopt_long(argc, argv, short_opts, long_opts, &long_index);
-    while( opt != -1 )
+    while( (opt = getopt_long(argc, argv, short_opts, long_opts, NULL)) != -1 )
     {
         switch( opt )
         {
 
-            case LongOpts::version:
-                        printf("%s  version  %d.%d.%d\n", DAEMON_NAME, DAEMON_MAJOR_VERSION,
-                                                                       DAEMON_MINOR_VERSION,
-                                                                       DAEMON_PATCH_VERSION);
+            case LongOpts::help:
+                        puts(help_str);
                         exit_if_not_daemonized(EXIT_SUCCESS);
                         break;
 
-            case LongOpts::help:
-                        printf(help_str, DAEMON_NAME, DAEMON_MAJOR_VERSION,
-                                                      DAEMON_MINOR_VERSION,
-                                                      DAEMON_PATCH_VERSION);
+            case LongOpts::version:
+                        puts(DAEMON_NAME "  version  " DAEMON_VERSION_STR "\n");
                         exit_if_not_daemonized(EXIT_SUCCESS);
                         break;
 
@@ -255,6 +248,10 @@ void processing_cmd(int argc, char *argv[])
                  //daemon options
             case LongOpts::no_chdir:
                         daemon_info.no_chdir = 1;
+                        break;
+
+            case LongOpts::no_fork:
+                        daemon_info.no_fork = 1;
                         break;
 
             case LongOpts::no_close:
@@ -358,14 +355,11 @@ void processing_cmd(int argc, char *argv[])
 
 
             default:
-                        printf("for more detail see help\n\n");
+                        puts("for more detail see help\n\n");
                         exit_if_not_daemonized(EXIT_FAILURE);
                         break;
         }
-
-        opt = getopt_long(argc, argv, short_opts, long_opts, &long_index);
     }
-
 }
 
 
@@ -423,17 +417,13 @@ void init(void *data)
 
 int main(int argc, char *argv[])
 {
-
     processing_cmd(argc, argv);
     daemonize2(init, NULL);
 
-
     FOREACH_SERVICE(DECLARE_SERVICE, soap)
-
 
     while( true )
     {
-
         // wait new client
         if( !soap_valid_socket(soap_accept(soap)) )
         {
@@ -453,7 +443,6 @@ int main(int argc, char *argv[])
             DEBUG_MSG("Unknown service\n");
         }
     }
-
 
 
     return EXIT_SUCCESS; // good job (we interrupted (finished) main loop)

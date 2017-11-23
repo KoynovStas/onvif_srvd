@@ -240,7 +240,6 @@ int DeviceBindingService::GetRemoteDiscoveryMode(_tds__GetRemoteDiscoveryMode *t
 
 int DeviceBindingService::SetRemoteDiscoveryMode(_tds__SetRemoteDiscoveryMode *tds__SetRemoteDiscoveryMode, _tds__SetRemoteDiscoveryModeResponse &tds__SetRemoteDiscoveryModeResponse)
 {
-	std::cout << __FUNCTION__ << std::endl;
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
     return SOAP_OK;
 }

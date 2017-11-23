@@ -2,35 +2,40 @@
  * daemon.c
  *
  *
- * version 1.0
+ * version 1.1
  *
  *
- * Copyright (c) 2016, Koynov Stas - skojnov@yandex.ru
+ *
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2015, Koynov Stas - skojnov@yandex.ru
  *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- *  1 Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  2 Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *  3 Neither the name of the <organization> nor the
- *    names of its contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
 
@@ -83,10 +88,18 @@ volatile struct daemon_info_t daemon_info =
     .terminated = 0,
     .daemonized = 0,                   //flag will be set in finale function daemonize()
 
+
     #ifdef  DAEMON_NO_CHDIR
         .no_chdir = DAEMON_NO_CHDIR,
     #else
         .no_chdir = 0,
+    #endif
+
+
+    #ifdef  DAEMON_NO_FORK
+        .no_fork = DAEMON_NO_FORK,
+    #else
+        .no_fork = 0,
     #endif
 
 
@@ -220,7 +233,7 @@ int create_pid_file(const char *pid_file_name)
 
 
 
-void daemonize2(void (*optional_init)(void *), void *data)
+static void do_fork()
 {
     switch( fork() )                                     // Become background process
     {
@@ -229,20 +242,25 @@ void daemonize2(void (*optional_init)(void *), void *data)
         default:  _exit(EXIT_SUCCESS);                   // We can exit the parent process
     }
 
-
     // ---- At this point we are executing as the child process ----
+}
 
+
+
+void daemonize2(void (*optional_init)(void *), void *data)
+{
+    if( !daemon_info.no_fork )
+        do_fork();
 
 
     // Reset the file mode mask
     umask(0);
 
 
-
     // Create a new process group(session) (SID) for the child process
-    if( setsid() == -1 )
+    // call setsid() only if fork is done
+    if( !daemon_info.no_fork && (setsid() == -1) )
         daemon_error_exit("Can't setsid: %m\n");
-
 
 
     // Change the current working directory to "/"
@@ -252,10 +270,8 @@ void daemonize2(void (*optional_init)(void *), void *data)
         daemon_error_exit("Can't chdir: %m\n");
 
 
-
     if( daemon_info.pid_file && (create_pid_file(daemon_info.pid_file) == -1) )
         daemon_error_exit("Can't create pid file: %s: %m\n", daemon_info.pid_file);
-
 
 
     // call user functions for the optional initialization
@@ -264,10 +280,8 @@ void daemonize2(void (*optional_init)(void *), void *data)
         optional_init(data);
 
 
-
     if( !daemon_info.no_close_stdio && (redirect_stdio_to_devnull() != 0) )
         daemon_error_exit("Can't redirect stdio to /dev/null: %m\n");
-
 
 
     daemon_info.daemonized = 1; //good job

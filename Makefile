@@ -199,7 +199,10 @@ distclean: clean
 	@$(foreach var, $(SOURCES), $(cmd))
 
 
-include $(wildcard .depend)
+
+ifeq "$(findstring $(MAKECMDGOALS),clean distclean)"  ""
+    include $(wildcard .depend)
+endif
 
 
 

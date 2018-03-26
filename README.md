@@ -67,10 +67,13 @@ For more details see help:
 ./onvif_srvd --help
 ```
 
-Or you can use [S90onvif_srvd](./S90onvif_srvd) script to start the daemon:
+Or you can use [S90onvif_srvd](./start_scripts/S90onvif_srvd) script to start the daemon (for old init.d script style):
 ```console
 ./S90onvif_srvd start
 ```
+
+If You use systemd see:
+[onvif_srvd.service](./start_scripts/onvif_srvd.service)
 
 
 
@@ -82,7 +85,7 @@ For testing daemon you need client application.
 #### Linux:
 1. [ONVIF Device Tool (GUI)](http://lingodigit.com/onvif_nvc.html)
 
-> **Note**: 
+> **Note**:
 > 1. ONVIF Device Tool at me this application falls when show the first frame of RTSP. Sad :(.
 > 2. This application requires support for **WS-Security**
 

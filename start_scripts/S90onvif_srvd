@@ -1,7 +1,7 @@
 #! /bin/sh
 
 DAEMON=onvif_srvd_debug
-DAEMON_PATH=.
+DAEMON_PATH=../
 PID_FILE=$DAEMON.pid
 
 DAEMON_ARGS="--pid_file $PID_FILE"

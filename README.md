@@ -69,7 +69,7 @@ For more details see help:
 
 Or you can use [S90onvif_srvd](./start_scripts/S90onvif_srvd) script to start the daemon (for old init.d script style):
 ```console
-./S90onvif_srvd start
+./start_scripts/S90onvif_srvd start
 ```
 
 If You use systemd see:
@@ -88,6 +88,7 @@ For testing daemon you need client application.
 > **Note**:
 > 1. ONVIF Device Tool at me this application falls when show the first frame of RTSP. Sad :(.
 > 2. This application requires support for **WS-Security**
+> 3. This application requires support for [**WS-Discovery**](https://github.com/KoynovStas/wsdd)
 
 
 

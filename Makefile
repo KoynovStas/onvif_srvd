@@ -23,7 +23,7 @@ COMMON_DIR        = ./src
 GENERATED_DIR     = ./generated
 
 
-CFLAGS            = -DDAEMON_NAME='"$(DAEMON_NAME)"'
+CFLAGS           := $(CFLAGS) -DDAEMON_NAME='"$(DAEMON_NAME)"'
 CFLAGS           += -DDAEMON_MAJOR_VERSION=$(DAEMON_MAJOR_VERSION)
 CFLAGS           += -DDAEMON_MINOR_VERSION=$(DAEMON_MINOR_VERSION)
 CFLAGS           += -DDAEMON_PATCH_VERSION=$(DAEMON_PATCH_VERSION)
@@ -36,8 +36,9 @@ CFLAGS           += -I$(COMMON_DIR)
 CFLAGS           += -I$(GENERATED_DIR)
 CFLAGS           += -I$(GSOAP_DIR) -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
 CFLAGS           += -std=c++11 -O2  -Wall  -pipe
+CFLAGS           += -lpthread
 
-GCC              =  g++
+GCC              ?=  g++
 
 
 
@@ -74,7 +75,9 @@ SOAP_SRC = $(GSOAP_DIR)/stdsoap2.cpp        \
 
 # We can't use wildcard func, this files will be generated
 SOAP_SERVICE_SRC = $(GENERATED_DIR)/soapDeviceBindingService.cpp \
-                   $(GENERATED_DIR)/soapMediaBindingService.cpp
+                   $(GENERATED_DIR)/soapMediaBindingService.cpp \
+                   $(GENERATED_DIR)/soapRemoteDiscoveryBindingService.cpp \
+                   $(GENERATED_DIR)/soapwsddService.cpp \
 
 
 
@@ -87,6 +90,7 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c         \
            $(COMMON_DIR)/ServiceContext.cpp       \
            $(COMMON_DIR)/ServiceDevice.cpp        \
            $(COMMON_DIR)/ServiceMedia.cpp         \
+           $(COMMON_DIR)/ServiceDiscovery.cpp     \
            $(GENERATED_DIR)/soapC.cpp             \
            $(SOAP_SRC)                            \
            $(SOAP_SERVICE_SRC)                    \
@@ -266,8 +270,8 @@ define build_gsoap
     # build
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
          cd gsoap-2.8; \
-         ./configure && \
-         make; \
+         CFLAGS= ./configure && \
+         make -j 1; \
          cd ..;\
     fi
 endef

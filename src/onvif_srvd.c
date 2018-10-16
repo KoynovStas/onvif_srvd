@@ -5,6 +5,7 @@
 #include <string.h>
 #include <signal.h>
 #include <getopt.h>
+#include <thread>
 
 
 #include "daemon.h"
@@ -15,6 +16,8 @@
 #include "DeviceBinding.nsmap"
 #include "soapDeviceBindingService.h"
 #include "soapMediaBindingService.h"
+#include "soapwsddService.h"
+#include "soapRemoteDiscoveryBindingService.h"
 
 
 
@@ -144,6 +147,10 @@ static const struct option long_opts[] =
         APPLY(MediaBindingService, soap)                \
 
 
+#define FOREACH_DISCOVERY_SERVICE(APPLY, soap)          \
+        APPLY(RemoteDiscoveryBindingService, soap)      \
+        APPLY(wsddService, soap)                        \
+
 /*
  * If you need support for other services,
  * add the desired option to the macro FOREACH_SERVICE.
@@ -179,6 +186,7 @@ static const struct option long_opts[] =
 
 
 static struct soap *soap;
+static struct soap *soap_discovery;
 
 ServiceContext service_ctx;
 
@@ -378,8 +386,6 @@ void check_service_ctx(void)
         daemon_error_exit("Error: not set no one profile more details see --help\n");
 }
 
-
-
 void init_gsoap(void)
 {
     soap = soap_new();
@@ -396,6 +402,7 @@ void init_gsoap(void)
         exit(EXIT_FAILURE);
     }
 
+
     soap->send_timeout = 3; // timeout in sec
     soap->recv_timeout = 3; // timeout in sec
 
@@ -404,12 +411,76 @@ void init_gsoap(void)
     soap->user = (void*)&service_ctx;
 }
 
+void init_gsoap_discovery(void) {
+    unsigned char loop = 1;
+    struct ip_mreq mreqcon;
+    soap_discovery = soap_new();
 
+    if (!soap_discovery)
+        daemon_error_exit("Can't get mem for soap discovery\n");
+
+    soap_discovery->connect_flags = SO_BROADCAST;
+    soap_discovery->port = 3702;
+
+    soap_set_namespaces(soap_discovery, namespaces);
+    soap_discovery->omode = SOAP_IO_UDP;
+    soap_discovery->bind_flags = SO_REUSEADDR;
+
+    if (!soap_valid_socket(soap_bind(soap_discovery, NULL, soap_discovery->port, 100))) {
+        soap_stream_fault(soap_discovery, std::cerr);
+        exit(EXIT_FAILURE);
+    }
+
+    for (size_t i = 0; i < service_ctx.eth_ifs.size(); ++i)
+    {
+        service_ctx.eth_ifs[i].set_gateway("-net 224.0.0.0 netmask 224.0.0.0");
+    }
+
+    if(setsockopt(soap_discovery->master, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop)))
+    {
+        perror("setsockopt");
+    }
+    mreqcon.imr_multiaddr.s_addr = inet_addr("239.255.255.250");
+    mreqcon.imr_interface.s_addr = htonl(INADDR_ANY);
+    if(setsockopt(soap_discovery->master, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreqcon, sizeof(mreqcon)))
+    {
+        perror("setsockopt");
+    }
+
+    //save pointer of service_ctx in soap
+    soap_discovery->user = (void*)&service_ctx;
+}
+
+void discovery_handler()
+{
+    FOREACH_DISCOVERY_SERVICE(DECLARE_SERVICE, soap_discovery)
+
+    while( true )
+    {
+        if(!soap_valid_socket(soap_accept(soap_discovery)))
+        {
+            soap_stream_fault(soap_discovery, std::cerr);
+            return;
+        }
+
+        // process service
+        if( soap_begin_serve(soap_discovery) )
+        {
+            soap_stream_fault(soap_discovery, std::cerr);
+        }
+        FOREACH_DISCOVERY_SERVICE(DISPATCH_SERVICE, soap)
+        else
+        {
+            DEBUG_MSG("Unknown service\n");
+        }
+    }
+}
 
 void init(void *data)
 {
     init_signals();
     check_service_ctx();
+    init_gsoap_discovery();
     init_gsoap();
 }
 
@@ -419,6 +490,8 @@ int main(int argc, char *argv[])
 {
     processing_cmd(argc, argv);
     daemonize2(init, NULL);
+
+    std::thread thread_discovery(discovery_handler);
 
     FOREACH_SERVICE(DECLARE_SERVICE, soap)
 
@@ -444,6 +517,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    thread_discovery.join();
 
     return EXIT_SUCCESS; // good job (we interrupted (finished) main loop)
 }

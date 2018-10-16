@@ -384,7 +384,7 @@ wsrm4	= <http://docs.oasis-open.org/wsrm/2004/06/ws-reliability-1.1.xsd>
 #	To upgrade WS-Discovery to WS-Addressing 2005/08, uncomment wsdd5:
 
 wsdd	= <http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01>
-#wsdd5	= <http://schemas.xmlsoap.org/ws/2005/04/discovery>
+wsdd5	= <http://schemas.xmlsoap.org/ws/2005/04/discovery>
 wsdd10	= <http://schemas.xmlsoap.org/ws/2005/04/discovery>
 
 wsdd5__HelloType		= | wsdd__HelloType

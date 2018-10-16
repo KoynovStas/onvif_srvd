@@ -353,6 +353,9 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
             tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = XAddr;
             tds__GetCapabilitiesResponse.Capabilities->Device->System = soap_new_tt__SystemCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->System->DiscoveryResolve = true;
+            tds__GetCapabilitiesResponse.Capabilities->Device->System->DiscoveryBye = true;
+            tds__GetCapabilitiesResponse.Capabilities->Device->System->RemoteDiscovery = true;
             tds__GetCapabilitiesResponse.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(this->soap, 2, 0));
             tds__GetCapabilitiesResponse.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(this->soap);

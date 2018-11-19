@@ -268,7 +268,7 @@ define build_gsoap
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
          cd gsoap-2.8; \
          ./configure && \
-         make; \
+         make -j1; \
          cd ..;\
     fi
 endef

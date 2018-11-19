@@ -37,7 +37,7 @@ CFLAGS           += -I$(GENERATED_DIR)
 CFLAGS           += -I$(GSOAP_DIR) -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
 CFLAGS           += -std=c++11 -O2  -Wall  -pipe
 
-GCC              =  g++
+GCC              ?=  g++
 
 
 

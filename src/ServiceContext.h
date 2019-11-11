@@ -19,11 +19,12 @@ class StreamProfile
 
         StreamProfile() { clear(); }
 
-        std::string  get_name  (void) const { return name;   }
-        int          get_width (void) const { return width;  }
-        int          get_height(void) const { return height; }
-        std::string  get_url   (void) const { return url;    }
-        int          get_type  (void) const { return type;   }
+        std::string  get_name   (void) const { return name;   }
+        int          get_width  (void) const { return width;  }
+        int          get_height (void) const { return height; }
+        std::string  get_url    (void) const { return url;    }
+        std::string  get_snapurl(void) const { return snapurl;}
+        int          get_type   (void) const { return type;   }
 
 
 
@@ -33,11 +34,12 @@ class StreamProfile
 
 
         //methods for parsing opt from cmd
-        bool set_name  (const char *new_val);
-        bool set_width (const char *new_val);
-        bool set_height(const char *new_val);
-        bool set_url   (const char *new_val);
-        bool set_type  (const char *new_val);
+        bool set_name   (const char *new_val);
+        bool set_width  (const char *new_val);
+        bool set_height (const char *new_val);
+        bool set_url    (const char *new_val);
+        bool set_snapurl(const char *new_val);
+        bool set_type   (const char *new_val);
 
 
         std::string get_str_err()  const { return str_err;         }
@@ -53,6 +55,7 @@ class StreamProfile
         int          width;
         int          height;
         std::string  url;
+        std::string  snapurl;
         int          type;
 
 
@@ -105,6 +108,7 @@ class ServiceContext
 
 
         std::string get_stream_uri(const std::string& profile_url, uint32_t client_ip) const;
+        std::string get_snapshot_uri(const std::string& profile_url, uint32_t client_ip) const;
 
 
         const std::map<std::string, StreamProfile> &get_profiles(void) { return profiles; }

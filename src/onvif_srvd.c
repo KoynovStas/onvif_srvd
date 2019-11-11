@@ -51,6 +51,7 @@ static const char *help_str =
         "       --width        [value] Set Width for Profile Media Services\n"
         "       --height       [value] Set Height for Profile Media Services\n"
         "       --url          [value] Set URL (or template URL) for Profile Media Services\n"
+        "       --snapurl      [value] Set URL (or template URL) for Snapshot\n"
         "                              in template mode %s will be changed to IP of interfase (see opt ifs)\n"
         "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n"
         "                              It is also a sign of the end of the profile parameters\n\n"
@@ -92,6 +93,7 @@ namespace LongOpts
         width,
         height,
         url,
+        snapurl,
         type
     };
 }
@@ -130,6 +132,7 @@ static const struct option long_opts[] =
     { "width",         required_argument, NULL, LongOpts::width        },
     { "height",        required_argument, NULL, LongOpts::height       },
     { "url",           required_argument, NULL, LongOpts::url          },
+    { "snapurl",       required_argument, NULL, LongOpts::snapurl      },
     { "type",          required_argument, NULL, LongOpts::type         },
 
     { NULL,           no_argument,       NULL,  0                      }
@@ -338,6 +341,13 @@ void processing_cmd(int argc, char *argv[])
             case LongOpts::url:
                         if( !profile.set_url(optarg) )
                             daemon_error_exit("Can't set URL for Profile: %s\n", profile.get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::snapurl:
+                        if( !profile.set_snapurl(optarg) )
+                            daemon_error_exit("Can't set URL for Snapshot: %s\n", profile.get_cstr_err());
 
                         break;
 

@@ -100,6 +100,23 @@ std::string ServiceContext::get_stream_uri(const std::string &profile_url, uint3
 
 
 
+std::string ServiceContext::get_snapshot_uri(const std::string &profile_url, uint32_t client_ip) const
+{
+    std::string uri(profile_url);
+    std::string template_str("%s");
+
+
+    auto it = uri.find(template_str, 0);
+
+    if( it != std::string::npos )
+        uri.replace(it, template_str.size(), getServerIpFromClientIp(client_ip));
+
+
+    return uri;
+}
+
+
+
 tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soap *soap)
 {
     tds__DeviceServiceCapabilities *capabilities = soap_new_tds__DeviceServiceCapabilities(soap);
@@ -309,6 +326,21 @@ bool StreamProfile::set_url(const char *new_val)
 
 
 
+bool StreamProfile::set_snapurl(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "URL is empty";
+        return false;
+    }
+
+
+    snapurl = new_val;
+    return true;
+}
+
+
+
 bool StreamProfile::set_type(const char *new_val)
 {
     std::string new_type(new_val);
@@ -336,6 +368,7 @@ void StreamProfile::clear()
 {
     name.clear();
     url.clear();
+    snapurl.clear();
 
     width  = -1;
     height = -1;

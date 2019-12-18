@@ -52,6 +52,18 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
     }
 
 
+    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
+    tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver20/ptz/wsdl";
+    tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
+    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 4);
+    if (tds__GetServices->IncludeCapability)
+    {
+        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
+        tptz__Capabilities *capabilities                             = ctx->getPTZServiceCapabilities(this->soap);
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "tptz:Capabilities", capabilities, capabilities->soap_type());
+    }
+
+
     return SOAP_OK;
 }
 
@@ -365,6 +377,12 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
             tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(this->soap);
+        }
+
+        if(!tds__GetCapabilitiesResponse.Capabilities->PTZ && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__PTZ) ) )
+        {
+            tds__GetCapabilitiesResponse.Capabilities->PTZ  = soap_new_tt__PTZCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->PTZ->XAddr = XAddr;
         }
 
     }

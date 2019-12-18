@@ -191,6 +191,15 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 
 
 
+tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
+{
+    tptz__Capabilities *capabilities = soap_new_tptz__Capabilities(soap);
+
+    return capabilities;
+}
+
+
+
 
 // ------------------------------- StreamProfile -------------------------------
 
@@ -227,6 +236,59 @@ tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soa
 
 
 
+tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
+{
+    tt__PTZConfiguration* ptz_cfg = soap_new_tt__PTZConfiguration(soap);
+
+    ptz_cfg->Name               = "PTZ";
+    ptz_cfg->token              = "PTZToken";
+    ptz_cfg->NodeToken          = "PTZNodeToken";
+
+    ptz_cfg->DefaultAbsolutePantTiltPositionSpace    = soap_new_std__string(soap);
+    *ptz_cfg->DefaultAbsolutePantTiltPositionSpace   = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
+    ptz_cfg->DefaultAbsoluteZoomPositionSpace        = soap_new_std__string(soap);
+    *ptz_cfg->DefaultAbsoluteZoomPositionSpace       = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
+    ptz_cfg->DefaultRelativePanTiltTranslationSpace  = soap_new_std__string(soap);
+    *ptz_cfg->DefaultRelativePanTiltTranslationSpace = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";
+    ptz_cfg->DefaultRelativeZoomTranslationSpace     = soap_new_std__string(soap);
+    *ptz_cfg->DefaultRelativeZoomTranslationSpace    = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
+    ptz_cfg->DefaultContinuousPanTiltVelocitySpace   = soap_new_std__string(soap);
+    *ptz_cfg->DefaultContinuousPanTiltVelocitySpace  = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
+    ptz_cfg->DefaultContinuousZoomVelocitySpace      = soap_new_std__string(soap);
+    *ptz_cfg->DefaultContinuousZoomVelocitySpace     = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
+
+    ptz_cfg->DefaultPTZSpeed                   = soap_new_tt__PTZSpeed(soap);
+    ptz_cfg->DefaultPTZSpeed->PanTilt          = soap_new_tt__Vector2D(soap);
+    ptz_cfg->DefaultPTZSpeed->PanTilt->x       = 0.1;
+    ptz_cfg->DefaultPTZSpeed->PanTilt->y       = 0.1;
+    ptz_cfg->DefaultPTZSpeed->Zoom             = soap_new_tt__Vector1D(soap);
+    ptz_cfg->DefaultPTZSpeed->Zoom->x          = 1;
+
+    ptz_cfg->DefaultPTZTimeout  = (LONG64 *)soap_malloc(soap, sizeof(LONG64));
+    soap_s2xsd__duration(soap, "1000", ptz_cfg->DefaultPTZTimeout);
+
+    ptz_cfg->PanTiltLimits                     = soap_new_tt__PanTiltLimits(soap);
+    ptz_cfg->PanTiltLimits->Range              = soap_new_tt__Space2DDescription(soap);
+    ptz_cfg->PanTiltLimits->Range->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
+    ptz_cfg->PanTiltLimits->Range->XRange      = soap_new_tt__FloatRange(soap);
+    ptz_cfg->PanTiltLimits->Range->XRange->Min = -INFINITY;
+    ptz_cfg->PanTiltLimits->Range->XRange->Max = INFINITY;
+    ptz_cfg->PanTiltLimits->Range->YRange      = soap_new_tt__FloatRange(soap);
+    ptz_cfg->PanTiltLimits->Range->YRange->Min = -INFINITY;
+    ptz_cfg->PanTiltLimits->Range->YRange->Max = INFINITY;
+
+    ptz_cfg->ZoomLimits                        = soap_new_tt__ZoomLimits(soap);
+    ptz_cfg->ZoomLimits->Range                 = soap_new_tt__Space1DDescription(soap);
+    ptz_cfg->ZoomLimits->Range->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
+    ptz_cfg->ZoomLimits->Range->XRange         = soap_new_tt__FloatRange(soap);
+    ptz_cfg->ZoomLimits->Range->XRange->Min    = -INFINITY;
+    ptz_cfg->ZoomLimits->Range->XRange->Max    = INFINITY;
+
+    return ptz_cfg;
+}
+
+
+
 tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 {
     tt__Profile* profile = soap_new_tt__Profile(soap);
@@ -236,6 +298,7 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 
     profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
     profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);
+    profile->PTZConfiguration = get_ptz_cfg(soap);
 
     return profile;
 }
@@ -385,4 +448,100 @@ bool StreamProfile::is_valid() const
              (height != -1) &&
              (type   != -1)
            );
+}
+
+
+
+bool PTZNode::set_enable(bool val)
+{
+    enable = val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_left(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_left = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_right(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_right = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_up(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_up = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_down(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_down = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_stop(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_stop = new_val;
+    return true;
+}
+
+
+
+void PTZNode::clear()
+{
+    enable = false;
+
+    move_left.clear();
+    move_right.clear();
+    move_up.clear();
+    move_down.clear();
+    move_stop.clear();
 }

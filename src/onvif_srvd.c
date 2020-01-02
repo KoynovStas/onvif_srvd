@@ -53,7 +53,7 @@ static const char *help_str =
         "       --height       [value] Set Height for Profile Media Services\n"
         "       --url          [value] Set URL (or template URL) for Profile Media Services\n"
         "       --snapurl      [value] Set URL (or template URL) for Snapshot\n"
-        "                              in template mode %s will be changed to IP of interfase (see opt ifs)\n"
+        "                              in template mode %s will be changed to IP of interface (see opt ifs)\n"
         "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n"
         "                              It is also a sign of the end of the profile parameters\n\n"
         "       --ptz                  Enable PTZ support\n"

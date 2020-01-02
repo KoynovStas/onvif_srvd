@@ -291,6 +291,8 @@ tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
 
 tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 {
+    ServiceContext* ctx = (ServiceContext*)soap->user;
+
     tt__Profile* profile = soap_new_tt__Profile(soap);
 
     profile->Name  = name;
@@ -298,7 +300,9 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 
     profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
     profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);
-    profile->PTZConfiguration = get_ptz_cfg(soap);
+    if (ctx->get_ptz_node()->get_enable() == true) {
+        profile->PTZConfiguration = get_ptz_cfg(soap);
+    }
 
     return profile;
 }

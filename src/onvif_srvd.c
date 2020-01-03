@@ -62,6 +62,7 @@ static const char *help_str =
         "       --move_up      [value] Set process to call for PTZ tilt up movement\n"
         "       --move_down    [value] Set process to call for PTZ tilt down movement\n"
         "       --move_stop    [value] Set process to call for PTZ stop movement\n"
+        "       --move_preset  [value] Set process to call for PTZ goto preset movement\n"
         "  -v,  --version              Display daemon version\n"
         "  -h,  --help                 Display this help\n\n";
 
@@ -109,7 +110,8 @@ namespace LongOpts
         move_right,
         move_up,
         move_down,
-        move_stop
+        move_stop,
+        move_preset
     };
 }
 
@@ -157,6 +159,7 @@ static const struct option long_opts[] =
     { "move_up",       required_argument, NULL, LongOpts::move_up      },
     { "move_down",     required_argument, NULL, LongOpts::move_down    },
     { "move_stop",     required_argument, NULL, LongOpts::move_stop    },
+    { "move_preset",   required_argument, NULL, LongOpts::move_preset  },
 
     { NULL,           no_argument,       NULL,  0                      }
 };
@@ -427,6 +430,13 @@ void processing_cmd(int argc, char *argv[])
             case LongOpts::move_stop:
                         if( !service_ctx.get_ptz_node()->set_move_stop(optarg) )
                             daemon_error_exit("Can't set process for stop movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_preset:
+                        if( !service_ctx.get_ptz_node()->set_move_preset(optarg) )
+                            daemon_error_exit("Can't set process for goto preset movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
 
                         break;
 

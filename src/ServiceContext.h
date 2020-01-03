@@ -83,6 +83,7 @@ class PTZNode
         std::string  get_move_up     (void) const { return move_up;     }
         std::string  get_move_down   (void) const { return move_down;   }
         std::string  get_move_stop   (void) const { return move_stop;   }
+        std::string  get_move_preset (void) const { return move_preset;   }
 
 
 
@@ -93,6 +94,7 @@ class PTZNode
         bool set_move_up     (const char *new_val);
         bool set_move_down   (const char *new_val);
         bool set_move_stop   (const char *new_val);
+        bool set_move_preset (const char *new_val);
 
 
         std::string get_str_err()  const { return str_err;         }
@@ -109,6 +111,7 @@ class PTZNode
         std::string  move_up;
         std::string  move_down;
         std::string  move_stop;
+        std::string  move_preset;
 
 
         std::string  str_err;

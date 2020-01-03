@@ -539,6 +539,21 @@ bool PTZNode::set_move_stop(const char *new_val)
 
 
 
+bool PTZNode::set_move_preset(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_preset = new_val;
+    return true;
+}
+
+
+
 void PTZNode::clear()
 {
     enable = false;

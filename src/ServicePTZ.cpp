@@ -27,9 +27,38 @@ int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConf
     return SOAP_OK;
 }
 
+int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
+{
+//    ptzp->token = "PTZPresetToken" + std::to_string(number);
+    ptzp->token = soap_new_std__string(soap);
+    *ptzp->token = std::to_string(number);
+    ptzp->Name = soap_new_std__string(soap);
+//    *ptzp->Name  = "PTZPresetToken" + std::to_string(number);
+    *ptzp->Name  = std::to_string(number);
+    ptzp->PTZPosition = soap_new_tt__PTZVector(soap);;
+    ptzp->PTZPosition->PanTilt          = soap_new_tt__Vector2D(soap);
+    ptzp->PTZPosition->PanTilt->x       = 0.0;
+    ptzp->PTZPosition->PanTilt->y       = 0.0;
+    ptzp->PTZPosition->Zoom             = soap_new_tt__Vector1D(soap);
+    ptzp->PTZPosition->Zoom->x          = 1;
+
+    return SOAP_OK;
+}
+
 int PTZBindingService::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__GetPresetsResponse &tptz__GetPresetsResponse)
 {
+    int i;
+
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
+
+    soap_default_std__vectorTemplateOfPointerTott__PTZPreset(soap, &tptz__GetPresetsResponse._tptz__GetPresetsResponse::Preset);
+    for (i = 0; i < 8; i++) {
+        tt__PTZPreset* ptzp;
+        ptzp = soap_new_tt__PTZPreset(soap);
+        tptz__GetPresetsResponse.Preset.push_back(ptzp);
+        GetPTZPreset(this->soap, ptzp, i);
+    }
+
     return SOAP_OK;
 }
 
@@ -47,7 +76,27 @@ int PTZBindingService::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tp
 
 int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__GotoPresetResponse &tptz__GotoPresetResponse)
 {
+    char cmd[1024];
+
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    if (tptz__GotoPreset == NULL) {
+        return SOAP_OK;
+    }
+    if (tptz__GotoPreset->ProfileToken.c_str() == NULL) {
+        return SOAP_OK;
+    }
+    if (tptz__GotoPreset->PresetToken.c_str() == NULL) {
+        return SOAP_OK;
+    }
+
+    if ((tptz__GotoPreset->PresetToken.back() >= '0') && (tptz__GotoPreset->PresetToken.back() <= '9')) {
+        sprintf(cmd, "%s %c", ctx->get_ptz_node()->get_move_preset().c_str(), tptz__GotoPreset->PresetToken.back());
+        system(cmd);
+    }
+
     return SOAP_OK;
 }
 
@@ -137,7 +186,7 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
     ptzs6->XRange->Min    = 0.0;
     ptzs6->XRange->Max    = 1.0;
 
-    ptzn->MaximumNumberOfPresets = 0;
+    ptzn->MaximumNumberOfPresets = 8;
     ptzn->HomeSupported = false;
     ptzn->FixedHomePosition = (bool *)soap_malloc(soap, sizeof(bool));
     soap_s2bool(soap, "true", ptzn->FixedHomePosition);

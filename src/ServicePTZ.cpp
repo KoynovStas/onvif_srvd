@@ -29,11 +29,9 @@ int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConf
 
 int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
 {
-//    ptzp->token = "PTZPresetToken" + std::to_string(number);
     ptzp->token = soap_new_std__string(soap);
     *ptzp->token = std::to_string(number);
     ptzp->Name = soap_new_std__string(soap);
-//    *ptzp->Name  = "PTZPresetToken" + std::to_string(number);
     *ptzp->Name  = std::to_string(number);
     ptzp->PTZPosition = soap_new_tt__PTZVector(soap);;
     ptzp->PTZPosition->PanTilt          = soap_new_tt__Vector2D(soap);
@@ -187,7 +185,7 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
     ptzs6->XRange->Max    = 1.0;
 
     ptzn->MaximumNumberOfPresets = 8;
-    ptzn->HomeSupported = false;
+    ptzn->HomeSupported = true;
     ptzn->FixedHomePosition = (bool *)soap_malloc(soap, sizeof(bool));
     soap_s2bool(soap, "true", ptzn->FixedHomePosition);
 
@@ -231,7 +229,16 @@ int PTZBindingService::GetConfigurationOptions(_tptz__GetConfigurationOptions *t
 
 int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomePosition, _tptz__GotoHomePositionResponse &tptz__GotoHomePositionResponse)
 {
+    char cmd[1024];
+
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    // Go to preset 1
+    sprintf(cmd, "%s 1", ctx->get_ptz_node()->get_move_preset().c_str());
+    system(cmd);
+
     return SOAP_OK;
 }
 

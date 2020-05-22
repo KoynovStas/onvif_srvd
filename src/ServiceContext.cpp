@@ -179,6 +179,19 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 {
     trt__Capabilities *capabilities = soap_new_trt__Capabilities(soap);
 
+    auto profiles = this->get_profiles();
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it ) {
+        if (( !it->second.get_snapurl().empty() ) && ( capabilities->SnapshotUri == NULL )) {
+            capabilities->SnapshotUri = soap_new_ptr(soap, true);
+        }
+    }
+
+//    if( it != profiles.end() ) {
+//        capabilities->SnapshotUri = (bool *)soap_malloc(soap, sizeof(bool));
+//        soap_s2bool(soap, "true", capabilities->SnapshotUri);
+//        capabilities->SnapshotUri = soap_new_ptr(soap, true);
+//    }
+
     capabilities->ProfileCapabilities = soap_new_trt__ProfileCapabilities(soap);
     capabilities->ProfileCapabilities->MaximumNumberOfProfiles =  soap_new_ptr(soap, 1);
 

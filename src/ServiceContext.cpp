@@ -31,6 +31,12 @@ std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip) const
     char server_ip[INET_ADDRSTRLEN];
 
 
+    if (eth_ifs.size() == 1)
+    {
+        eth_ifs[0].get_ip(server_ip);
+        return server_ip;
+    }
+
     for(size_t i = 0; i < eth_ifs.size(); ++i)
     {
         uint32_t if_ip, if_mask;

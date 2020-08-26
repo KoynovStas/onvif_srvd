@@ -582,4 +582,5 @@ void PTZNode::clear()
     move_up.clear();
     move_down.clear();
     move_stop.clear();
+    move_preset.clear();
 }

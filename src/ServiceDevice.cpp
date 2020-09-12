@@ -124,7 +124,7 @@ int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime->TimeZone->TZ      = tm->tm_zone;
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime       = soap_new_tt__DateTime(this->soap);
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Time = soap_new_req_tt__Time(this->soap, tm->tm_hour, tm->tm_min  , tm->tm_sec );
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Date = soap_new_req_tt__Date(this->soap, tm->tm_year, tm->tm_mon+1, tm->tm_mday);
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Date = soap_new_req_tt__Date(this->soap, tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday);
 
     return SOAP_OK;
 }

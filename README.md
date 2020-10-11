@@ -8,7 +8,8 @@
 This server (Service) has a minimal implementation. Use this server as a template for writing your ONVIF service for an IP camera.
 
 
-ONVIF official website: [http://www.onvif.org](http://www.onvif.org)
+ONVIF official website: [https://www.onvif.org](https://www.onvif.org)
+and their [github presence](https://github.com/onvif/).
 
 The web services data binding is generated using [gSOAP](http://www.genivia.com)
 

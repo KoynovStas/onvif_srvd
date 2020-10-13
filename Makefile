@@ -8,9 +8,9 @@ DAEMON_NO_CHDIR       = 1
 DAEMON_NO_CLOSE_STDIO = 0
 
 
-
-GSOAP_DIR         = ./gsoap-2.8/gsoap
-GSOAP_CUSTOM_DIR  = ./gsoap-2.8/gsoap/custom
+GSOAP_INSTALL_DIR = ./gsoap-2.8
+GSOAP_DIR         = $(GSOAP_INSTALL_DIR)/gsoap
+GSOAP_CUSTOM_DIR  = $(GSOAP_DIR)/custom
 GSOAP_PLUGIN_DIR  = $(GSOAP_DIR)/plugin
 GSOAP_IMPORT_DIR  = $(GSOAP_DIR)/import
 
@@ -188,7 +188,7 @@ clean:
 .PHONY: distclean
 distclean: clean
 	-@rm -f -d -R SDK
-	-@rm -f -d -R gsoap-2.8
+	-@rm -f -d -R $(GSOAP_INSTALL_DIR)
 	-@rm -f RECV.log SENT.log TEST.log
 
 
@@ -262,13 +262,13 @@ define build_gsoap
     fi
 
     # unzip
-    if [ ! -f gsoap-2.8/README.txt ]; then \
+    if [ ! -f $(GSOAP_INSTALL_DIR)/README.txt ]; then \
          unzip ./SDK/gsoap.zip; \
     fi
 
     # build
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
-         cd gsoap-2.8; \
+         cd $(GSOAP_INSTALL_DIR); \
          ./configure --disable-c-locale --disable-ssl && \
          make -j1; \
          cd ..;\

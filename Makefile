@@ -74,7 +74,8 @@ SOAP_SRC = $(GSOAP_DIR)/stdsoap2.cpp        \
 
 # We can't use wildcard func, this files will be generated
 SOAP_SERVICE_SRC = $(GENERATED_DIR)/soapDeviceBindingService.cpp \
-                   $(GENERATED_DIR)/soapMediaBindingService.cpp
+                   $(GENERATED_DIR)/soapMediaBindingService.cpp  \
+                   $(GENERATED_DIR)/soapPTZBindingService.cpp
 
 
 
@@ -87,6 +88,7 @@ SOURCES  = $(COMMON_DIR)/$(DAEMON_NAME).c         \
            $(COMMON_DIR)/ServiceContext.cpp       \
            $(COMMON_DIR)/ServiceDevice.cpp        \
            $(COMMON_DIR)/ServiceMedia.cpp         \
+           $(COMMON_DIR)/ServicePTZ.cpp           \
            $(GENERATED_DIR)/soapC.cpp             \
            $(SOAP_SRC)                            \
            $(SOAP_SERVICE_SRC)                    \
@@ -255,7 +257,7 @@ define build_gsoap
     # get archive
     if [ ! -f SDK/gsoap.zip ]; then \
         mkdir -p SDK; \
-        wget -O ./SDK/gsoap.zip.tmp "https://sourceforge.net/projects/gsoap2/files/gsoap-2.8/gsoap_2.8.65.zip/download" && \
+        wget -O ./SDK/gsoap.zip.tmp "https://sourceforge.net/projects/gsoap2/files/gsoap-2.8/gsoap_2.8.92.zip/download" && \
         mv ./SDK/gsoap.zip.tmp ./SDK/gsoap.zip; \
     fi
 
@@ -267,7 +269,7 @@ define build_gsoap
     # build
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
          cd gsoap-2.8; \
-         ./configure && \
+         ./configure --disable-c-locale --disable-ssl && \
          make -j1; \
          cd ..;\
     fi

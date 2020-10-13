@@ -31,6 +31,12 @@ std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip) const
     char server_ip[INET_ADDRSTRLEN];
 
 
+    if (eth_ifs.size() == 1)
+    {
+        eth_ifs[0].get_ip(server_ip);
+        return server_ip;
+    }
+
     for(size_t i = 0; i < eth_ifs.size(); ++i)
     {
         uint32_t if_ip, if_mask;
@@ -84,6 +90,23 @@ bool ServiceContext::add_profile(const StreamProfile &profile)
 
 
 std::string ServiceContext::get_stream_uri(const std::string &profile_url, uint32_t client_ip) const
+{
+    std::string uri(profile_url);
+    std::string template_str("%s");
+
+
+    auto it = uri.find(template_str, 0);
+
+    if( it != std::string::npos )
+        uri.replace(it, template_str.size(), getServerIpFromClientIp(client_ip));
+
+
+    return uri;
+}
+
+
+
+std::string ServiceContext::get_snapshot_uri(const std::string &profile_url, uint32_t client_ip) const
 {
     std::string uri(profile_url);
     std::string template_str("%s");
@@ -162,12 +185,34 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 {
     trt__Capabilities *capabilities = soap_new_trt__Capabilities(soap);
 
+    auto profiles = this->get_profiles();
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it ) {
+        if (( !it->second.get_snapurl().empty() ) && ( capabilities->SnapshotUri == NULL )) {
+            capabilities->SnapshotUri = soap_new_ptr(soap, true);
+        }
+    }
+
+//    if( it != profiles.end() ) {
+//        capabilities->SnapshotUri = (bool *)soap_malloc(soap, sizeof(bool));
+//        soap_s2bool(soap, "true", capabilities->SnapshotUri);
+//        capabilities->SnapshotUri = soap_new_ptr(soap, true);
+//    }
+
     capabilities->ProfileCapabilities = soap_new_trt__ProfileCapabilities(soap);
     capabilities->ProfileCapabilities->MaximumNumberOfProfiles =  soap_new_ptr(soap, 1);
 
     capabilities->StreamingCapabilities = soap_new_trt__StreamingCapabilities(soap);
     capabilities->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
 
+
+    return capabilities;
+}
+
+
+
+tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
+{
+    tptz__Capabilities *capabilities = soap_new_tptz__Capabilities(soap);
 
     return capabilities;
 }
@@ -210,8 +255,63 @@ tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soa
 
 
 
+tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
+{
+    tt__PTZConfiguration* ptz_cfg = soap_new_tt__PTZConfiguration(soap);
+
+    ptz_cfg->Name               = "PTZ";
+    ptz_cfg->token              = "PTZToken";
+    ptz_cfg->NodeToken          = "PTZNodeToken";
+
+    ptz_cfg->DefaultAbsolutePantTiltPositionSpace    = soap_new_std__string(soap);
+    *ptz_cfg->DefaultAbsolutePantTiltPositionSpace   = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
+    ptz_cfg->DefaultAbsoluteZoomPositionSpace        = soap_new_std__string(soap);
+    *ptz_cfg->DefaultAbsoluteZoomPositionSpace       = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
+    ptz_cfg->DefaultRelativePanTiltTranslationSpace  = soap_new_std__string(soap);
+    *ptz_cfg->DefaultRelativePanTiltTranslationSpace = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";
+    ptz_cfg->DefaultRelativeZoomTranslationSpace     = soap_new_std__string(soap);
+    *ptz_cfg->DefaultRelativeZoomTranslationSpace    = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
+    ptz_cfg->DefaultContinuousPanTiltVelocitySpace   = soap_new_std__string(soap);
+    *ptz_cfg->DefaultContinuousPanTiltVelocitySpace  = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
+    ptz_cfg->DefaultContinuousZoomVelocitySpace      = soap_new_std__string(soap);
+    *ptz_cfg->DefaultContinuousZoomVelocitySpace     = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
+
+    ptz_cfg->DefaultPTZSpeed                   = soap_new_tt__PTZSpeed(soap);
+    ptz_cfg->DefaultPTZSpeed->PanTilt          = soap_new_tt__Vector2D(soap);
+    ptz_cfg->DefaultPTZSpeed->PanTilt->x       = 0.1;
+    ptz_cfg->DefaultPTZSpeed->PanTilt->y       = 0.1;
+    ptz_cfg->DefaultPTZSpeed->Zoom             = soap_new_tt__Vector1D(soap);
+    ptz_cfg->DefaultPTZSpeed->Zoom->x          = 1;
+
+    ptz_cfg->DefaultPTZTimeout  = (LONG64 *)soap_malloc(soap, sizeof(LONG64));
+    soap_s2xsd__duration(soap, "1000", ptz_cfg->DefaultPTZTimeout);
+
+    ptz_cfg->PanTiltLimits                     = soap_new_tt__PanTiltLimits(soap);
+    ptz_cfg->PanTiltLimits->Range              = soap_new_tt__Space2DDescription(soap);
+    ptz_cfg->PanTiltLimits->Range->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
+    ptz_cfg->PanTiltLimits->Range->XRange      = soap_new_tt__FloatRange(soap);
+    ptz_cfg->PanTiltLimits->Range->XRange->Min = -INFINITY;
+    ptz_cfg->PanTiltLimits->Range->XRange->Max = INFINITY;
+    ptz_cfg->PanTiltLimits->Range->YRange      = soap_new_tt__FloatRange(soap);
+    ptz_cfg->PanTiltLimits->Range->YRange->Min = -INFINITY;
+    ptz_cfg->PanTiltLimits->Range->YRange->Max = INFINITY;
+
+    ptz_cfg->ZoomLimits                        = soap_new_tt__ZoomLimits(soap);
+    ptz_cfg->ZoomLimits->Range                 = soap_new_tt__Space1DDescription(soap);
+    ptz_cfg->ZoomLimits->Range->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
+    ptz_cfg->ZoomLimits->Range->XRange         = soap_new_tt__FloatRange(soap);
+    ptz_cfg->ZoomLimits->Range->XRange->Min    = -INFINITY;
+    ptz_cfg->ZoomLimits->Range->XRange->Max    = INFINITY;
+
+    return ptz_cfg;
+}
+
+
+
 tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 {
+    ServiceContext* ctx = (ServiceContext*)soap->user;
+
     tt__Profile* profile = soap_new_tt__Profile(soap);
 
     profile->Name  = name;
@@ -219,6 +319,9 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 
     profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
     profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);
+    if (ctx->get_ptz_node()->get_enable() == true) {
+        profile->PTZConfiguration = get_ptz_cfg(soap);
+    }
 
     return profile;
 }
@@ -309,6 +412,21 @@ bool StreamProfile::set_url(const char *new_val)
 
 
 
+bool StreamProfile::set_snapurl(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "URL is empty";
+        return false;
+    }
+
+
+    snapurl = new_val;
+    return true;
+}
+
+
+
 bool StreamProfile::set_type(const char *new_val)
 {
     std::string new_type(new_val);
@@ -336,6 +454,7 @@ void StreamProfile::clear()
 {
     name.clear();
     url.clear();
+    snapurl.clear();
 
     width  = -1;
     height = -1;
@@ -352,4 +471,116 @@ bool StreamProfile::is_valid() const
              (height != -1) &&
              (type   != -1)
            );
+}
+
+
+
+bool PTZNode::set_enable(bool val)
+{
+    enable = val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_left(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_left = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_right(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_right = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_up(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_up = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_down(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_down = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_stop(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_stop = new_val;
+    return true;
+}
+
+
+
+bool PTZNode::set_move_preset(const char *new_val)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    move_preset = new_val;
+    return true;
+}
+
+
+
+void PTZNode::clear()
+{
+    enable = false;
+
+    move_left.clear();
+    move_right.clear();
+    move_up.clear();
+    move_down.clear();
+    move_stop.clear();
+    move_preset.clear();
 }

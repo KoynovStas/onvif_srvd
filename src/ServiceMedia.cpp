@@ -642,8 +642,24 @@ int MediaBindingService::SetSynchronizationPoint(_trt__SetSynchronizationPoint *
 
 int MediaBindingService::GetSnapshotUri(_trt__GetSnapshotUri *trt__GetSnapshotUri, _trt__GetSnapshotUriResponse &trt__GetSnapshotUriResponse)
 {
-    DEBUG_MSG("Media: %s\n", __FUNCTION__);
-    return SOAP_OK;
+    DEBUG_MSG("Media: %s   for profile:%s\n", __FUNCTION__, trt__GetSnapshotUri->ProfileToken.c_str());
+
+
+    int ret = SOAP_FAULT;
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto profiles       = ctx->get_profiles();
+    auto it             = profiles.find(trt__GetSnapshotUri->ProfileToken);
+
+    if( it != profiles.end() )
+    {
+        trt__GetSnapshotUriResponse.MediaUri = soap_new_tt__MediaUri(this->soap);
+        trt__GetSnapshotUriResponse.MediaUri->Uri = ctx->get_snapshot_uri(it->second.get_snapurl(), htonl(this->soap->ip));
+        ret = SOAP_OK;
+    }
+
+
+    return ret;
 }
 
 

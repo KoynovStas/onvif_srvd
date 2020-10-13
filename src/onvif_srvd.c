@@ -15,6 +15,7 @@
 #include "DeviceBinding.nsmap"
 #include "soapDeviceBindingService.h"
 #include "soapMediaBindingService.h"
+#include "soapPTZBindingService.h"
 
 
 
@@ -51,9 +52,17 @@ static const char *help_str =
         "       --width        [value] Set Width for Profile Media Services\n"
         "       --height       [value] Set Height for Profile Media Services\n"
         "       --url          [value] Set URL (or template URL) for Profile Media Services\n"
-        "                              in template mode %s will be changed to IP of interfase (see opt ifs)\n"
+        "       --snapurl      [value] Set URL (or template URL) for Snapshot\n"
+        "                              in template mode %s will be changed to IP of interface (see opt ifs)\n"
         "       --type         [value] Set Type for Profile Media Services (JPEG|MPEG4|H264)\n"
         "                              It is also a sign of the end of the profile parameters\n\n"
+        "       --ptz                  Enable PTZ support\n"
+        "       --move_left    [value] Set process to call for PTZ pan left movement\n"
+        "       --move_right   [value] Set process to call for PTZ pan right movement\n"
+        "       --move_up      [value] Set process to call for PTZ tilt up movement\n"
+        "       --move_down    [value] Set process to call for PTZ tilt down movement\n"
+        "       --move_stop    [value] Set process to call for PTZ stop movement\n"
+        "       --move_preset  [value] Set process to call for PTZ goto preset movement\n"
         "  -v,  --version              Display daemon version\n"
         "  -h,  --help                 Display this help\n\n";
 
@@ -92,7 +101,17 @@ namespace LongOpts
         width,
         height,
         url,
-        type
+        snapurl,
+        type,
+
+        //PTZ Profile for ONVIF PTZ Service
+        ptz,
+        move_left,
+        move_right,
+        move_up,
+        move_down,
+        move_stop,
+        move_preset
     };
 }
 
@@ -130,7 +149,17 @@ static const struct option long_opts[] =
     { "width",         required_argument, NULL, LongOpts::width        },
     { "height",        required_argument, NULL, LongOpts::height       },
     { "url",           required_argument, NULL, LongOpts::url          },
+    { "snapurl",       required_argument, NULL, LongOpts::snapurl      },
     { "type",          required_argument, NULL, LongOpts::type         },
+
+    //PTZ Profile for ONVIF PTZ Service
+    { "ptz",           no_argument,       NULL, LongOpts::ptz          },
+    { "move_left",     required_argument, NULL, LongOpts::move_left    },
+    { "move_right",    required_argument, NULL, LongOpts::move_right   },
+    { "move_up",       required_argument, NULL, LongOpts::move_up      },
+    { "move_down",     required_argument, NULL, LongOpts::move_down    },
+    { "move_stop",     required_argument, NULL, LongOpts::move_stop    },
+    { "move_preset",   required_argument, NULL, LongOpts::move_preset  },
 
     { NULL,           no_argument,       NULL,  0                      }
 };
@@ -142,6 +171,7 @@ static const struct option long_opts[] =
 #define FOREACH_SERVICE(APPLY, soap)                    \
         APPLY(DeviceBindingService, soap)               \
         APPLY(MediaBindingService, soap)                \
+        APPLY(PTZBindingService, soap)                  \
 
 
 /*
@@ -342,6 +372,13 @@ void processing_cmd(int argc, char *argv[])
                         break;
 
 
+            case LongOpts::snapurl:
+                        if( !profile.set_snapurl(optarg) )
+                            daemon_error_exit("Can't set URL for Snapshot: %s\n", profile.get_cstr_err());
+
+                        break;
+
+
             case LongOpts::type:
                         if( !profile.set_type(optarg) )
                             daemon_error_exit("Can't set type for Profile: %s\n", profile.get_cstr_err());
@@ -350,6 +387,56 @@ void processing_cmd(int argc, char *argv[])
                             daemon_error_exit("Can't add Profile: %s\n", service_ctx.get_cstr_err());
 
                         profile.clear(); //now we can add new profile (just uses one variable)
+
+                        break;
+
+
+            //PTZ Profile for ONVIF PTZ Service
+            case LongOpts::ptz:
+                        if( !service_ctx.get_ptz_node()->set_enable(true) )
+                            daemon_error_exit("Can't enable PTZ support: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_left:
+                        if( !service_ctx.get_ptz_node()->set_move_left(optarg) )
+                            daemon_error_exit("Can't set process for pan left movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_right:
+                        if( !service_ctx.get_ptz_node()->set_move_right(optarg) )
+                            daemon_error_exit("Can't set process for pan right movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_up:
+                        if( !service_ctx.get_ptz_node()->set_move_up(optarg) )
+                            daemon_error_exit("Can't set process for tilt up movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_down:
+                        if( !service_ctx.get_ptz_node()->set_move_down(optarg) )
+                            daemon_error_exit("Can't set process for tilt down movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_stop:
+                        if( !service_ctx.get_ptz_node()->set_move_stop(optarg) )
+                            daemon_error_exit("Can't set process for stop movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
+
+                        break;
+
+
+            case LongOpts::move_preset:
+                        if( !service_ctx.get_ptz_node()->set_move_preset(optarg) )
+                            daemon_error_exit("Can't set process for goto preset movement: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
 
                         break;
 

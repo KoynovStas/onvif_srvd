@@ -18,7 +18,7 @@ The web services data binding is generated using [gSOAP](https://www.genivia.com
 
 ## Build
 
-To start build you have to choose your compiler (or toolchain) in the [Makefile](./Makefile) (see variable `$GCC`).
+To start build you have to choose your compiler (or toolchain) in the [Makefile](./Makefile) (see variable `$CXX`).
 
 For build daemon in release and debug mode:
 ```console

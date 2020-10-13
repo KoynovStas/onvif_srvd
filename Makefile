@@ -23,32 +23,32 @@ COMMON_DIR        = ./src
 GENERATED_DIR     = ./generated
 
 
-CFLAGS            = -DDAEMON_NAME='"$(DAEMON_NAME)"'
-CFLAGS           += -DDAEMON_MAJOR_VERSION=$(DAEMON_MAJOR_VERSION)
-CFLAGS           += -DDAEMON_MINOR_VERSION=$(DAEMON_MINOR_VERSION)
-CFLAGS           += -DDAEMON_PATCH_VERSION=$(DAEMON_PATCH_VERSION)
-CFLAGS           += -DDAEMON_PID_FILE_NAME='"$(DAEMON_PID_FILE_NAME)"'
-CFLAGS           += -DDAEMON_LOG_FILE_NAME='"$(DAEMON_LOG_FILE_NAME)"'
-CFLAGS           += -DDAEMON_NO_CHDIR=$(DAEMON_NO_CHDIR)
-CFLAGS           += -DDAEMON_NO_CLOSE_STDIO=$(DAEMON_NO_CLOSE_STDIO)
+CXXFLAGS          = -DDAEMON_NAME='"$(DAEMON_NAME)"'
+CXXFLAGS         += -DDAEMON_MAJOR_VERSION=$(DAEMON_MAJOR_VERSION)
+CXXFLAGS         += -DDAEMON_MINOR_VERSION=$(DAEMON_MINOR_VERSION)
+CXXFLAGS         += -DDAEMON_PATCH_VERSION=$(DAEMON_PATCH_VERSION)
+CXXFLAGS         += -DDAEMON_PID_FILE_NAME='"$(DAEMON_PID_FILE_NAME)"'
+CXXFLAGS         += -DDAEMON_LOG_FILE_NAME='"$(DAEMON_LOG_FILE_NAME)"'
+CXXFLAGS         += -DDAEMON_NO_CHDIR=$(DAEMON_NO_CHDIR)
+CXXFLAGS         += -DDAEMON_NO_CLOSE_STDIO=$(DAEMON_NO_CLOSE_STDIO)
 
-CFLAGS           += -I$(COMMON_DIR)
-CFLAGS           += -I$(GENERATED_DIR)
-CFLAGS           += -I$(GSOAP_DIR) -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
-CFLAGS           += -std=c++11 -O2  -Wall  -pipe
+CXXFLAGS         += -I$(COMMON_DIR)
+CXXFLAGS         += -I$(GENERATED_DIR)
+CXXFLAGS         += -I$(GSOAP_DIR) -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(GSOAP_IMPORT_DIR)
+CXXFLAGS         += -std=c++11 -O2  -Wall  -pipe
 
-GCC              ?=  g++
-
-
+CXX              ?= g++
 
 
 
-# To build a daemon with WS-Security support, 
+
+
+# To build a daemon with WS-Security support,
 # call make with the WSSE_ON=1 parameter
 # example:
 # make WSSE_ON=1 all
 ifdef WSSE_ON
-CFLAGS       += -DWITH_OPENSSL -lssl -lcrypto -lz
+CXXFLAGS     += -DWITH_OPENSSL -lssl -lcrypto -lz
 
 
 WSSE_SOURCES  = $(GSOAP_PLUGIN_DIR)/wsseapi.c \
@@ -122,14 +122,14 @@ all: debug release
 
 
 .PHONY: release
-release: CFLAGS := -s  $(CFLAGS)
+release: CXXFLAGS := -s  $(CXXFLAGS)
 release: $(DAEMON_NAME)
 
 
 
 .PHONY: debug
 debug: DAEMON_NO_CLOSE_STDIO = 1
-debug: CFLAGS := -DDEBUG  -g  $(CFLAGS)
+debug: CXXFLAGS := -DDEBUG  -g  $(CXXFLAGS)
 debug: $(DAEMON_NAME)_$(DEBUG_SUFFIX)
 
 
@@ -199,7 +199,7 @@ distclean: clean
 	@echo "Generating dependencies..."
 	@for src in $(SOURCES) ; do \
         echo "  [depend]  $$src" ; \
-        $(GCC) $(CFLAGS) -MT ".depend $${src%.*}.o $${src%.*}_$(DEBUG_SUFFIX).o" -MM $$src >> .depend ; \
+        $(CXX) $(CXXFLAGS) -MT ".depend $${src%.*}.o $${src%.*}_$(DEBUG_SUFFIX).o" -MM $$src >> .depend ; \
     done
 
 
@@ -239,14 +239,14 @@ BUILD_ECHO = echo "\n  [build]  $@:"
 
 define build_object
     @$(BUILD_ECHO)
-    $(GCC) -c $< -o $@  $(CFLAGS)
+    $(CXX) -c $< -o $@  $(CXXFLAGS)
 endef
 
 
 
 define build_bin
     @$(BUILD_ECHO)
-    $(GCC)  $1 -o $@  $(CFLAGS)
+    $(CXX)  $1 -o $@  $(CXXFLAGS)
     @echo "\n---- Compiled $@ ver $(DAEMON_MAJOR_VERSION).$(DAEMON_MINOR_VERSION).$(DAEMON_PATCH_VERSION) ----\n"
 endef
 
@@ -288,4 +288,3 @@ help:
 	@echo "   clean     -  remove all generated files"
 	@echo "   distclean -  clean + remove all SDK files"
 	@echo "   help      -  this help"
-

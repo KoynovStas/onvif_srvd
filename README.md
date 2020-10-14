@@ -18,27 +18,35 @@ The web services data binding is generated using [gSOAP](https://www.genivia.com
 
 ## Build
 
+#### Dependencies
+Most Linux systems for building this project require the following packages to be installed: `make m4 flex bison byacc yacc`
+
+If you need support for encryption and WS-Security then you also need: `openssl zlib libcrypto`
+
+
+For example, on ubuntu 20.04, you needed to install:
+```console
+sudo apt install flex bison byacc make m4
+
+#for support encryption and WS-Security
+sudo apt install openssl libssl-dev libcrypto++6
+```
+
 To start build you have to choose your compiler (or toolchain) in the [Makefile](./Makefile) (see variable `$CXX`).
 
-For build daemon in release and debug mode:
+For build use make for [Makefile](./Makefile):
 ```console
-make all
+make target
 ```
 
-For build daemon in release mode (strip):
-```console
-make release
-```
+target is:
+ - `all`       -  build daemon in release and debug mode
+ - `debug`     -  build in debug mode (#define DEBUG 1)
+ - `release`   -  build in release mode (strip)
+ - `clean`     -  remove all generated files
+ - `distclean` -  clean + remove all SDK files
+ - `help`      -  show list support targets
 
-For build daemon in debug mode (`#define DEBUG 1`):
-```console
-make debug
-```
-
-Show all supported commands(targets) for  [Makefile](./Makefile):
-```console
-make help
-```
 
 > **Note**: If you need WS-Security support, you need to call make with the `WSSE_ON=1` parameter.
 
@@ -47,9 +55,9 @@ Show how enable support WS-Security:
 make WSSE_ON=1
 ```
 
-If before make was done without WS-Security support, it is necessary to perform the cleanup:
+If before make was done without WS-Security support, **must cleanup** (We need to rebuild the gsoap with `openssl` support):
 ```console
-make clean
+make distclean
 ```
 
 

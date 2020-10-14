@@ -190,17 +190,4 @@ class ServiceContext
 
 
 
-template<typename T>
-T* soap_new_ptr(struct soap* soap, T value)
-{
-    T* ptr = (T*)soap_malloc(soap, sizeof(T));
-    *ptr = value;
-
-    return ptr;
-}
-
-
-
-
-
 #endif // SERVICECONTEXT_H

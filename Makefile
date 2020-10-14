@@ -18,6 +18,7 @@ GSOAP_IMPORT_DIR  = $(GSOAP_DIR)/import
 
 SOAPCPP2          = $(GSOAP_DIR)/src/soapcpp2
 WSDL2H            = $(GSOAP_DIR)/wsdl/wsdl2h
+GSOAP_CONFIGURE   = --disable-c-locale
 
 
 COMMON_DIR        = ./src
@@ -49,16 +50,16 @@ CXX              ?= g++
 # example:
 # make WSSE_ON=1 all
 ifdef WSSE_ON
-CXXFLAGS     += -DWITH_OPENSSL -lssl -lcrypto -lz
+CXXFLAGS        += -DWITH_OPENSSL -lssl -lcrypto -lz
 
+WSSE_SOURCES     = $(GSOAP_PLUGIN_DIR)/wsseapi.c \
+                   $(GSOAP_PLUGIN_DIR)/mecevp.c  \
+                   $(GSOAP_PLUGIN_DIR)/smdevp.c  \
+                   $(GSOAP_PLUGIN_DIR)/wsaapi.c
 
-WSSE_SOURCES  = $(GSOAP_PLUGIN_DIR)/wsseapi.c \
-                $(GSOAP_PLUGIN_DIR)/mecevp.c  \
-                $(GSOAP_PLUGIN_DIR)/smdevp.c  \
-                $(GSOAP_PLUGIN_DIR)/wsaapi.c
-
-
-WSSE_IMPORT   = echo '\#import "wsse.h" ' >> $@
+WSSE_IMPORT      = echo '\#import "wsse.h" ' >> $@
+else
+GSOAP_CONFIGURE += --disable-ssl
 endif
 
 
@@ -272,7 +273,7 @@ define build_gsoap
     # build
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
          cd $(GSOAP_INSTALL_DIR); \
-         ./configure --disable-c-locale --disable-ssl && \
+         ./configure $(GSOAP_CONFIGURE) && \
          make -j1; \
          cd ..;\
     fi

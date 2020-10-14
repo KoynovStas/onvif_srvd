@@ -192,14 +192,8 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
         }
     }
 
-//    if( it != profiles.end() ) {
-//        capabilities->SnapshotUri = (bool *)soap_malloc(soap, sizeof(bool));
-//        soap_s2bool(soap, "true", capabilities->SnapshotUri);
-//        capabilities->SnapshotUri = soap_new_ptr(soap, true);
-//    }
-
     capabilities->ProfileCapabilities = soap_new_trt__ProfileCapabilities(soap);
-    capabilities->ProfileCapabilities->MaximumNumberOfProfiles =  soap_new_ptr(soap, 1);
+    capabilities->ProfileCapabilities->MaximumNumberOfProfiles = soap_new_ptr(soap, 1);
 
     capabilities->StreamingCapabilities = soap_new_trt__StreamingCapabilities(soap);
     capabilities->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);

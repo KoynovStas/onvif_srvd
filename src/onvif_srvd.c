@@ -220,6 +220,7 @@ void daemon_exit_handler(int sig)
 {
     //Here we release resources
 
+    UNUSED(sig);
     soap_destroy(soap);
     soap_end(soap);
     soap_free(soap);
@@ -493,6 +494,7 @@ void init_gsoap(void)
 
 void init(void *data)
 {
+    UNUSED(data);
     init_signals();
     check_service_ctx();
     init_gsoap();

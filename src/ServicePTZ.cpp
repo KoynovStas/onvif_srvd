@@ -144,28 +144,23 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
     soap_default_std__vectorTemplateOfPointerTott__Space1DDescription(soap, &ptzn->SupportedPTZSpaces->tt__PTZSpaces::PanTiltSpeedSpace);
     soap_default_std__vectorTemplateOfPointerTott__Space1DDescription(soap, &ptzn->SupportedPTZSpaces->tt__PTZSpaces::ZoomSpeedSpace);
 
-    tt__Space2DDescription* ptzs1;
-    ptzs1 = soap_new_tt__Space2DDescription(soap);
+
+    auto ptzs1 = soap_new_tt__Space2DDescription(soap);
     ptzn->SupportedPTZSpaces->RelativePanTiltTranslationSpace.push_back(ptzs1);
 
-    tt__Space1DDescription* ptzs2;
-    ptzs2 = soap_new_tt__Space1DDescription(soap);
+    auto ptzs2 = soap_new_tt__Space1DDescription(soap);
     ptzn->SupportedPTZSpaces->RelativeZoomTranslationSpace.push_back(ptzs2);
 
-    tt__Space2DDescription* ptzs3;
-    ptzs3 = soap_new_tt__Space2DDescription(soap);
+    auto ptzs3 = soap_new_tt__Space2DDescription(soap);
     ptzn->SupportedPTZSpaces->ContinuousPanTiltVelocitySpace.push_back(ptzs3);
 
-    tt__Space1DDescription* ptzs4;
-    ptzs4 = soap_new_tt__Space1DDescription(soap);
+    auto ptzs4 = soap_new_tt__Space1DDescription(soap);
     ptzn->SupportedPTZSpaces->ContinuousZoomVelocitySpace.push_back(ptzs4);
 
-    tt__Space1DDescription* ptzs5;
-    ptzs5 = soap_new_tt__Space1DDescription(soap);
+    auto ptzs5 = soap_new_tt__Space1DDescription(soap);
     ptzn->SupportedPTZSpaces->PanTiltSpeedSpace.push_back(ptzs5);
 
-    tt__Space1DDescription* ptzs6;
-    ptzs6 = soap_new_tt__Space1DDescription(soap);
+    auto ptzs6 = soap_new_tt__Space1DDescription(soap);
     ptzn->SupportedPTZSpaces->ZoomSpeedSpace.push_back(ptzs6);
 
     ptzs1->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";

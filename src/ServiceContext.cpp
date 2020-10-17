@@ -271,30 +271,21 @@ tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
     *ptz_cfg->DefaultContinuousZoomVelocitySpace     = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
 
     ptz_cfg->DefaultPTZSpeed                   = soap_new_tt__PTZSpeed(soap);
-    ptz_cfg->DefaultPTZSpeed->PanTilt          = soap_new_tt__Vector2D(soap);
-    ptz_cfg->DefaultPTZSpeed->PanTilt->x       = 0.1;
-    ptz_cfg->DefaultPTZSpeed->PanTilt->y       = 0.1;
-    ptz_cfg->DefaultPTZSpeed->Zoom             = soap_new_tt__Vector1D(soap);
-    ptz_cfg->DefaultPTZSpeed->Zoom->x          = 1;
+    ptz_cfg->DefaultPTZSpeed->PanTilt          = soap_new_req_tt__Vector2D(soap, 0.1f, 0.1f);
+    ptz_cfg->DefaultPTZSpeed->Zoom             = soap_new_req_tt__Vector1D(soap, 1.0f);
 
     ptz_cfg->DefaultPTZTimeout                 = soap_new_ptr(soap, (LONG64)1000);
 
     ptz_cfg->PanTiltLimits                     = soap_new_tt__PanTiltLimits(soap);
     ptz_cfg->PanTiltLimits->Range              = soap_new_tt__Space2DDescription(soap);
     ptz_cfg->PanTiltLimits->Range->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
-    ptz_cfg->PanTiltLimits->Range->XRange      = soap_new_tt__FloatRange(soap);
-    ptz_cfg->PanTiltLimits->Range->XRange->Min = -INFINITY;
-    ptz_cfg->PanTiltLimits->Range->XRange->Max = INFINITY;
-    ptz_cfg->PanTiltLimits->Range->YRange      = soap_new_tt__FloatRange(soap);
-    ptz_cfg->PanTiltLimits->Range->YRange->Min = -INFINITY;
-    ptz_cfg->PanTiltLimits->Range->YRange->Max = INFINITY;
+    ptz_cfg->PanTiltLimits->Range->XRange      = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
+    ptz_cfg->PanTiltLimits->Range->YRange      = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
 
     ptz_cfg->ZoomLimits                        = soap_new_tt__ZoomLimits(soap);
     ptz_cfg->ZoomLimits->Range                 = soap_new_tt__Space1DDescription(soap);
     ptz_cfg->ZoomLimits->Range->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
-    ptz_cfg->ZoomLimits->Range->XRange         = soap_new_tt__FloatRange(soap);
-    ptz_cfg->ZoomLimits->Range->XRange->Min    = -INFINITY;
-    ptz_cfg->ZoomLimits->Range->XRange->Max    = INFINITY;
+    ptz_cfg->ZoomLimits->Range->XRange         = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
 
     return ptz_cfg;
 }

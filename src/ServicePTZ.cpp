@@ -164,40 +164,25 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
     ptzn->SupportedPTZSpaces->ZoomSpeedSpace.push_back(ptzs6);
 
     ptzs1->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";
-    ptzs1->XRange      = soap_new_tt__FloatRange(soap);
-    ptzs1->XRange->Min = -1.0;
-    ptzs1->XRange->Max = 1.0;
-    ptzs1->YRange      = soap_new_tt__FloatRange(soap);
-    ptzs1->YRange->Min = -1.0;
-    ptzs1->YRange->Max = 1.0;
+    ptzs1->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+    ptzs1->YRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
 
     ptzs2->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
-    ptzs2->XRange      = soap_new_tt__FloatRange(soap);
-    ptzs2->XRange->Min = -1.0;
-    ptzs2->XRange->Max = 1.0;
+    ptzs2->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
 
     ptzs3->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
-    ptzs3->XRange      = soap_new_tt__FloatRange(soap);
-    ptzs3->XRange->Min = -1.0;
-    ptzs3->XRange->Max = 1.0;
-    ptzs3->YRange      = soap_new_tt__FloatRange(soap);
-    ptzs3->YRange->Min = -1.0;
-    ptzs3->YRange->Max = 1.0;
+    ptzs3->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+    ptzs3->YRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
 
     ptzs4->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
-    ptzs4->XRange      = soap_new_tt__FloatRange(soap);
-    ptzs4->XRange->Min = -1.0;
-    ptzs4->XRange->Max = 1.0;
+    ptzs4->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
 
     ptzs5->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace";
-    ptzs5->XRange      = soap_new_tt__FloatRange(soap);
-    ptzs5->XRange->Min = 0.0;
-    ptzs5->XRange->Max = 1.0;
+    ptzs5->XRange      = soap_new_req_tt__FloatRange(soap, 0.0f, 1.0f);
 
     ptzs6->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace";
-    ptzs6->XRange      = soap_new_tt__FloatRange(soap);
-    ptzs6->XRange->Min = 0.0;
-    ptzs6->XRange->Max = 1.0;
+    ptzs6->XRange      = soap_new_req_tt__FloatRange(soap, 0.0f, 1.0f);
+
 
     ptzn->MaximumNumberOfPresets = 8;
     ptzn->HomeSupported          = true;

@@ -277,8 +277,7 @@ tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
     ptz_cfg->DefaultPTZSpeed->Zoom             = soap_new_tt__Vector1D(soap);
     ptz_cfg->DefaultPTZSpeed->Zoom->x          = 1;
 
-    ptz_cfg->DefaultPTZTimeout  = (LONG64 *)soap_malloc(soap, sizeof(LONG64));
-    soap_s2xsd__duration(soap, "1000", ptz_cfg->DefaultPTZTimeout);
+    ptz_cfg->DefaultPTZTimeout                 = soap_new_ptr(soap, (LONG64)1000);
 
     ptz_cfg->PanTiltLimits                     = soap_new_tt__PanTiltLimits(soap);
     ptz_cfg->PanTiltLimits->Range              = soap_new_tt__Space2DDescription(soap);

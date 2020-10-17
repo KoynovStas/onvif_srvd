@@ -85,7 +85,7 @@ int Eth_Dev_Param::open(const char *dev_name)
         return -1;
 
 
-    strncpy(_ifr.ifr_name, dev_name, IFNAMSIZ);
+    strcpy(_ifr.ifr_name, dev_name);
 
 
     // try get flags for interface

@@ -1,7 +1,7 @@
 /*
  --------------------------------------------------------------------------
  ServiceDevice.cpp
- 
+
  Implementation of functions (methods) for the service:
  ONVIF devicemgmt.wsdl server side
 -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
     }
 
 
-    if (ctx->get_ptz_node()->get_enable() == true) {
+    if (ctx->get_ptz_node()->enable) {
         tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
         tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver20/ptz/wsdl";
         tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
@@ -381,7 +381,7 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(this->soap);
         }
 
-        if (ctx->get_ptz_node()->get_enable() == true) {
+        if (ctx->get_ptz_node()->enable) {
             if(!tds__GetCapabilitiesResponse.Capabilities->PTZ && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__PTZ) ) )
             {
                 tds__GetCapabilitiesResponse.Capabilities->PTZ  = soap_new_tt__PTZCapabilities(this->soap);

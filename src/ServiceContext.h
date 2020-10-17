@@ -77,7 +77,8 @@ class PTZNode
 
         PTZNode() { clear(); }
 
-        bool         get_enable      (void) const { return enable;      }
+        bool         enable;
+
         std::string  get_move_left   (void) const { return move_left;   }
         std::string  get_move_right  (void) const { return move_right;  }
         std::string  get_move_up     (void) const { return move_up;     }
@@ -88,7 +89,6 @@ class PTZNode
 
 
         //methods for parsing opt from cmd
-        bool set_enable      (bool val);
         bool set_move_left   (const char *new_val) { return set_str_value(new_val, move_left  ); }
         bool set_move_right  (const char *new_val) { return set_str_value(new_val, move_right ); }
         bool set_move_up     (const char *new_val) { return set_str_value(new_val, move_up    ); }
@@ -105,7 +105,6 @@ class PTZNode
 
     private:
 
-        bool         enable;
         std::string  move_left;
         std::string  move_right;
         std::string  move_up;

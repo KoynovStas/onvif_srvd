@@ -313,7 +313,7 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 
     profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
     profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);
-    if (ctx->get_ptz_node()->get_enable() == true) {
+    if (ctx->get_ptz_node()->enable) {
         profile->PTZConfiguration = get_ptz_cfg(soap);
     }
 
@@ -468,12 +468,6 @@ bool StreamProfile::is_valid() const
 }
 
 
-
-bool PTZNode::set_enable(bool val)
-{
-    enable = val;
-    return true;
-}
 
 
 

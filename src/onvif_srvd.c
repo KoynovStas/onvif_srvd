@@ -393,9 +393,7 @@ void processing_cmd(int argc, char *argv[])
 
             //PTZ Profile for ONVIF PTZ Service
             case LongOpts::ptz:
-                        if( !service_ctx.get_ptz_node()->set_enable(true) )
-                            daemon_error_exit("Can't enable PTZ support: %s\n", service_ctx.get_ptz_node()->get_cstr_err());
-
+                        service_ctx.get_ptz_node()->enable = true;
                         break;
 
 

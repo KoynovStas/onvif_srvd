@@ -470,6 +470,10 @@ bool StreamProfile::is_valid() const
 
 
 
+// ------------------------------- PTZNode -------------------------------
+
+
+
 
 void PTZNode::clear()
 {

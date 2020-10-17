@@ -34,16 +34,17 @@ int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConf
 
 int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
 {
-    ptzp->token = soap_new_std__string(soap);
+    ptzp->token  = soap_new_std__string(soap);
     *ptzp->token = std::to_string(number);
-    ptzp->Name = soap_new_std__string(soap);
+    ptzp->Name   = soap_new_std__string(soap);
     *ptzp->Name  = std::to_string(number);
-    ptzp->PTZPosition = soap_new_tt__PTZVector(soap);;
-    ptzp->PTZPosition->PanTilt          = soap_new_tt__Vector2D(soap);
-    ptzp->PTZPosition->PanTilt->x       = 0.0;
-    ptzp->PTZPosition->PanTilt->y       = 0.0;
-    ptzp->PTZPosition->Zoom             = soap_new_tt__Vector1D(soap);
-    ptzp->PTZPosition->Zoom->x          = 1;
+
+    ptzp->PTZPosition             = soap_new_tt__PTZVector(soap);
+    ptzp->PTZPosition->PanTilt    = soap_new_tt__Vector2D(soap);
+    ptzp->PTZPosition->PanTilt->x = 0.0;
+    ptzp->PTZPosition->PanTilt->y = 0.0;
+    ptzp->PTZPosition->Zoom       = soap_new_tt__Vector1D(soap);
+    ptzp->PTZPosition->Zoom->x    = 1;
 
     return SOAP_OK;
 }
@@ -132,8 +133,8 @@ int PTZBindingService::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfig
 int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
 {
     ptzn->token = "PTZNodeToken";
-    ptzn->Name = soap_new_std__string(soap);
-    *ptzn->Name  = "PTZ";
+    ptzn->Name  = soap_new_std__string(soap);
+    *ptzn->Name = "PTZ";
 
     ptzn->SupportedPTZSpaces = soap_new_tt__PTZSpaces(soap);;
     soap_default_std__vectorTemplateOfPointerTott__Space2DDescription(soap, &ptzn->SupportedPTZSpaces->tt__PTZSpaces::RelativePanTiltTranslationSpace);
@@ -175,10 +176,10 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
     ptzs1->YRange->Min = -1.0;
     ptzs1->YRange->Max = 1.0;
 
-    ptzs2->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
-    ptzs2->XRange         = soap_new_tt__FloatRange(soap);
-    ptzs2->XRange->Min    = -1.0;
-    ptzs2->XRange->Max    = 1.0;
+    ptzs2->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
+    ptzs2->XRange      = soap_new_tt__FloatRange(soap);
+    ptzs2->XRange->Min = -1.0;
+    ptzs2->XRange->Max = 1.0;
 
     ptzs3->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
     ptzs3->XRange      = soap_new_tt__FloatRange(soap);
@@ -188,24 +189,24 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
     ptzs3->YRange->Min = -1.0;
     ptzs3->YRange->Max = 1.0;
 
-    ptzs4->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
-    ptzs4->XRange         = soap_new_tt__FloatRange(soap);
-    ptzs4->XRange->Min    = -1.0;
-    ptzs4->XRange->Max    = 1.0;
+    ptzs4->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
+    ptzs4->XRange      = soap_new_tt__FloatRange(soap);
+    ptzs4->XRange->Min = -1.0;
+    ptzs4->XRange->Max = 1.0;
 
-    ptzs5->URI            = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace";
-    ptzs5->XRange         = soap_new_tt__FloatRange(soap);
-    ptzs5->XRange->Min    = 0.0;
-    ptzs5->XRange->Max    = 1.0;
+    ptzs5->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace";
+    ptzs5->XRange      = soap_new_tt__FloatRange(soap);
+    ptzs5->XRange->Min = 0.0;
+    ptzs5->XRange->Max = 1.0;
 
-    ptzs6->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace";
-    ptzs6->XRange         = soap_new_tt__FloatRange(soap);
-    ptzs6->XRange->Min    = 0.0;
-    ptzs6->XRange->Max    = 1.0;
+    ptzs6->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace";
+    ptzs6->XRange      = soap_new_tt__FloatRange(soap);
+    ptzs6->XRange->Min = 0.0;
+    ptzs6->XRange->Max = 1.0;
 
     ptzn->MaximumNumberOfPresets = 8;
-    ptzn->HomeSupported = true;
-    ptzn->FixedHomePosition = (bool *)soap_malloc(soap, sizeof(bool));
+    ptzn->HomeSupported          = true;
+    ptzn->FixedHomePosition      = (bool *)soap_malloc(soap, sizeof(bool));
     soap_s2bool(soap, "true", ptzn->FixedHomePosition);
 
     return SOAP_OK;

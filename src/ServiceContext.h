@@ -77,7 +77,8 @@ class PTZNode
 
         PTZNode() { clear(); }
 
-        bool         get_enable      (void) const { return enable;      }
+        bool         enable;
+
         std::string  get_move_left   (void) const { return move_left;   }
         std::string  get_move_right  (void) const { return move_right;  }
         std::string  get_move_up     (void) const { return move_up;     }
@@ -88,13 +89,12 @@ class PTZNode
 
 
         //methods for parsing opt from cmd
-        bool set_enable      (bool val);
-        bool set_move_left   (const char *new_val);
-        bool set_move_right  (const char *new_val);
-        bool set_move_up     (const char *new_val);
-        bool set_move_down   (const char *new_val);
-        bool set_move_stop   (const char *new_val);
-        bool set_move_preset (const char *new_val);
+        bool set_move_left   (const char *new_val) { return set_str_value(new_val, move_left  ); }
+        bool set_move_right  (const char *new_val) { return set_str_value(new_val, move_right ); }
+        bool set_move_up     (const char *new_val) { return set_str_value(new_val, move_up    ); }
+        bool set_move_down   (const char *new_val) { return set_str_value(new_val, move_down  ); }
+        bool set_move_stop   (const char *new_val) { return set_str_value(new_val, move_stop  ); }
+        bool set_move_preset (const char *new_val) { return set_str_value(new_val, move_preset); }
 
 
         std::string get_str_err()  const { return str_err;         }
@@ -105,7 +105,6 @@ class PTZNode
 
     private:
 
-        bool         enable;
         std::string  move_left;
         std::string  move_right;
         std::string  move_up;
@@ -115,6 +114,8 @@ class PTZNode
 
 
         std::string  str_err;
+
+        bool set_str_value(const char *new_val, std::string& value);
 };
 
 
@@ -185,19 +186,6 @@ class ServiceContext
 
         std::string  str_err;
 };
-
-
-
-
-
-template<typename T>
-T* soap_new_ptr(struct soap* soap, T value)
-{
-    T* ptr = (T*)soap_malloc(soap, sizeof(T));
-    *ptr = value;
-
-    return ptr;
-}
 
 
 

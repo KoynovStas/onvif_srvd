@@ -40,11 +40,8 @@ int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
     *ptzp->Name  = std::to_string(number);
 
     ptzp->PTZPosition             = soap_new_tt__PTZVector(soap);
-    ptzp->PTZPosition->PanTilt    = soap_new_tt__Vector2D(soap);
-    ptzp->PTZPosition->PanTilt->x = 0.0;
-    ptzp->PTZPosition->PanTilt->y = 0.0;
-    ptzp->PTZPosition->Zoom       = soap_new_tt__Vector1D(soap);
-    ptzp->PTZPosition->Zoom->x    = 1;
+    ptzp->PTZPosition->PanTilt    = soap_new_req_tt__Vector2D(soap, 0.0f, 0.0f);
+    ptzp->PTZPosition->Zoom       = soap_new_req_tt__Vector1D(soap, 1.0f);
 
     return SOAP_OK;
 }

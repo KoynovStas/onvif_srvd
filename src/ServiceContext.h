@@ -89,12 +89,12 @@ class PTZNode
 
         //methods for parsing opt from cmd
         bool set_enable      (bool val);
-        bool set_move_left   (const char *new_val);
-        bool set_move_right  (const char *new_val);
-        bool set_move_up     (const char *new_val);
-        bool set_move_down   (const char *new_val);
-        bool set_move_stop   (const char *new_val);
-        bool set_move_preset (const char *new_val);
+        bool set_move_left   (const char *new_val) { return set_str_value(new_val, move_left  ); }
+        bool set_move_right  (const char *new_val) { return set_str_value(new_val, move_right ); }
+        bool set_move_up     (const char *new_val) { return set_str_value(new_val, move_up    ); }
+        bool set_move_down   (const char *new_val) { return set_str_value(new_val, move_down  ); }
+        bool set_move_stop   (const char *new_val) { return set_str_value(new_val, move_stop  ); }
+        bool set_move_preset (const char *new_val) { return set_str_value(new_val, move_preset); }
 
 
         std::string get_str_err()  const { return str_err;         }
@@ -115,6 +115,8 @@ class PTZNode
 
 
         std::string  str_err;
+
+        bool set_str_value(const char *new_val, std::string& value);
 };
 
 

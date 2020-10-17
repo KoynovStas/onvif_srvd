@@ -477,96 +477,6 @@ bool PTZNode::set_enable(bool val)
 
 
 
-bool PTZNode::set_move_left(const char *new_val)
-{
-    if(!new_val)
-    {
-        str_err = "Process is empty";
-        return false;
-    }
-
-
-    move_left = new_val;
-    return true;
-}
-
-
-
-bool PTZNode::set_move_right(const char *new_val)
-{
-    if(!new_val)
-    {
-        str_err = "Process is empty";
-        return false;
-    }
-
-
-    move_right = new_val;
-    return true;
-}
-
-
-
-bool PTZNode::set_move_up(const char *new_val)
-{
-    if(!new_val)
-    {
-        str_err = "Process is empty";
-        return false;
-    }
-
-
-    move_up = new_val;
-    return true;
-}
-
-
-
-bool PTZNode::set_move_down(const char *new_val)
-{
-    if(!new_val)
-    {
-        str_err = "Process is empty";
-        return false;
-    }
-
-
-    move_down = new_val;
-    return true;
-}
-
-
-
-bool PTZNode::set_move_stop(const char *new_val)
-{
-    if(!new_val)
-    {
-        str_err = "Process is empty";
-        return false;
-    }
-
-
-    move_stop = new_val;
-    return true;
-}
-
-
-
-bool PTZNode::set_move_preset(const char *new_val)
-{
-    if(!new_val)
-    {
-        str_err = "Process is empty";
-        return false;
-    }
-
-
-    move_preset = new_val;
-    return true;
-}
-
-
-
 void PTZNode::clear()
 {
     enable = false;
@@ -577,4 +487,19 @@ void PTZNode::clear()
     move_down.clear();
     move_stop.clear();
     move_preset.clear();
+}
+
+
+
+bool PTZNode::set_str_value(const char* new_val, std::string& value)
+{
+    if(!new_val)
+    {
+        str_err = "Process is empty";
+        return false;
+    }
+
+
+    value = new_val;
+    return true;
 }

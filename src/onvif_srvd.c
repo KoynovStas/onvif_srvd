@@ -221,9 +221,9 @@ void daemon_exit_handler(int sig)
     //Here we release resources
 
     UNUSED(sig);
-    soap_destroy(soap);
-    soap_end(soap);
-    soap_free(soap);
+    soap_destroy(soap); // delete managed C++ objects
+    soap_end(soap);     // delete managed memory
+    soap_free(soap);    // free the context
 
 
     unlink(daemon_info.pid_file);
@@ -529,8 +529,11 @@ int main(int argc, char *argv[])
         {
             DEBUG_MSG("Unknown service\n");
         }
+
+        soap_destroy(soap); // delete managed C++ objects
+        soap_end(soap);     // delete managed memory
     }
 
 
-    return EXIT_SUCCESS; // good job (we interrupted (finished) main loop)
+    return EXIT_FAILURE; // Error, normal exit from the main loop only through the signal handler.
 }

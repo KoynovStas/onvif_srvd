@@ -163,6 +163,18 @@ void daemon_error_exit(const char *format, ...)
 
 
 
+void set_sig_handler(int signum, __sighandler_t handler)
+{
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = handler;
+    if( sigaction(signum, &sa, NULL) != 0 )
+        daemon_error_exit("Can't set handler for signal: %d %m\n", signum);
+}
+
+
+
 int redirect_stdio_to_devnull(void)
 {
     int fd;

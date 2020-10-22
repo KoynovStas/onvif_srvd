@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <signal.h>
 #include <getopt.h>
 
 
@@ -236,13 +235,8 @@ void daemon_exit_handler(int sig)
 
 void init_signals(void)
 {
-    struct sigaction sa;
-
-    memset(&sa, 0, sizeof(sa));
-    sa.sa_handler = daemon_exit_handler;
-    if( sigaction(SIGTERM, &sa, NULL) != 0 )
-        daemon_error_exit("Can't set daemon_exit_handler: %m\n");
-
+    set_sig_handler(SIGINT,  daemon_exit_handler); //for Ctlr-C in terminal for debug (in debug mode)
+    set_sig_handler(SIGTERM, daemon_exit_handler);
 
     signal(SIGCHLD, SIG_IGN); // ignore child
     signal(SIGTSTP, SIG_IGN); // ignore tty signals

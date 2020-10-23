@@ -31,6 +31,10 @@ class StreamProfile
         tt__Profile*     get_profile(struct soap *soap) const;
         tt__VideoSource* get_video_src(struct soap *soap) const;
 
+        tt__VideoSourceConfiguration*  get_video_src_cnf(struct soap *soap) const;
+        tt__VideoEncoderConfiguration* get_video_enc_cfg(struct soap *soap) const;
+        tt__PTZConfiguration*          get_ptz_cfg(struct soap *soap) const;
+
 
 
         //methods for parsing opt from cmd
@@ -60,11 +64,6 @@ class StreamProfile
 
 
         std::string  str_err;
-
-
-        tt__VideoSourceConfiguration*  get_video_src_cnf(struct soap *soap) const;
-        tt__VideoEncoderConfiguration* get_video_enc_cfg(struct soap *soap) const;
-        tt__PTZConfiguration*          get_ptz_cfg(struct soap *soap) const;
 };
 
 

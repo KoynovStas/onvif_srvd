@@ -85,7 +85,7 @@ int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__Go
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    char cmd[1024];
+    std::string preset_cmd;
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
@@ -99,10 +99,21 @@ int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__Go
         return SOAP_OK;
     }
 
-    if ((tptz__GotoPreset->PresetToken.back() >= '0') && (tptz__GotoPreset->PresetToken.back() <= '9')) {
-        sprintf(cmd, "%s %c", ctx->get_ptz_node()->get_move_preset().c_str(), tptz__GotoPreset->PresetToken.back());
-        system(cmd);
+    if (!ctx->get_ptz_node()->get_move_preset().empty()) {
+        preset_cmd = ctx->get_ptz_node()->get_move_preset().c_str();
+    } else {
+        return SOAP_OK;
     }
+
+    std::string template_str_t("%t");
+
+    auto it_t = preset_cmd.find(template_str_t, 0);
+
+    if( it_t != std::string::npos ) {
+        preset_cmd.replace(it_t, template_str_t.size(), tptz__GotoPreset->PresetToken.c_str());
+    }
+
+    system(preset_cmd.c_str());
 
     return SOAP_OK;
 }
@@ -237,18 +248,35 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
     UNUSED(tptz__GotoHomePositionResponse);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
-    char cmd[1024];
-
+    std::string preset_cmd;
+	
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
-    // Go to preset 1
-    sprintf(cmd, "%s 1", ctx->get_ptz_node()->get_move_preset().c_str());
-    system(cmd);
+    if (tptz__GotoHomePosition == NULL) {
+        return SOAP_OK;
+    }
+    if (tptz__GotoHomePosition->ProfileToken.c_str() == NULL) {
+        return SOAP_OK;
+    }
+
+    if (!ctx->get_ptz_node()->get_move_preset().empty()) {
+        preset_cmd = ctx->get_ptz_node()->get_move_preset().c_str();
+    } else {
+        return SOAP_OK;
+    }
+
+    std::string template_str_t("%t");
+
+    auto it_t = preset_cmd.find(template_str_t, 0);
+
+    if( it_t != std::string::npos ) {
+        preset_cmd.replace(it_t, template_str_t.size(), "1");
+    }
+
+    system(preset_cmd.c_str());
 
     return SOAP_OK;
 }
-
-
 
 int PTZBindingService::SetHomePosition(_tptz__SetHomePosition *tptz__SetHomePosition, _tptz__SetHomePositionResponse &tptz__SetHomePositionResponse)
 {

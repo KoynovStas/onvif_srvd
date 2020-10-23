@@ -11,6 +11,7 @@
 #include "soapMediaBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
+#include "stools.h"
 
 
 
@@ -254,14 +255,40 @@ int MediaBindingService::DeleteProfile(_trt__DeleteProfile *trt__DeleteProfile, 
 
 int MediaBindingService::GetVideoSourceConfigurations(_trt__GetVideoSourceConfigurations *trt__GetVideoSourceConfigurations, _trt__GetVideoSourceConfigurationsResponse &trt__GetVideoSourceConfigurationsResponse)
 {
-    SOAP_EMPTY_HANDLER(trt__GetVideoSourceConfigurations, "Media");
+    UNUSED(trt__GetVideoSourceConfigurations);
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        tt__VideoSourceConfiguration *vsc = it->second.get_video_src_cnf(this->soap);
+        trt__GetVideoSourceConfigurationsResponse.Configurations.push_back(vsc);
+    }
+
+    return SOAP_OK;
 }
 
 
 
 int MediaBindingService::GetVideoEncoderConfigurations(_trt__GetVideoEncoderConfigurations *trt__GetVideoEncoderConfigurations, _trt__GetVideoEncoderConfigurationsResponse &trt__GetVideoEncoderConfigurationsResponse)
 {
-    SOAP_EMPTY_HANDLER(trt__GetVideoEncoderConfigurations, "Media");
+    UNUSED(trt__GetVideoEncoderConfigurations);
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        tt__VideoEncoderConfiguration *vec = it->second.get_video_enc_cfg(this->soap);
+        trt__GetVideoEncoderConfigurationsResponse.Configurations.push_back(vec);
+    }
+
+    return SOAP_OK;
 }
 
 
@@ -310,14 +337,44 @@ int MediaBindingService::GetAudioDecoderConfigurations(_trt__GetAudioDecoderConf
 
 int MediaBindingService::GetVideoSourceConfiguration(_trt__GetVideoSourceConfiguration *trt__GetVideoSourceConfiguration, _trt__GetVideoSourceConfigurationResponse &trt__GetVideoSourceConfigurationResponse)
 {
-    SOAP_EMPTY_HANDLER(trt__GetVideoSourceConfiguration, "Media");
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        if (trt__GetVideoSourceConfiguration->ConfigurationToken == it->second.get_video_src_cnf(this->soap)->token) {
+            tt__VideoSourceConfiguration *vsc = it->second.get_video_src_cnf(this->soap);
+            trt__GetVideoSourceConfigurationResponse.Configuration = vsc;
+            break;
+        }
+    }
+
+    return SOAP_OK;
 }
 
 
 
 int MediaBindingService::GetVideoEncoderConfiguration(_trt__GetVideoEncoderConfiguration *trt__GetVideoEncoderConfiguration, _trt__GetVideoEncoderConfigurationResponse &trt__GetVideoEncoderConfigurationResponse)
 {
-    SOAP_EMPTY_HANDLER(trt__GetVideoEncoderConfiguration, "Media");
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        if (trt__GetVideoEncoderConfiguration->ConfigurationToken == it->second.get_video_enc_cfg(this->soap)->token) {
+            tt__VideoEncoderConfiguration *vec = it->second.get_video_enc_cfg(this->soap);
+            trt__GetVideoEncoderConfigurationResponse.Configuration = vec;
+            break;
+        }
+    }
+
+    return SOAP_OK;
 }
 
 
@@ -527,7 +584,15 @@ int MediaBindingService::GetAudioDecoderConfigurationOptions(_trt__GetAudioDecod
 
 int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(_trt__GetGuaranteedNumberOfVideoEncoderInstances *trt__GetGuaranteedNumberOfVideoEncoderInstances, _trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse &trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse)
 {
-    SOAP_EMPTY_HANDLER(trt__GetGuaranteedNumberOfVideoEncoderInstances, "Media");
+    UNUSED(trt__GetGuaranteedNumberOfVideoEncoderInstances);
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.TotalNumber = 3;
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.JPEG = soap_new_ptr(soap, 0);
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.H264 = soap_new_ptr(soap, 3);
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.MPEG4 = soap_new_ptr(soap, 0);
+
+    return SOAP_OK;
 }
 
 

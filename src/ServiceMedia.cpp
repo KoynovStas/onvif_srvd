@@ -587,10 +587,34 @@ int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(_trt__GetGua
     UNUSED(trt__GetGuaranteedNumberOfVideoEncoderInstances);
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
 
-    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.TotalNumber = 3;
-    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.JPEG = soap_new_ptr(soap, 0);
-    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.H264 = soap_new_ptr(soap, 3);
-    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.MPEG4 = soap_new_ptr(soap, 0);
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    int instancesNumber = 3;
+    int jpegInstancesNumber = 0;
+    int mpeg4InstancesNumber = 0;
+    int h264InstancesNumber = 0;
+    int totalNumber = 0;
+
+    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it )
+    {
+        if (it->second.get_type() == tt__VideoEncoding__JPEG) {
+            jpegInstancesNumber += instancesNumber;
+            totalNumber += instancesNumber;
+        } else if (it->second.get_type() == tt__VideoEncoding__MPEG4) {
+            mpeg4InstancesNumber += instancesNumber;
+            totalNumber += instancesNumber;
+        } else if (it->second.get_type() == tt__VideoEncoding__H264) {
+            h264InstancesNumber += instancesNumber;
+            totalNumber += instancesNumber;
+        }
+    }
+
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.TotalNumber = totalNumber;
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.JPEG = soap_new_ptr(soap, jpegInstancesNumber);
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.MPEG4 = soap_new_ptr(soap, mpeg4InstancesNumber);
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.H264 = soap_new_ptr(soap, h264InstancesNumber);
 
     return SOAP_OK;
 }

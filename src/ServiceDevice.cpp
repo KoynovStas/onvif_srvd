@@ -115,25 +115,9 @@ int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__
     UNUSED(tds__GetSystemDateAndTime);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
-    const time_t  timestamp = time(NULL);
-    struct tm    *tm        = localtime(&timestamp);
-
-
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime                    = soap_new_tt__SystemDateTime(this->soap);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DateTimeType      = tt__SetDateTimeType__Manual;
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DaylightSavings   = (tm->tm_isdst > 0);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->TimeZone          = soap_new_req_tt__TimeZone(this->soap, ctx->get_time_zone());
-
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->LocalDateTime       = soap_new_tt__DateTime(this->soap);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->LocalDateTime->Time = soap_new_req_tt__Time(this->soap, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->LocalDateTime->Date = soap_new_req_tt__Date(this->soap, tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday);
-
-    tm = gmtime(&timestamp);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime       = soap_new_tt__DateTime(this->soap);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Time = soap_new_req_tt__Time(this->soap, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->UTCDateTime->Date = soap_new_req_tt__Date(this->soap, tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday);
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime = ctx->get_SystemDateAndTime(this->soap);
 
     return SOAP_OK;
 }

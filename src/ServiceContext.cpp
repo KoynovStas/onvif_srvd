@@ -88,6 +88,50 @@ std::string ServiceContext::get_time_zone() const
 
 
 
+tt__SystemDateTime* ServiceContext::get_SystemDateAndTime(soap* soap)
+{
+    const time_t  timestamp = time(NULL);
+    struct tm    *time_info = localtime(&timestamp);
+
+    auto res = soap_new_req_tt__SystemDateTime(soap,
+                                               tt__SetDateTimeType__Manual,
+                                               (time_info->tm_isdst > 0));
+
+    if(res)
+    {
+        res->TimeZone      = soap_new_req_tt__TimeZone(soap, get_time_zone());
+        res->LocalDateTime = get_DateTime(soap, time_info);
+        res->UTCDateTime   = get_DateTime(soap, gmtime(&timestamp));
+    }
+
+    return res;
+
+    //About tm_isdst see https://man7.org/linux/man-pages//man3/ctime.3.html
+}
+
+
+
+tt__DateTime* ServiceContext::get_DateTime(soap* soap, tm* time_info)
+{
+    return soap_new_req_tt__DateTime(
+               soap,
+               soap_new_req_tt__Time(
+                   soap,
+                   time_info->tm_hour,
+                   time_info->tm_min,
+                   time_info->tm_sec
+               ),
+               soap_new_req_tt__Date(
+                   soap,
+                   time_info->tm_year+1900,
+                   time_info->tm_mon+1,
+                   time_info->tm_mday
+               )
+           );
+}
+
+
+
 bool ServiceContext::set_tz_format(const char* new_val)
 {
     std::istringstream ss(new_val);

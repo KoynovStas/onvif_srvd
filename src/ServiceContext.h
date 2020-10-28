@@ -159,6 +159,9 @@ class ServiceContext
 
         std::string  get_time_zone() const;
 
+        tt__SystemDateTime *get_SystemDateAndTime(struct soap* soap);
+        tt__DateTime *get_DateTime(struct soap* soap, struct tm *time_info);
+
         TimeZoneForamt get_tz_format() const { return tz_format; }
         bool set_tz_format(const char *new_val);
 

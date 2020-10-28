@@ -27,10 +27,8 @@ class StreamProfile
         int          get_type   (void) const { return type;   }
 
 
-
         tt__Profile*     get_profile(struct soap *soap) const;
         tt__VideoSource* get_video_src(struct soap *soap) const;
-
 
 
         //methods for parsing opt from cmd
@@ -126,6 +124,19 @@ class ServiceContext
 {
     public:
 
+        enum TimeZoneForamt : unsigned int
+        {
+            TZ_UTC_OFFSET,   //[+|-]hh:mm
+            TZ_GMT_OFFSET,   //[+|-]hh:mm     (reverse sign of TZ_UTC_OFFSET)
+            TZ_UTC,          //UTC[+|-]hh:mm
+            TZ_GMT,          //GMT[+|-]hh:mm  (reverse sign of TZ_UTC)
+            TZ_ENV,          //value from TZ environment variable
+            TZ_ONVIF_ENV,    //value from TZ_ONVIF environment variable(its not std)
+
+            TZ_CNT_FORMATS   //Its not format! Its counter for use in code (max index)
+        };
+
+
         ServiceContext();
 
 
@@ -146,6 +157,10 @@ class ServiceContext
 
         std::vector<Eth_Dev_Param> eth_ifs; //ethernet interfaces
 
+        std::string  get_time_zone() const;
+
+        TimeZoneForamt get_tz_format() const { return tz_format; }
+        bool set_tz_format(const char *new_val);
 
         std::string getServerIpFromClientIp(uint32_t client_ip) const;
         std::string getXAddr(struct soap* soap) const;
@@ -183,6 +198,8 @@ class ServiceContext
 
         std::map<std::string, StreamProfile> profiles;
         PTZNode ptz_node;
+
+        TimeZoneForamt tz_format;
 
         std::string  str_err;
 };

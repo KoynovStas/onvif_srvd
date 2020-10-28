@@ -1,6 +1,8 @@
 #include <arpa/inet.h>
 
+#include <stdlib.h> // defines getenv in POSIX
 #include <sstream>
+#include <iomanip>
 
 #include "ServiceContext.h"
 #include "stools.h"
@@ -20,8 +22,88 @@ ServiceContext::ServiceContext():
     model            ( "Model"          ),
     firmware_version ( "FirmwareVersion"),
     serial_number    ( "SerialNumber"   ),
-    hardware_id      ( "HardwareId"     )
+    hardware_id      ( "HardwareId"     ),
+
+    //private
+    tz_format(TZ_UTC_OFFSET)
 {
+}
+
+
+
+std::string ServiceContext::get_time_zone() const
+{
+    #define HH_FORMAT   std::setfill('0') << std::internal << std::setw(3) << std::showpos
+    #define MM_FORMAT   ':' << std::setw(2) << std::noshowpos
+
+    std::ostringstream res;
+    char* TZ_env;
+    const time_t  timestamp = time(NULL);
+    struct tm    *now       = localtime(&timestamp);
+
+
+    //global var timezone is not adjusted for daylight saving!
+    //In GNU programs it is better to use tm_gmtoff, since it contains the correct
+    //offset even when it is not the latest one.
+    int hh = now->tm_gmtoff/3600;
+    int mm = abs(now->tm_gmtoff%60);
+
+    switch (tz_format)
+    {
+        case TZ_UTC_OFFSET:
+            res << HH_FORMAT << hh << MM_FORMAT << mm;
+            return res.str();
+
+
+        case TZ_GMT_OFFSET:
+            res << HH_FORMAT << -hh << MM_FORMAT << mm;
+            return res.str();
+
+
+        case TZ_UTC:
+            res << "UTC" << HH_FORMAT << hh << MM_FORMAT << mm;
+            return res.str();
+
+
+        case TZ_GMT:
+            res << "GMT" << HH_FORMAT << -hh << MM_FORMAT << mm;
+            return res.str();
+
+
+        case TZ_ENV:
+            TZ_env = getenv("TZ");
+            return (TZ_env ? TZ_env : "UTC+00");
+
+
+        default:
+            TZ_env = getenv("TZ_ONVIF");
+            return (TZ_env ? TZ_env : "UTC+00");
+    }
+
+    //Note: for GMT sign
+    //According to the definition, GMT and UTC mean the same thing!
+    //But when offsets are specified, the sign of the GMT is inverted!
+    //This feature is described here: https://en.wikipedia.org/wiki/Tz_database#Area
+}
+
+
+
+bool ServiceContext::set_tz_format(const char* new_val)
+{
+    std::istringstream ss(new_val);
+    unsigned int tmp_val;
+    ss >> tmp_val;
+
+
+    if( tmp_val >= TZ_CNT_FORMATS )
+    {
+        str_err = "tz_format is not supported";
+        return false;
+    }
+
+
+    tz_format = static_cast<TimeZoneForamt>(tmp_val);
+    return true;
 }
 
 

@@ -123,7 +123,7 @@ int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__
 
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime                    = soap_new_tt__SystemDateTime(this->soap);
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DateTimeType      = tt__SetDateTimeType__Manual;
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DaylightSavings   = tm->tm_isdst;
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime->DaylightSavings   = (tm->tm_isdst > 0);
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime->TimeZone          = soap_new_req_tt__TimeZone(this->soap, ctx->get_time_zone());
 
     tds__GetSystemDateAndTimeResponse.SystemDateAndTime->LocalDateTime       = soap_new_tt__DateTime(this->soap);

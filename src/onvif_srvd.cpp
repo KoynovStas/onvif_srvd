@@ -43,6 +43,7 @@ static const char *help_str =
         "       --model        [value] Set model device for Services  (default = Model)\n"
         "       --scope        [value] Set scope for Services         (default don't set)\n"
         "       --ifs          [value] Set Net interfaces for work    (default don't set)\n"
+        "       --tz_format    [value] Set Time Zone Format           (default = 0)\n"
         "       --hardware_id  [value] Set Hardware ID of device      (default = HardwareID)\n"
         "       --serial_num   [value] Set Serial number of device    (default = SerialNumber)\n"
         "       --firmware_ver [value] Set firmware version of device (default = FirmwareVersion)\n"
@@ -94,6 +95,7 @@ namespace LongOpts
         hardware_id,
         scope,
         ifs,
+        tz_format,
 
         //Media Profile for ONVIF Media Service
         name,
@@ -142,6 +144,7 @@ static const struct option long_opts[] =
     { "hardware_id",  required_argument, NULL, LongOpts::hardware_id   },
     { "scope",        required_argument, NULL, LongOpts::scope         },
     { "ifs",          required_argument, NULL, LongOpts::ifs           },
+    { "tz_format",    required_argument, NULL, LongOpts::tz_format     },
 
     //Media Profile for ONVIF Media Service
     { "name",          required_argument, NULL, LongOpts::name         },
@@ -334,6 +337,12 @@ void processing_cmd(int argc, char *argv[])
 
                         if( service_ctx.eth_ifs.back().open(optarg) != 0 )
                             daemon_error_exit("Can't open ethernet interface: %s - %m\n", optarg);
+
+                        break;
+
+            case LongOpts::tz_format:
+                        if( !service_ctx.set_tz_format(optarg) )
+                            daemon_error_exit("Can't set tz_format: %s\n", service_ctx.get_cstr_err());
 
                         break;
 

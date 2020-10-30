@@ -29,7 +29,7 @@ For example, on ubuntu 20.04, you needed to install:
 sudo apt install flex bison byacc make m4
 
 #for support encryption and WS-Security
-sudo apt install openssl libssl-dev libcrypto++6
+sudo apt install openssl libssl-dev zlib1g-dev libcrypto++6
 ```
 
 To start build you have to choose your compiler (or toolchain) in the [Makefile](./Makefile) (see variable `$CXX`).

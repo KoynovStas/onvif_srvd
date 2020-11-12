@@ -163,7 +163,7 @@ void daemon_error_exit(const char *format, ...)
 
 
 
-void set_sig_handler(int signum, __sighandler_t handler)
+void set_sig_handler(int signum, signal_handler_t handler)
 {
     struct sigaction sa;
 

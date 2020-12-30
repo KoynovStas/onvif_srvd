@@ -323,6 +323,8 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 
     capabilities->StreamingCapabilities = soap_new_trt__StreamingCapabilities(soap);
     capabilities->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
+    capabilities->StreamingCapabilities->RTP_USCORETCP = soap_new_ptr(soap, false);
+    capabilities->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
 
 
     return capabilities;
@@ -426,6 +428,7 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 
     profile->Name  = name;
     profile->token = name;
+    profile->fixed = soap_new_ptr(soap, true);
 
     profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
     profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);

@@ -118,4 +118,4 @@ Usage:
 
 ## License
 
-[BSD-3-Clause](./LICENSE).
+[GPLv2](./LICENSE).

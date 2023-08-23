@@ -269,6 +269,12 @@ define build_gsoap
          unzip ./SDK/gsoap.zip; \
     fi
 
+    #add patch
+    if [ ! -f $(GSOAP_INSTALL_DIR)/gsoap/src/soapcpp2_lex.l.patched ]; then \
+        patch $(GSOAP_INSTALL_DIR)/gsoap/src/soapcpp2_lex.l -i ./patch/soapcpp2_lex.l.patch -f; \
+        touch $(GSOAP_INSTALL_DIR)/gsoap/src/soapcpp2_lex.l.patched; \
+    fi
+
     # build
     if [ ! -f $(SOAPCPP2) ] || [ ! -f $(WSDL2H) ]; then \
          cd $(GSOAP_INSTALL_DIR); \

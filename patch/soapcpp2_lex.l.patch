@@ -1,0 +1,17 @@
+On ubuntu 22.04 there is a new Flex/Bison that does not correctly generate files for gsoap.
+which, when compiled, produces an error: "multiple definition of `yylval'; soapcpp2-soapcpp2_yacc.o"
+This bug has been fixed in gsoap version 2.8.99.
+We will update the version of gsoap in the next release, and this patch will be removed!
+For more details see: https://sourceforge.net/p/gsoap2/bugs/1269/
+
+--- soapcpp2_lex.l	2019-09-16 22:41:21.000000000 +0400
++++ soapcpp2_lex.l2	2023-08-23 13:37:39.786839728 +0400
+@@ -50,7 +50,7 @@
+ extern int isatty(int); /* silence warnings */
+ 
+ #ifdef WITH_BISON
+-YYSTYPE yylval;
++extern YYSTYPE yylval;
+ #undef YY_NEED_STRLEN
+ #define YY_INPUT(buf, result, max_size) \
+         { \

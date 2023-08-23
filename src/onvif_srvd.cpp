@@ -241,11 +241,11 @@ void init_signals(void)
     set_sig_handler(SIGINT,  daemon_exit_handler); //for Ctlr-C in terminal for debug (in debug mode)
     set_sig_handler(SIGTERM, daemon_exit_handler);
 
-    signal(SIGCHLD, SIG_IGN); // ignore child
-    signal(SIGTSTP, SIG_IGN); // ignore tty signals
-    signal(SIGTTOU, SIG_IGN);
-    signal(SIGTTIN, SIG_IGN);
-    signal(SIGHUP,  SIG_IGN);
+    set_sig_handler(SIGCHLD, SIG_IGN); // ignore child
+    set_sig_handler(SIGTSTP, SIG_IGN); // ignore tty signals
+    set_sig_handler(SIGTTOU, SIG_IGN);
+    set_sig_handler(SIGTTIN, SIG_IGN);
+    set_sig_handler(SIGHUP,  SIG_IGN);
 }
 
 

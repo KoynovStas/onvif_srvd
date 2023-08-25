@@ -21,16 +21,20 @@
 
 
 static const char *help_str =
-        " ===============  Help  ===============\n"
-        " Daemon name:  " DAEMON_NAME          "\n"
-        " Daemon  ver:  " DAEMON_VERSION_STR   "\n"
+        " Daemon name:  " DAEMON_NAME        "\n"
+        " Daemon  ver:  " DAEMON_VERSION_STR "\n\n"
 #ifdef  DEBUG
         " Build  mode:  debug\n"
 #else
         " Build  mode:  release\n"
 #endif
         " Build  date:  " __DATE__ "\n"
-        " Build  time:  " __TIME__ "\n\n"
+        " Build  time:  " __TIME__ "\n"
+#if  COMMIT_ISDIRTY == 0
+        " Build  hash:  "  COMMIT_HASH "\n\n"
+#else
+        " Build  hash:  *" COMMIT_HASH "\n\n"
+#endif
         "Options:                      description:\n\n"
         "       --no_chdir             Don't change the directory to '/'\n"
         "       --no_fork              Don't do fork\n"

@@ -1,11 +1,52 @@
 DAEMON_NAME           = onvif_srvd
 DAEMON_MAJOR_VERSION  = 1
 DAEMON_MINOR_VERSION  = 1
-DAEMON_PATCH_VERSION  = 0
+DAEMON_PATCH_VERSION  = patch
+#variants:  hash - set PATCH_VERSION == commit hash (12 digits)
+#variants: *hash - set PATCH_VERSION == * + commit hash (12 digits),
+#                  * will be set if files in repo are changed
+#variants: patch - set PATCH_VERSION == number of commits(patches) between head and last tag
+#variants: xxx   - set PATCH_VERSION == xxx (your variant)
 DAEMON_PID_FILE_NAME  = $(DAEMON_NAME).pid
 DAEMON_LOG_FILE_NAME  = $(DAEMON_NAME).log
 DAEMON_NO_CHDIR       = 1
 DAEMON_NO_CLOSE_STDIO = 0
+
+
+
+COMMIT_HASH = $(shell git rev-parse --short=12 HEAD 2>/dev/null)
+ifeq ($(strip $(shell git status --short --untracked-files=no 2>/dev/null)),)
+    COMMIT_ISDIRTY = 0
+else
+    COMMIT_ISDIRTY = 1
+endif
+
+
+# process PATCH_VERSION
+ifeq ($(strip $(DAEMON_PATCH_VERSION)), *hash)
+    ifeq ($(strip $(COMMIT_ISDIRTY)), 0)
+        DAEMON_PATCH_VERSION = $(COMMIT_HASH)
+    else
+        DAEMON_PATCH_VERSION = *$(COMMIT_HASH)
+    endif
+endif
+
+
+ifeq ($(strip $(DAEMON_PATCH_VERSION)), hash)
+    DAEMON_PATCH_VERSION = $(COMMIT_HASH)
+endif
+
+
+ifeq ($(strip $(DAEMON_PATCH_VERSION)), patch)
+    LAST_TAG = $(shell git describe --tags --first-parent --abbrev=0 2>/dev/null)
+    DAEMON_PATCH_VERSION = $(shell git rev-list HEAD...$(LAST_TAG) --count  2>/dev/null)
+endif
+
+
+ifeq ($(strip $(DAEMON_PATCH_VERSION)),)
+    DAEMON_PATCH_VERSION = 0
+endif
+
 
 
 GSOAP_VERSION     = 2.8.92
@@ -33,6 +74,8 @@ CXXFLAGS         += -DDAEMON_PID_FILE_NAME='"$(DAEMON_PID_FILE_NAME)"'
 CXXFLAGS         += -DDAEMON_LOG_FILE_NAME='"$(DAEMON_LOG_FILE_NAME)"'
 CXXFLAGS         += -DDAEMON_NO_CHDIR=$(DAEMON_NO_CHDIR)
 CXXFLAGS         += -DDAEMON_NO_CLOSE_STDIO=$(DAEMON_NO_CLOSE_STDIO)
+CXXFLAGS         += -DCOMMIT_ISDIRTY=$(COMMIT_ISDIRTY)
+CXXFLAGS         += -DCOMMIT_HASH='"$(COMMIT_HASH)"'
 
 CXXFLAGS         += -I$(COMMON_DIR)
 CXXFLAGS         += -I$(GENERATED_DIR)

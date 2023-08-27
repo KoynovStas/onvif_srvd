@@ -2,7 +2,7 @@
  * smacros.h
  *
  *
- * version 1.1
+ * version 1.2
  *
  *
  * BSD 3-Clause License
@@ -40,52 +40,59 @@
  * more details see https://github.com/KoynovStas/smacros
  */
 
-#ifndef SMACROS_HEADER
-#define SMACROS_HEADER
+#ifndef SMACROS_H
+#define SMACROS_H
 
-
-#include <stdint.h>
 #include <stddef.h>  //for offsetof
 
 
 
 
 
+#define UNUSED(var)  (void)var
+
+
+
 #ifdef  __cplusplus
-        #define  EXTERN_PREFIX extern "C"
+    #define  EXTERN_PREFIX extern "C"
 #else
-        #define  EXTERN_PREFIX extern
+    #define  EXTERN_PREFIX extern
 #endif
 
 
 
+#define BIT_FLAG(num_bit)           (1ull << (num_bit))
 
 
-#define  SET_BIT(reg, num_bit)   ( (reg) |=  (1 << (num_bit)) )
-#define  CLR_BIT(reg, num_bit)   ( (reg) &= ~(1 << (num_bit)) )
-#define  INV_BIT(reg, num_bit)   ( (reg) ^=  (1 << (num_bit)) )
+#define SET_BIT(reg, num_bit)       ( (reg) |=  (1ull << (num_bit)) )
+#define CLR_BIT(reg, num_bit)       ( (reg) &= ~(1ull << (num_bit)) )
+#define INV_BIT(reg, num_bit)       ( (reg) ^=  (1ull << (num_bit)) )
 
 
-#define  SET_FLAG(reg, flag)   ( (reg) |=  (flag) )
-#define  CLR_FLAG(reg, flag)   ( (reg) &= ~(flag) )
-#define  INV_FLAG(reg, flag)   ( (reg) ^=  (flag) )
+#define SET_FLAG(reg, flags)        ( (reg) |=  (flags) )
+#define CLR_FLAG(reg, flags)        ( (reg) &= ~(flags) )
+#define INV_FLAG(reg, flags)        ( (reg) ^=  (flags) )
 
 
+#define CHECK_FLAG_ALL( reg, flags) ( ((reg) & (flags)) == (flags) ) //Checks if all bits are set to 1
+#define CHECK_FLAG_ANY( reg, flags) ( ((reg) & (flags)) != 0       ) //Checks if any bits are set to 1
+#define CHECK_FLAG_NONE(reg, flags) ( ((reg) & (flags)) == 0       ) //Checks if none of the bits are set to 1
+
+
+#define MODIFY_REG(reg, clear_mask, set_mask)  ( (reg) = (((reg) & ~(clear_mask)) | (set_mask)) )
 
 
 
 //The count of elements in the array.
-#define  COUNT_ELEMENTS(array) (sizeof(array) / sizeof(array[0]))
-
+#define COUNT_ELEMENTS(array) (sizeof(array) / sizeof(array[0]))
 
 
 
 /*
- * For GCC 4.6 or higher, in C++ you can use a standard right static_assert(exp, msg) in *.c and in *.h files.
- * For GCC 4.6 is required to add CFLAGS += -std="c++0x"
- * Simple C (gcc) have static_assert in std=c11.
- * A lot of variants, it is the most simple and intuitive
- * It can be used in *.c and in *.h files. (macros that use function style can be used in *.c files only)
+ * Since C/C++ 11 you can use a standard static_assert(exp, msg)
+ * For old C/C++ a lot of variants, this is the most simple and intuitive
+ * It can be used in *.c and in *.h files.
+ * (macros that use function style can be used in *.c files only)
  *
  * Disadvantages: you can not be set msg to display the console when compiling
  *
@@ -97,9 +104,8 @@
 #define ASSERT_CONCAT_(a, b) a##b
 #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
 #define STATIC_ASSERT(expr) \
-    enum { ASSERT_CONCAT(assert_line_, __LINE__) = 1/(int)(!!(expr)) }
-
-
+    enum {ASSERT_CONCAT(ASSERT_CONCAT(level_, __INCLUDE_LEVEL__), \
+          ASSERT_CONCAT(_static_assert_on_line_, __LINE__)) = 1/(int)(!!(expr)) }
 
 
 
@@ -108,46 +114,15 @@
 
 
 
-
-
 // align must be a power of two.
 // Alignment takes place upwards.
-#define  ALIGNMENT(val, align)  ( ((val) + (align)) & ~( (align) - 1) )
+#define ALIGNMENT(val, align)  ( ((val) + (align)) & ~( (align) - 1) )
 
 
 
-
-
-// Macros to convert the time in microseconds
-// t  have to have  struct timespec type
-// TIME_IN_USEC2 is fast variant (have not mul)
-#define  TIME_IN_USEC(t)     (uint32_t)(t.tv_usec + t.tv_sec * 1000000)
-#define  TIME_IN_USEC2(t)    (uint32_t)(t.tv_usec + (t.tv_sec << 20) )
-
-
-
-
-
-#define  FREE_AND_NULL(ptr_var)  ({                  \
-                                     free(ptr_var);  \
-                                     ptr_var = NULL; \
-                                  })
-
-
-
-#define  DELETE_AND_NULL(ptr_var) ({                    \
-                                      delete (ptr_var); \
-                                      ptr_var = NULL;   \
-                                   })
-
-
-
-#define  DELETE_ARRAY_AND_NULL(ptr_var) ({                       \
-                                            delete [] (ptr_var); \
-                                            ptr_var = NULL;      \
-                                        })
-
-
+#define FREE_AND_NULL(        ptr_var)  ({ free     (ptr_var); ptr_var = NULL; })
+#define DELETE_AND_NULL(      ptr_var)  ({ delete   (ptr_var); ptr_var = NULL; })
+#define DELETE_ARRAY_AND_NULL(ptr_var)  ({ delete [](ptr_var); ptr_var = NULL; })
 
 
 
@@ -163,18 +138,12 @@
 
 
 
-#define UNUSED(var) (void)var
-
-
-
 // container_of - cast a member of a structure out to the containing structure
 // ptr:    the pointer to the member.
 // type:   the type of the container struct this is embedded in.
 // member: the name of the member within the struct.
-//
-#define container_of( ptr, type, member ) \
-    ({  (type *)( (const char *)ptr - offsetof(type, member) );  })
-
+#define container_of(ptr, type, member) \
+    ({ (type *)( (const char *)ptr - offsetof(type, member) ); })
 
 
 
@@ -196,4 +165,4 @@
 
 
 
-#endif //SMACROS_HEADER
+#endif //SMACROS_H

@@ -1,6 +1,6 @@
 DAEMON_NAME           = onvif_srvd
-DAEMON_MAJOR_VERSION  = 1
-DAEMON_MINOR_VERSION  = 1
+DAEMON_MAJOR_VERSION  = 2
+DAEMON_MINOR_VERSION  = 0
 DAEMON_PATCH_VERSION  = patch
 #variants:  hash - set PATCH_VERSION == commit hash (12 digits)
 #variants: *hash - set PATCH_VERSION == * + commit hash (12 digits),

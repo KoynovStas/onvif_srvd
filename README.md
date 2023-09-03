@@ -24,41 +24,71 @@ Most Linux systems for building this project require the following packages to b
 If you need support for encryption and WS-Security then you also need: `openssl zlib libcrypto`
 
 
-For example, on ubuntu 20.04, you needed to install:
+For example, on ubuntu 22.04, you needed to install:
 ```console
-sudo apt install flex bison byacc make m4
+sudo apt install flex bison byacc make cmake m4
 
 #for support encryption and WS-Security
-sudo apt install openssl libssl-dev zlib1g-dev libcrypto++6
+sudo apt install openssl libssl-dev zlib1g-dev libcrypto++8
 ```
 
-To start build you have to choose your compiler (or toolchain) in the [Makefile](./Makefile) (see variable `$CXX`).
+For build use cmake for [CMakeLists.txt](./CMakeLists.txt):
 
-For build use make for [Makefile](./Makefile):
+You have 4 build variants:
+
+1. By default, the build takes place in the old style (when there was a `Makefile`)
+  We build our own version of `gSOAP` and use it (see [build_gsoap.cmake](./cmake/build_gsoap.cmake)).
+  At the same time, we compile the necessary `gSOAP` functions with the project.
+
 ```console
-make target
+cd repo_dir
+cmake -B build .
+cmake --build build
 ```
 
-target is:
- - `all`       -  build daemon in release and debug mode
- - `debug`     -  build in debug mode (#define DEBUG 1)
- - `release`   -  build in release mode (strip)
- - `clean`     -  remove all generated files
- - `distclean` -  clean + remove all SDK files
- - `help`      -  show list support targets
 
+2. Analogue of the 1st, but we use the static library `gSOAP` (we link it)
+
+```console
+cd repo_dir
+cmake -B build . -DUSE_GSOAP_STATIC_LIB=1
+cmake --build build
+```
+
+
+3. We use the system `gSOAP`, for this we use the search module([FindgSOAP.cmake](./cmake/FindgSOAP.cmake)),
+ this module should find the `gSOAP` in the system that we will use.
+
+```console
+cd repo_dir
+cmake -B build . -DUSE_SYSTEM_GSOAP=1
+cmake --build build
+```
+
+For example, in Ubuntu 22.04, to install `gSOAP`, you need to install the following packages:
+
+```console
+sudo apt install gsoap libgsoap-dev
+```
+
+
+4. Analogue of the 3rd, but we tell the [FindgSOAP.cmake](./cmake/FindgSOAP.cmake) search module to look for static libraries instead of shared ones.
+  This will allow you not to depend on the `gSOAP` system libraries.
+
+```console
+cd repo_dir
+cmake -B build . -DUSE_SYSTEM_GSOAP=1 -DUSE_GSOAP_STATIC_LIB=1
+cmake --build build
+```
 
 > **Note**: If you need WS-Security support, you need to call make with the `WSSE_ON=1` parameter.
 
 Show how enable support WS-Security:
 ```console
-make WSSE_ON=1
+cmake -B build . -DWSSE_ON=1
 ```
 
-If before make was done without WS-Security support, **must cleanup** (We need to rebuild the gsoap with `openssl` support):
-```console
-make distclean
-```
+If before make was done without WS-Security support, **must regenerate** (We need to rebuild the gsoap with `openssl` support)
 
 
 

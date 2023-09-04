@@ -94,7 +94,7 @@ tt__SystemDateTime* ServiceContext::get_SystemDateAndTime(soap* soap)
     struct tm    *time_info = localtime(&timestamp);
 
     auto res = soap_new_req_tt__SystemDateTime(soap,
-                                               tt__SetDateTimeType__Manual,
+                                               tt__SetDateTimeType::Manual,
                                                (time_info->tm_isdst > 0));
 
     if(res)
@@ -543,11 +543,11 @@ bool StreamProfile::set_type(const char *new_val)
 
 
     if( new_type == "JPEG" )
-        type = tt__VideoEncoding__JPEG;
+        type = static_cast<int>(tt__VideoEncoding::JPEG);
     else if( new_type == "MPEG4" )
-        type = tt__VideoEncoding__MPEG4;
+        type = static_cast<int>(tt__VideoEncoding::MPEG4);
     else if( new_type == "H264" )
-        type = tt__VideoEncoding__H264;
+        type = static_cast<int>(tt__VideoEncoding::H264);
     else
     {
         str_err = "type dont support";

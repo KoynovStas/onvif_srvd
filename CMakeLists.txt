@@ -185,7 +185,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 add_custom_command(
     OUTPUT ${GENERATED_DIR}/onvif.h
     COMMAND "${CMAKE_COMMAND}" -E make_directory ${GENERATED_DIR}
-    COMMAND ${GSOAP_WSDL2H} -d -t ${WSDL_DIR}/typemap.dat
+    COMMAND ${GSOAP_WSDL2H} -c++11 -d -t ${WSDL_DIR}/typemap.dat
             -o ${GENERATED_DIR}/onvif.h  ${WSDL_FILES}
     COMMAND ${WSSE_IMPORT}
     VERBATIM
@@ -195,7 +195,7 @@ add_custom_command(
 
 add_custom_command(
     OUTPUT ${GENERATED_DIR}/soapC.cpp
-    COMMAND ${GSOAP_SOAPCPP2} -j -L -x -S -d ${GENERATED_DIR}
+    COMMAND ${GSOAP_SOAPCPP2} -c++11 -j -L -x -S -d ${GENERATED_DIR}
             -I${GSOAP_INCLUDE_DIR}:${GSOAP_IMPORT_DIR} ${GENERATED_DIR}/onvif.h
     DEPENDS ${GENERATED_DIR}/onvif.h
     COMMENT "Creating gSOAP stubs and glue code"

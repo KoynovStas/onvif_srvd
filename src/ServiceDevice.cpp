@@ -183,7 +183,7 @@ int DeviceBindingService::GetScopes(_tds__GetScopes *tds__GetScopes, _tds__GetSc
 
     for(size_t i = 0; i < ctx->scopes.size(); ++i)
     {
-        tds__GetScopesResponse.Scopes.push_back(soap_new_req_tt__Scope(soap, tt__ScopeDefinition__Fixed, ctx->scopes[i]));
+        tds__GetScopesResponse.Scopes.push_back(soap_new_req_tt__Scope(soap, tt__ScopeDefinition::Fixed, ctx->scopes[i]));
     }
 
     return SOAP_OK;
@@ -329,13 +329,13 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
     std::vector<tt__CapabilityCategory>& categories(tds__GetCapabilities->Category);
     if(categories.empty())
     {
-        categories.push_back(tt__CapabilityCategory__All);
+        categories.push_back(tt__CapabilityCategory::All);
     }
 
 
     for(tt__CapabilityCategory category : categories)
     {
-        if(!tds__GetCapabilitiesResponse.Capabilities->Device && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__Device) ) )
+        if(!tds__GetCapabilitiesResponse.Capabilities->Device && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Device) ) )
         {
             tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = XAddr;
@@ -347,7 +347,7 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
         }
 
 
-        if(!tds__GetCapabilitiesResponse.Capabilities->Media && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__Media) ) )
+        if(!tds__GetCapabilitiesResponse.Capabilities->Media && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Media) ) )
         {
             tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
@@ -355,7 +355,7 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
         }
 
         if (ctx->get_ptz_node()->enable) {
-            if(!tds__GetCapabilitiesResponse.Capabilities->PTZ && ( (category == tt__CapabilityCategory__All) || (category == tt__CapabilityCategory__PTZ) ) )
+            if(!tds__GetCapabilitiesResponse.Capabilities->PTZ && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::PTZ) ) )
             {
                 tds__GetCapabilitiesResponse.Capabilities->PTZ  = soap_new_tt__PTZCapabilities(this->soap);
                 tds__GetCapabilitiesResponse.Capabilities->PTZ->XAddr = XAddr;

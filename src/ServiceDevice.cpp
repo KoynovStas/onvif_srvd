@@ -12,6 +12,7 @@
 #include "soapDeviceBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
+#include "stools.h"
 
 
 
@@ -309,7 +310,13 @@ int DeviceBindingService::SetUser(_tds__SetUser *tds__SetUser, _tds__SetUserResp
 
 int DeviceBindingService::GetWsdlUrl(_tds__GetWsdlUrl *tds__GetWsdlUrl, _tds__GetWsdlUrlResponse &tds__GetWsdlUrlResponse)
 {
-    SOAP_EMPTY_HANDLER(tds__GetWsdlUrl, "Device");
+    UNUSED(tds__GetWsdlUrl);
+    DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+    std::string url = soap->endpoint;
+    tds__GetWsdlUrlResponse.WsdlUrl = url.c_str();
+
+    return SOAP_OK;
 }
 
 
@@ -352,6 +359,9 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
             tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_ptr(soap, false);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
         }
 
         if (ctx->get_ptz_node()->enable) {

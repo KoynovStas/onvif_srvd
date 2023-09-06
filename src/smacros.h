@@ -43,8 +43,6 @@
 #ifndef SMACROS_H
 #define SMACROS_H
 
-#include <stddef.h>  //for offsetof
-
 
 
 
@@ -88,27 +86,6 @@
 
 
 
-/*
- * Since C/C++ 11 you can use a standard static_assert(exp, msg)
- * For old C/C++ a lot of variants, this is the most simple and intuitive
- * It can be used in *.c and in *.h files.
- * (macros that use function style can be used in *.c files only)
- *
- * Disadvantages: you can not be set msg to display the console when compiling
- *
- * Example:
- *
- * STATIC_ASSERT( sizeof(char) == 1)  //good job
- * STATIC_ASSERT( sizeof(char) != 1)  //You will get a compilation error
-*/
-#define ASSERT_CONCAT_(a, b) a##b
-#define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
-#define STATIC_ASSERT(expr) \
-    enum {ASSERT_CONCAT(ASSERT_CONCAT(level_, __INCLUDE_LEVEL__), \
-          ASSERT_CONCAT(_static_assert_on_line_, __LINE__)) = 1/(int)(!!(expr)) }
-
-
-
 #define DEF_TO_STR_(text) #text
 #define DEF_TO_STR(arg) DEF_TO_STR_(arg)
 
@@ -135,15 +112,6 @@
         #define  DEBUG_MSG(...)       ({})
         #define  FDEBUG_MSG(fp, ...)  ({})
 #endif
-
-
-
-// container_of - cast a member of a structure out to the containing structure
-// ptr:    the pointer to the member.
-// type:   the type of the container struct this is embedded in.
-// member: the name of the member within the struct.
-#define container_of(ptr, type, member) \
-    ({ (type *)( (const char *)ptr - offsetof(type, member) ); })
 
 
 

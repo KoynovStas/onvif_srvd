@@ -7,7 +7,6 @@
 -----------------------------------------------------------------------------
 */
 
-
 #include "soapMediaBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
@@ -49,27 +48,6 @@ int MediaBindingService::GetVideoSources(_trt__GetVideoSources *trt__GetVideoSou
 
 
     return SOAP_OK;
-}
-
-
-
-int MediaBindingService::GetAudioSources(_trt__GetAudioSources *trt__GetAudioSources, _trt__GetAudioSourcesResponse &trt__GetAudioSourcesResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioSources, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioOutputs(_trt__GetAudioOutputs *trt__GetAudioOutputs, _trt__GetAudioOutputsResponse &trt__GetAudioOutputsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioOutputs, "Media");
-}
-
-
-
-int MediaBindingService::CreateProfile(_trt__CreateProfile *trt__CreateProfile, _trt__CreateProfileResponse &trt__CreateProfileResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__CreateProfile, "Media");
 }
 
 
@@ -119,419 +97,6 @@ int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__
 
 
 
-int MediaBindingService::AddVideoEncoderConfiguration(_trt__AddVideoEncoderConfiguration *trt__AddVideoEncoderConfiguration, _trt__AddVideoEncoderConfigurationResponse &trt__AddVideoEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddVideoEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddVideoSourceConfiguration(_trt__AddVideoSourceConfiguration *trt__AddVideoSourceConfiguration, _trt__AddVideoSourceConfigurationResponse &trt__AddVideoSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddVideoSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddAudioEncoderConfiguration(_trt__AddAudioEncoderConfiguration *trt__AddAudioEncoderConfiguration, _trt__AddAudioEncoderConfigurationResponse &trt__AddAudioEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddAudioEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddAudioSourceConfiguration(_trt__AddAudioSourceConfiguration *trt__AddAudioSourceConfiguration, _trt__AddAudioSourceConfigurationResponse &trt__AddAudioSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddAudioSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddPTZConfiguration(_trt__AddPTZConfiguration *trt__AddPTZConfiguration, _trt__AddPTZConfigurationResponse &trt__AddPTZConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddPTZConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddVideoAnalyticsConfiguration(_trt__AddVideoAnalyticsConfiguration *trt__AddVideoAnalyticsConfiguration, _trt__AddVideoAnalyticsConfigurationResponse &trt__AddVideoAnalyticsConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddVideoAnalyticsConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddMetadataConfiguration(_trt__AddMetadataConfiguration *trt__AddMetadataConfiguration, _trt__AddMetadataConfigurationResponse &trt__AddMetadataConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddMetadataConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddAudioOutputConfiguration(_trt__AddAudioOutputConfiguration *trt__AddAudioOutputConfiguration, _trt__AddAudioOutputConfigurationResponse &trt__AddAudioOutputConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddAudioOutputConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::AddAudioDecoderConfiguration(_trt__AddAudioDecoderConfiguration *trt__AddAudioDecoderConfiguration, _trt__AddAudioDecoderConfigurationResponse &trt__AddAudioDecoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__AddAudioDecoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveVideoEncoderConfiguration(_trt__RemoveVideoEncoderConfiguration *trt__RemoveVideoEncoderConfiguration, _trt__RemoveVideoEncoderConfigurationResponse &trt__RemoveVideoEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveVideoEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveVideoSourceConfiguration(_trt__RemoveVideoSourceConfiguration *trt__RemoveVideoSourceConfiguration, _trt__RemoveVideoSourceConfigurationResponse &trt__RemoveVideoSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveVideoSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveAudioEncoderConfiguration(_trt__RemoveAudioEncoderConfiguration *trt__RemoveAudioEncoderConfiguration, _trt__RemoveAudioEncoderConfigurationResponse &trt__RemoveAudioEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveAudioEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveAudioSourceConfiguration(_trt__RemoveAudioSourceConfiguration *trt__RemoveAudioSourceConfiguration, _trt__RemoveAudioSourceConfigurationResponse &trt__RemoveAudioSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveAudioSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemovePTZConfiguration(_trt__RemovePTZConfiguration *trt__RemovePTZConfiguration, _trt__RemovePTZConfigurationResponse &trt__RemovePTZConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemovePTZConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveVideoAnalyticsConfiguration(_trt__RemoveVideoAnalyticsConfiguration *trt__RemoveVideoAnalyticsConfiguration, _trt__RemoveVideoAnalyticsConfigurationResponse &trt__RemoveVideoAnalyticsConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveVideoAnalyticsConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveMetadataConfiguration(_trt__RemoveMetadataConfiguration *trt__RemoveMetadataConfiguration, _trt__RemoveMetadataConfigurationResponse &trt__RemoveMetadataConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveMetadataConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveAudioOutputConfiguration(_trt__RemoveAudioOutputConfiguration *trt__RemoveAudioOutputConfiguration, _trt__RemoveAudioOutputConfigurationResponse &trt__RemoveAudioOutputConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveAudioOutputConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::RemoveAudioDecoderConfiguration(_trt__RemoveAudioDecoderConfiguration *trt__RemoveAudioDecoderConfiguration, _trt__RemoveAudioDecoderConfigurationResponse &trt__RemoveAudioDecoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__RemoveAudioDecoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::DeleteProfile(_trt__DeleteProfile *trt__DeleteProfile, _trt__DeleteProfileResponse &trt__DeleteProfileResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__DeleteProfile, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoSourceConfigurations(_trt__GetVideoSourceConfigurations *trt__GetVideoSourceConfigurations, _trt__GetVideoSourceConfigurationsResponse &trt__GetVideoSourceConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoSourceConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoEncoderConfigurations(_trt__GetVideoEncoderConfigurations *trt__GetVideoEncoderConfigurations, _trt__GetVideoEncoderConfigurationsResponse &trt__GetVideoEncoderConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoEncoderConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioSourceConfigurations(_trt__GetAudioSourceConfigurations *trt__GetAudioSourceConfigurations, _trt__GetAudioSourceConfigurationsResponse &trt__GetAudioSourceConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioSourceConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioEncoderConfigurations(_trt__GetAudioEncoderConfigurations *trt__GetAudioEncoderConfigurations, _trt__GetAudioEncoderConfigurationsResponse &trt__GetAudioEncoderConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioEncoderConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoAnalyticsConfigurations(_trt__GetVideoAnalyticsConfigurations *trt__GetVideoAnalyticsConfigurations, _trt__GetVideoAnalyticsConfigurationsResponse &trt__GetVideoAnalyticsConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoAnalyticsConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetMetadataConfigurations(_trt__GetMetadataConfigurations *trt__GetMetadataConfigurations, _trt__GetMetadataConfigurationsResponse &trt__GetMetadataConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetMetadataConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioOutputConfigurations(_trt__GetAudioOutputConfigurations *trt__GetAudioOutputConfigurations, _trt__GetAudioOutputConfigurationsResponse &trt__GetAudioOutputConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioOutputConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioDecoderConfigurations(_trt__GetAudioDecoderConfigurations *trt__GetAudioDecoderConfigurations, _trt__GetAudioDecoderConfigurationsResponse &trt__GetAudioDecoderConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioDecoderConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoSourceConfiguration(_trt__GetVideoSourceConfiguration *trt__GetVideoSourceConfiguration, _trt__GetVideoSourceConfigurationResponse &trt__GetVideoSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoEncoderConfiguration(_trt__GetVideoEncoderConfiguration *trt__GetVideoEncoderConfiguration, _trt__GetVideoEncoderConfigurationResponse &trt__GetVideoEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioSourceConfiguration(_trt__GetAudioSourceConfiguration *trt__GetAudioSourceConfiguration, _trt__GetAudioSourceConfigurationResponse &trt__GetAudioSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioEncoderConfiguration(_trt__GetAudioEncoderConfiguration *trt__GetAudioEncoderConfiguration, _trt__GetAudioEncoderConfigurationResponse &trt__GetAudioEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoAnalyticsConfiguration(_trt__GetVideoAnalyticsConfiguration *trt__GetVideoAnalyticsConfiguration, _trt__GetVideoAnalyticsConfigurationResponse &trt__GetVideoAnalyticsConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoAnalyticsConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetMetadataConfiguration(_trt__GetMetadataConfiguration *trt__GetMetadataConfiguration, _trt__GetMetadataConfigurationResponse &trt__GetMetadataConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetMetadataConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioOutputConfiguration(_trt__GetAudioOutputConfiguration *trt__GetAudioOutputConfiguration, _trt__GetAudioOutputConfigurationResponse &trt__GetAudioOutputConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioOutputConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioDecoderConfiguration(_trt__GetAudioDecoderConfiguration *trt__GetAudioDecoderConfiguration, _trt__GetAudioDecoderConfigurationResponse &trt__GetAudioDecoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioDecoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleVideoEncoderConfigurations(_trt__GetCompatibleVideoEncoderConfigurations *trt__GetCompatibleVideoEncoderConfigurations, _trt__GetCompatibleVideoEncoderConfigurationsResponse &trt__GetCompatibleVideoEncoderConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleVideoEncoderConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleVideoSourceConfigurations(_trt__GetCompatibleVideoSourceConfigurations *trt__GetCompatibleVideoSourceConfigurations, _trt__GetCompatibleVideoSourceConfigurationsResponse &trt__GetCompatibleVideoSourceConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleVideoSourceConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleAudioEncoderConfigurations(_trt__GetCompatibleAudioEncoderConfigurations *trt__GetCompatibleAudioEncoderConfigurations, _trt__GetCompatibleAudioEncoderConfigurationsResponse &trt__GetCompatibleAudioEncoderConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleAudioEncoderConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleAudioSourceConfigurations(_trt__GetCompatibleAudioSourceConfigurations *trt__GetCompatibleAudioSourceConfigurations, _trt__GetCompatibleAudioSourceConfigurationsResponse &trt__GetCompatibleAudioSourceConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleAudioSourceConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleVideoAnalyticsConfigurations(_trt__GetCompatibleVideoAnalyticsConfigurations *trt__GetCompatibleVideoAnalyticsConfigurations, _trt__GetCompatibleVideoAnalyticsConfigurationsResponse &trt__GetCompatibleVideoAnalyticsConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleVideoAnalyticsConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleMetadataConfigurations(_trt__GetCompatibleMetadataConfigurations *trt__GetCompatibleMetadataConfigurations, _trt__GetCompatibleMetadataConfigurationsResponse &trt__GetCompatibleMetadataConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleMetadataConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleAudioOutputConfigurations(_trt__GetCompatibleAudioOutputConfigurations *trt__GetCompatibleAudioOutputConfigurations, _trt__GetCompatibleAudioOutputConfigurationsResponse &trt__GetCompatibleAudioOutputConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleAudioOutputConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::GetCompatibleAudioDecoderConfigurations(_trt__GetCompatibleAudioDecoderConfigurations *trt__GetCompatibleAudioDecoderConfigurations, _trt__GetCompatibleAudioDecoderConfigurationsResponse &trt__GetCompatibleAudioDecoderConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetCompatibleAudioDecoderConfigurations, "Media");
-}
-
-
-
-int MediaBindingService::SetVideoSourceConfiguration(_trt__SetVideoSourceConfiguration *trt__SetVideoSourceConfiguration, _trt__SetVideoSourceConfigurationResponse &trt__SetVideoSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetVideoSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetVideoEncoderConfiguration(_trt__SetVideoEncoderConfiguration *trt__SetVideoEncoderConfiguration, _trt__SetVideoEncoderConfigurationResponse &trt__SetVideoEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetVideoEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetAudioSourceConfiguration(_trt__SetAudioSourceConfiguration *trt__SetAudioSourceConfiguration, _trt__SetAudioSourceConfigurationResponse &trt__SetAudioSourceConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetAudioSourceConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetAudioEncoderConfiguration(_trt__SetAudioEncoderConfiguration *trt__SetAudioEncoderConfiguration, _trt__SetAudioEncoderConfigurationResponse &trt__SetAudioEncoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetAudioEncoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetVideoAnalyticsConfiguration(_trt__SetVideoAnalyticsConfiguration *trt__SetVideoAnalyticsConfiguration, _trt__SetVideoAnalyticsConfigurationResponse &trt__SetVideoAnalyticsConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetVideoAnalyticsConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetMetadataConfiguration(_trt__SetMetadataConfiguration *trt__SetMetadataConfiguration, _trt__SetMetadataConfigurationResponse &trt__SetMetadataConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetMetadataConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetAudioOutputConfiguration(_trt__SetAudioOutputConfiguration *trt__SetAudioOutputConfiguration, _trt__SetAudioOutputConfigurationResponse &trt__SetAudioOutputConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetAudioOutputConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::SetAudioDecoderConfiguration(_trt__SetAudioDecoderConfiguration *trt__SetAudioDecoderConfiguration, _trt__SetAudioDecoderConfigurationResponse &trt__SetAudioDecoderConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetAudioDecoderConfiguration, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoSourceConfigurationOptions(_trt__GetVideoSourceConfigurationOptions *trt__GetVideoSourceConfigurationOptions, _trt__GetVideoSourceConfigurationOptionsResponse &trt__GetVideoSourceConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoSourceConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetVideoEncoderConfigurationOptions(_trt__GetVideoEncoderConfigurationOptions *trt__GetVideoEncoderConfigurationOptions, _trt__GetVideoEncoderConfigurationOptionsResponse &trt__GetVideoEncoderConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoEncoderConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioSourceConfigurationOptions(_trt__GetAudioSourceConfigurationOptions *trt__GetAudioSourceConfigurationOptions, _trt__GetAudioSourceConfigurationOptionsResponse &trt__GetAudioSourceConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioSourceConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioEncoderConfigurationOptions(_trt__GetAudioEncoderConfigurationOptions *trt__GetAudioEncoderConfigurationOptions, _trt__GetAudioEncoderConfigurationOptionsResponse &trt__GetAudioEncoderConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioEncoderConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetMetadataConfigurationOptions(_trt__GetMetadataConfigurationOptions *trt__GetMetadataConfigurationOptions, _trt__GetMetadataConfigurationOptionsResponse &trt__GetMetadataConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetMetadataConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioOutputConfigurationOptions(_trt__GetAudioOutputConfigurationOptions *trt__GetAudioOutputConfigurationOptions, _trt__GetAudioOutputConfigurationOptionsResponse &trt__GetAudioOutputConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioOutputConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetAudioDecoderConfigurationOptions(_trt__GetAudioDecoderConfigurationOptions *trt__GetAudioDecoderConfigurationOptions, _trt__GetAudioDecoderConfigurationOptionsResponse &trt__GetAudioDecoderConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetAudioDecoderConfigurationOptions, "Media");
-}
-
-
-
-int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(_trt__GetGuaranteedNumberOfVideoEncoderInstances *trt__GetGuaranteedNumberOfVideoEncoderInstances, _trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse &trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetGuaranteedNumberOfVideoEncoderInstances, "Media");
-}
-
-
-
 int MediaBindingService::GetStreamUri(_trt__GetStreamUri *trt__GetStreamUri, _trt__GetStreamUriResponse &trt__GetStreamUriResponse)
 {
     DEBUG_MSG("Media: %s   for profile:%s\n", __FUNCTION__, trt__GetStreamUri->ProfileToken.c_str());
@@ -553,27 +118,6 @@ int MediaBindingService::GetStreamUri(_trt__GetStreamUri *trt__GetStreamUri, _tr
 
 
     return ret;
-}
-
-
-
-int MediaBindingService::StartMulticastStreaming(_trt__StartMulticastStreaming *trt__StartMulticastStreaming, _trt__StartMulticastStreamingResponse &trt__StartMulticastStreamingResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__StartMulticastStreaming, "Media");
-}
-
-
-
-int MediaBindingService::StopMulticastStreaming(_trt__StopMulticastStreaming *trt__StopMulticastStreaming, _trt__StopMulticastStreamingResponse &trt__StopMulticastStreamingResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__StopMulticastStreaming, "Media");
-}
-
-
-
-int MediaBindingService::SetSynchronizationPoint(_trt__SetSynchronizationPoint *trt__SetSynchronizationPoint, _trt__SetSynchronizationPointResponse &trt__SetSynchronizationPointResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetSynchronizationPoint, "Media");
 }
 
 
@@ -602,56 +146,76 @@ int MediaBindingService::GetSnapshotUri(_trt__GetSnapshotUri *trt__GetSnapshotUr
 
 
 
-int MediaBindingService::GetVideoSourceModes(_trt__GetVideoSourceModes *trt__GetVideoSourceModes, _trt__GetVideoSourceModesResponse &trt__GetVideoSourceModesResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetVideoSourceModes, "Media");
-}
-
-
-
-int MediaBindingService::SetVideoSourceMode(_trt__SetVideoSourceMode *trt__SetVideoSourceMode, _trt__SetVideoSourceModeResponse &trt__SetVideoSourceModeResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetVideoSourceMode, "Media");
-}
-
-
-
-int MediaBindingService::GetOSDs(_trt__GetOSDs *trt__GetOSDs, _trt__GetOSDsResponse &trt__GetOSDsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetOSDs, "Media");
-}
-
-
-
-int MediaBindingService::GetOSD(_trt__GetOSD *trt__GetOSD, _trt__GetOSDResponse &trt__GetOSDResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetOSD, "Media");
-}
-
-
-
-int MediaBindingService::GetOSDOptions(_trt__GetOSDOptions *trt__GetOSDOptions, _trt__GetOSDOptionsResponse &trt__GetOSDOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__GetOSDOptions, "Media");
-}
-
-
-
-int MediaBindingService::SetOSD(_trt__SetOSD *trt__SetOSD, _trt__SetOSDResponse &trt__SetOSDResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__SetOSD, "Media");
-}
-
-
-
-int MediaBindingService::CreateOSD(_trt__CreateOSD *trt__CreateOSD, _trt__CreateOSDResponse &trt__CreateOSDResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__CreateOSD, "Media");
-}
-
-
-
-int MediaBindingService::DeleteOSD(_trt__DeleteOSD *trt__DeleteOSD, _trt__DeleteOSDResponse &trt__DeleteOSDResponse)
-{
-    SOAP_EMPTY_HANDLER(trt__DeleteOSD, "Media");
-}
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, StartMulticastStreaming)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, StopMulticastStreaming)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetSynchronizationPoint)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioSources)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioOutputs)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, CreateProfile)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddVideoEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddVideoSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddAudioEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddAudioSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddPTZConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddVideoAnalyticsConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddMetadataConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddAudioOutputConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, AddAudioDecoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveVideoEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveVideoSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveAudioEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveAudioSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemovePTZConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveVideoAnalyticsConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveMetadataConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveAudioOutputConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveAudioDecoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, DeleteProfile)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoSourceConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoEncoderConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioSourceConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioEncoderConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoAnalyticsConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetMetadataConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioOutputConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioDecoderConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoAnalyticsConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetMetadataConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioOutputConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioDecoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleVideoEncoderConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleVideoSourceConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleAudioEncoderConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleAudioSourceConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleVideoAnalyticsConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleMetadataConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleAudioOutputConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetCompatibleAudioDecoderConfigurations)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetVideoSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetVideoEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetAudioSourceConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetAudioEncoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetVideoAnalyticsConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetMetadataConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetAudioOutputConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetAudioDecoderConfiguration)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoSourceConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoEncoderConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioSourceConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioEncoderConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetMetadataConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioOutputConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioDecoderConfigurationOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetGuaranteedNumberOfVideoEncoderInstances)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoSourceModes)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetVideoSourceMode)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetOSDs)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetOSD)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetOSDOptions)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetOSD)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, CreateOSD)
+SOAP_EMPTY_HANDLER(MediaBindingService, trt, DeleteOSD)

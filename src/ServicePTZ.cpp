@@ -7,26 +7,11 @@
 -----------------------------------------------------------------------------
 */
 
-
 #include "soapPTZBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
 
 
-
-
-
-int PTZBindingService::GetServiceCapabilities(_tptz__GetServiceCapabilities *tptz__GetServiceCapabilities, _tptz__GetServiceCapabilitiesResponse &tptz__GetServiceCapabilitiesResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetServiceCapabilities, "PTZ");
-}
-
-
-
-int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, _tptz__GetConfigurationsResponse &tptz__GetConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetConfigurations, "PTZ");
-}
 
 
 
@@ -61,20 +46,6 @@ int PTZBindingService::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__Ge
     }
 
     return SOAP_OK;
-}
-
-
-
-int PTZBindingService::SetPreset(_tptz__SetPreset *tptz__SetPreset, _tptz__SetPresetResponse &tptz__SetPresetResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__SetPreset, "PTZ");
-}
-
-
-
-int PTZBindingService::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePresetResponse &tptz__RemovePresetResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__RemovePreset, "PTZ");
 }
 
 
@@ -116,20 +87,6 @@ int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__Go
     system(preset_cmd.c_str());
 
     return SOAP_OK;
-}
-
-
-
-int PTZBindingService::GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetStatusResponse &tptz__GetStatusResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetStatus, "PTZ");
-}
-
-
-
-int PTZBindingService::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tptz__GetConfigurationResponse &tptz__GetConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetConfiguration, "PTZ");
 }
 
 
@@ -228,20 +185,6 @@ int PTZBindingService::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResp
 
 
 
-int PTZBindingService::SetConfiguration(_tptz__SetConfiguration *tptz__SetConfiguration, _tptz__SetConfigurationResponse &tptz__SetConfigurationResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__SetConfiguration, "PTZ");
-}
-
-
-
-int PTZBindingService::GetConfigurationOptions(_tptz__GetConfigurationOptions *tptz__GetConfigurationOptions, _tptz__GetConfigurationOptionsResponse &tptz__GetConfigurationOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetConfigurationOptions, "PTZ");
-}
-
-
-
 int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomePosition, _tptz__GotoHomePositionResponse &tptz__GotoHomePositionResponse)
 {
     UNUSED(tptz__GotoHomePosition);
@@ -276,11 +219,6 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
     system(preset_cmd.c_str());
 
     return SOAP_OK;
-}
-
-int PTZBindingService::SetHomePosition(_tptz__SetHomePosition *tptz__SetHomePosition, _tptz__SetHomePositionResponse &tptz__SetHomePositionResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__SetHomePosition, "PTZ");
 }
 
 
@@ -361,20 +299,6 @@ int PTZBindingService::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tp
 
 
 
-int PTZBindingService::SendAuxiliaryCommand(_tptz__SendAuxiliaryCommand *tptz__SendAuxiliaryCommand, _tptz__SendAuxiliaryCommandResponse &tptz__SendAuxiliaryCommandResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__SendAuxiliaryCommand, "PTZ");
-}
-
-
-
-int PTZBindingService::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__AbsoluteMoveResponse &tptz__AbsoluteMoveResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__AbsoluteMove, "PTZ");
-}
-
-
-
 int PTZBindingService::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse &tptz__StopResponse)
 {
     UNUSED(tptz__Stop);
@@ -390,56 +314,22 @@ int PTZBindingService::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse &tptz__
 
 
 
-int PTZBindingService::GetPresetTours(_tptz__GetPresetTours *tptz__GetPresetTours, _tptz__GetPresetToursResponse &tptz__GetPresetToursResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetPresetTours, "PTZ");
-}
-
-
-
-int PTZBindingService::GetPresetTour(_tptz__GetPresetTour *tptz__GetPresetTour, _tptz__GetPresetTourResponse &tptz__GetPresetTourResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetPresetTour, "PTZ");
-}
-
-
-
-int PTZBindingService::GetPresetTourOptions(_tptz__GetPresetTourOptions *tptz__GetPresetTourOptions, _tptz__GetPresetTourOptionsResponse &tptz__GetPresetTourOptionsResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetPresetTourOptions, "PTZ");
-}
-
-
-
-int PTZBindingService::CreatePresetTour(_tptz__CreatePresetTour *tptz__CreatePresetTour, _tptz__CreatePresetTourResponse &tptz__CreatePresetTourResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__CreatePresetTour, "PTZ");
-}
-
-
-
-int PTZBindingService::ModifyPresetTour(_tptz__ModifyPresetTour *tptz__ModifyPresetTour, _tptz__ModifyPresetTourResponse &tptz__ModifyPresetTourResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__ModifyPresetTour, "PTZ");
-}
-
-
-
-int PTZBindingService::OperatePresetTour(_tptz__OperatePresetTour *tptz__OperatePresetTour, _tptz__OperatePresetTourResponse &tptz__OperatePresetTourResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__OperatePresetTour, "PTZ");
-}
-
-
-
-int PTZBindingService::RemovePresetTour(_tptz__RemovePresetTour *tptz__RemovePresetTour, _tptz__RemovePresetTourResponse &tptz__RemovePresetTourResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__RemovePresetTour, "PTZ");
-}
-
-
-
-int PTZBindingService::GetCompatibleConfigurations(_tptz__GetCompatibleConfigurations *tptz__GetCompatibleConfigurations, _tptz__GetCompatibleConfigurationsResponse &tptz__GetCompatibleConfigurationsResponse)
-{
-    SOAP_EMPTY_HANDLER(tptz__GetCompatibleConfigurations, "PTZ");
-}
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetServiceCapabilities)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetConfigurations)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, SetPreset)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, RemovePreset)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetStatus)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetConfiguration)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, SetConfiguration)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetConfigurationOptions)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, SetHomePosition)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, SendAuxiliaryCommand)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, AbsoluteMove)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetPresetTours)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetPresetTour)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetPresetTourOptions)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, CreatePresetTour)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, ModifyPresetTour)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, OperatePresetTour)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, RemovePresetTour)
+SOAP_EMPTY_HANDLER(PTZBindingService, tptz, GetCompatibleConfigurations)

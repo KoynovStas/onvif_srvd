@@ -123,11 +123,18 @@
  * Disable the compiler warning about unused arguments and
  * display a message for the Debug mode.
  */
-#define  SOAP_EMPTY_HANDLER(arg1, str_prefix)      \
-    UNUSED(arg1);                                  \
-    UNUSED(arg1##Response);                        \
-    DEBUG_MSG(str_prefix ": %s\n", __FUNCTION__);  \
-    return SOAP_OK                                 \
+#define SOAP_REQ_ARG(_prefix, _handler) _prefix##__##_handler
+#define SOAP_RSP_ARG(_prefix, _handler) _prefix##__##_handler##Response
+#define SOAP_EMPTY_HANDLER(_class, _prefix, _handler)                       \
+int _class::_handler(                                                       \
+        _##_prefix##__##_handler           *SOAP_REQ_ARG(_prefix, _handler),\
+        _##_prefix##__##_handler##Response &SOAP_RSP_ARG(_prefix, _handler))\
+    {                                                                       \
+        UNUSED(SOAP_REQ_ARG(_prefix, _handler));                            \
+        UNUSED(SOAP_RSP_ARG(_prefix, _handler));                            \
+        DEBUG_MSG(#_class ": %s\n", __FUNCTION__);                          \
+        return SOAP_OK;                                                     \
+    }
 
 
 

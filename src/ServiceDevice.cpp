@@ -12,6 +12,7 @@
 #include "soapDeviceBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
+#include "stools.h"
 
 
 
@@ -220,6 +221,9 @@ int DeviceBindingService::GetCapabilities(
             tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(this->soap);
             tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_ptr(soap, false);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
         }
 
         if (ctx->get_ptz_node()->enable) {

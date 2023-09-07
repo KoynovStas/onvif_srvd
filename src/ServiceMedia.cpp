@@ -10,6 +10,7 @@
 #include "soapMediaBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
+#include "stools.h"
 
 
 
@@ -146,6 +147,52 @@ int MediaBindingService::GetSnapshotUri(_trt__GetSnapshotUri *trt__GetSnapshotUr
 
 
 
+int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(
+    _trt__GetGuaranteedNumberOfVideoEncoderInstances         *trt__GetGuaranteedNumberOfVideoEncoderInstances,
+    _trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse &trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse)
+{
+    UNUSED(trt__GetGuaranteedNumberOfVideoEncoderInstances);
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    int instancesNumber     = 3;
+    int jpegInstancesNumber = 0;
+    int mpeg4InstancesNumber= 0;
+    int h264InstancesNumber = 0;
+    int totalNumber         = 0;
+
+    for(auto& p : profiles)
+    {
+        if (p.second.get_type() == static_cast<int>(tt__VideoEncoding::JPEG))
+        {
+            jpegInstancesNumber += instancesNumber;
+            totalNumber         += instancesNumber;
+        }
+        else if (p.second.get_type() == static_cast<int>(tt__VideoEncoding::MPEG4))
+        {
+            mpeg4InstancesNumber += instancesNumber;
+            totalNumber          += instancesNumber;
+        }
+        else if (p.second.get_type() == static_cast<int>(tt__VideoEncoding::H264))
+        {
+            h264InstancesNumber += instancesNumber;
+            totalNumber         += instancesNumber;
+        }
+    }
+
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.TotalNumber = totalNumber;
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.JPEG  = soap_new_ptr(soap, jpegInstancesNumber);
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.MPEG4 = soap_new_ptr(soap, mpeg4InstancesNumber);
+    trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse.H264  = soap_new_ptr(soap, h264InstancesNumber);
+
+    return SOAP_OK;
+}
+
+
+
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, StartMulticastStreaming)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, StopMulticastStreaming)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetSynchronizationPoint)
@@ -210,7 +257,6 @@ SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioEncoderConfigurationOptions
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetMetadataConfigurationOptions)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioOutputConfigurationOptions)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioDecoderConfigurationOptions)
-SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetGuaranteedNumberOfVideoEncoderInstances)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoSourceModes)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, SetVideoSourceMode)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetOSDs)

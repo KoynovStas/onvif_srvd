@@ -15,18 +15,32 @@
 
 
 
-int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
+static int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
 {
     ptzp->token  = soap_new_std__string(soap);
     *ptzp->token = std::to_string(number);
     ptzp->Name   = soap_new_std__string(soap);
     *ptzp->Name  = std::to_string(number);
 
-    ptzp->PTZPosition             = soap_new_tt__PTZVector(soap);
-    ptzp->PTZPosition->PanTilt    = soap_new_req_tt__Vector2D(soap, 0.0f, 0.0f);
-    ptzp->PTZPosition->Zoom       = soap_new_req_tt__Vector1D(soap, 1.0f);
+    ptzp->PTZPosition          = soap_new_tt__PTZVector(soap);
+    ptzp->PTZPosition->PanTilt = soap_new_req_tt__Vector2D(soap, 0.0f, 0.0f);
+    ptzp->PTZPosition->Zoom    = soap_new_req_tt__Vector1D(soap, 1.0f);
 
     return SOAP_OK;
+}
+
+
+
+static int run_system_cmd(const char* cmd, unsigned int timeout_usec = 0)
+{
+    int ret = system(cmd);
+
+    DEBUG_MSG("PTZ cmd:%s  ret:%d\n", cmd, ret);
+
+    if(timeout_usec)
+        usleep(timeout_usec);
+
+    return ret;
 }
 
 
@@ -60,19 +74,21 @@ int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__Go
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__GotoPreset == NULL) {
+    if (tptz__GotoPreset == NULL)
         return SOAP_OK;
-    }
-    if (tptz__GotoPreset->ProfileToken.c_str() == NULL) {
-        return SOAP_OK;
-    }
-    if (tptz__GotoPreset->PresetToken.c_str() == NULL) {
-        return SOAP_OK;
-    }
 
-    if (!ctx->get_ptz_node()->get_move_preset().empty()) {
+    if (tptz__GotoPreset->ProfileToken.c_str() == NULL)
+        return SOAP_OK;
+
+    if (tptz__GotoPreset->PresetToken.c_str() == NULL)
+        return SOAP_OK;
+
+
+    if (!ctx->get_ptz_node()->get_move_preset().empty())
+    {
         preset_cmd = ctx->get_ptz_node()->get_move_preset().c_str();
-    } else {
+    } else
+    {
         return SOAP_OK;
     }
 
@@ -80,11 +96,12 @@ int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__Go
 
     auto it_t = preset_cmd.find(template_str_t, 0);
 
-    if( it_t != std::string::npos ) {
+    if( it_t != std::string::npos )
+    {
         preset_cmd.replace(it_t, template_str_t.size(), tptz__GotoPreset->PresetToken.c_str());
     }
 
-    system(preset_cmd.c_str());
+    run_system_cmd(preset_cmd.c_str());
 
     return SOAP_OK;
 }
@@ -195,16 +212,19 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
 	
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__GotoHomePosition == NULL) {
+    if (tptz__GotoHomePosition == NULL)
         return SOAP_OK;
-    }
-    if (tptz__GotoHomePosition->ProfileToken.c_str() == NULL) {
-        return SOAP_OK;
-    }
 
-    if (!ctx->get_ptz_node()->get_move_preset().empty()) {
+    if (tptz__GotoHomePosition->ProfileToken.c_str() == NULL)
+        return SOAP_OK;
+
+
+    if (!ctx->get_ptz_node()->get_move_preset().empty())
+    {
         preset_cmd = ctx->get_ptz_node()->get_move_preset().c_str();
-    } else {
+    }
+    else
+    {
         return SOAP_OK;
     }
 
@@ -212,11 +232,12 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
 
     auto it_t = preset_cmd.find(template_str_t, 0);
 
-    if( it_t != std::string::npos ) {
+    if( it_t != std::string::npos )
+    {
         preset_cmd.replace(it_t, template_str_t.size(), "1");
     }
 
-    system(preset_cmd.c_str());
+    run_system_cmd(preset_cmd.c_str());
 
     return SOAP_OK;
 }
@@ -231,25 +252,32 @@ int PTZBindingService::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMov
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__ContinuousMove == NULL) {
+    if (tptz__ContinuousMove == NULL)
         return SOAP_OK;
+
+    if (tptz__ContinuousMove->Velocity == NULL)
+        return SOAP_OK;
+
+    if (tptz__ContinuousMove->Velocity->PanTilt == NULL)
+        return SOAP_OK;
+
+
+    if (tptz__ContinuousMove->Velocity->PanTilt->x > 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_right().c_str());
     }
-    if (tptz__ContinuousMove->Velocity == NULL) {
-        return SOAP_OK;
-    }
-    if (tptz__ContinuousMove->Velocity->PanTilt == NULL) {
-        return SOAP_OK;
+    else if (tptz__ContinuousMove->Velocity->PanTilt->x < 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_left().c_str());
     }
 
-    if (tptz__ContinuousMove->Velocity->PanTilt->x > 0) {
-        system(ctx->get_ptz_node()->get_move_right().c_str());
-    } else if (tptz__ContinuousMove->Velocity->PanTilt->x < 0) {
-        system(ctx->get_ptz_node()->get_move_left().c_str());
+    if (tptz__ContinuousMove->Velocity->PanTilt->y > 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_up().c_str());
     }
-    if (tptz__ContinuousMove->Velocity->PanTilt->y > 0) {
-        system(ctx->get_ptz_node()->get_move_up().c_str());
-    } else if (tptz__ContinuousMove->Velocity->PanTilt->y < 0) {
-        system(ctx->get_ptz_node()->get_move_down().c_str());
+    else if (tptz__ContinuousMove->Velocity->PanTilt->y < 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_down().c_str());
     }
 
     return SOAP_OK;
@@ -265,33 +293,36 @@ int PTZBindingService::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tp
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__RelativeMove == NULL) {
+    if (tptz__RelativeMove == NULL)
         return SOAP_OK;
+
+    if (tptz__RelativeMove->Translation == NULL)
+        return SOAP_OK;
+
+    if (tptz__RelativeMove->Translation->PanTilt == NULL)
+        return SOAP_OK;
+
+
+    if (tptz__RelativeMove->Translation->PanTilt->x > 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_right().c_str(), 300000);
+        run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
     }
-    if (tptz__RelativeMove->Translation == NULL) {
-        return SOAP_OK;
-    }
-    if (tptz__RelativeMove->Translation->PanTilt == NULL) {
-        return SOAP_OK;
+    else if (tptz__RelativeMove->Translation->PanTilt->x < 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_left().c_str(), 300000);
+        run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
     }
 
-    if (tptz__RelativeMove->Translation->PanTilt->x > 0) {
-        system(ctx->get_ptz_node()->get_move_right().c_str());
-        usleep(300000);
-        system(ctx->get_ptz_node()->get_move_stop().c_str());
-    } else if (tptz__RelativeMove->Translation->PanTilt->x < 0) {
-        system(ctx->get_ptz_node()->get_move_left().c_str());
-        usleep(300000);
-        system(ctx->get_ptz_node()->get_move_stop().c_str());
+    if (tptz__RelativeMove->Translation->PanTilt->y > 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_up().c_str(), 300000);
+        run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
     }
-    if (tptz__RelativeMove->Translation->PanTilt->y > 0) {
-        system(ctx->get_ptz_node()->get_move_up().c_str());
-        usleep(300000);
-        system(ctx->get_ptz_node()->get_move_stop().c_str());
-    } else if (tptz__RelativeMove->Translation->PanTilt->y < 0) {
-        system(ctx->get_ptz_node()->get_move_down().c_str());
-        usleep(300000);
-        system(ctx->get_ptz_node()->get_move_stop().c_str());
+    else if (tptz__RelativeMove->Translation->PanTilt->y < 0)
+    {
+        run_system_cmd(ctx->get_ptz_node()->get_move_down().c_str(), 300000);
+        run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
     }
 
     return SOAP_OK;
@@ -307,7 +338,7 @@ int PTZBindingService::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse &tptz__
 
     ServiceContext* ctx = (ServiceContext*)this->soap->user;
 
-    system(ctx->get_ptz_node()->get_move_stop().c_str());
+    run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
 
     return SOAP_OK;
 }

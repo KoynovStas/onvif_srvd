@@ -147,6 +147,28 @@ int MediaBindingService::GetSnapshotUri(_trt__GetSnapshotUri *trt__GetSnapshotUr
 
 
 
+int MediaBindingService::GetVideoSourceConfigurations(
+    _trt__GetVideoSourceConfigurations         *trt__GetVideoSourceConfigurations,
+    _trt__GetVideoSourceConfigurationsResponse &trt__GetVideoSourceConfigurationsResponse)
+{
+    UNUSED(trt__GetVideoSourceConfigurations);
+    DEBUG_MSG("Media: %s\n", __FUNCTION__);
+
+    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+
+    auto profiles = ctx->get_profiles();
+
+    for(auto& p : profiles)
+    {
+        tt__VideoSourceConfiguration *vsc = p.second.get_video_src_cnf(this->soap);
+        trt__GetVideoSourceConfigurationsResponse.Configurations.push_back(vsc);
+    }
+
+    return SOAP_OK;
+}
+
+
+
 int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(
     _trt__GetGuaranteedNumberOfVideoEncoderInstances         *trt__GetGuaranteedNumberOfVideoEncoderInstances,
     _trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse &trt__GetGuaranteedNumberOfVideoEncoderInstancesResponse)
@@ -218,7 +240,6 @@ SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveMetadataConfiguration)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveAudioOutputConfiguration)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, RemoveAudioDecoderConfiguration)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, DeleteProfile)
-SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoSourceConfigurations)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetVideoEncoderConfigurations)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioSourceConfigurations)
 SOAP_EMPTY_HANDLER(MediaBindingService, trt, GetAudioEncoderConfigurations)

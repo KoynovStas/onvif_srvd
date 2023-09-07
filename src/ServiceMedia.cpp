@@ -16,7 +16,9 @@
 
 
 
-int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *trt__GetServiceCapabilities, _trt__GetServiceCapabilitiesResponse &trt__GetServiceCapabilitiesResponse)
+int MediaBindingService::GetServiceCapabilities(
+    _trt__GetServiceCapabilities         *trt__GetServiceCapabilities,
+    _trt__GetServiceCapabilitiesResponse &trt__GetServiceCapabilitiesResponse)
 {
     UNUSED(trt__GetServiceCapabilities);
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
@@ -31,7 +33,9 @@ int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *tr
 
 
 
-int MediaBindingService::GetVideoSources(_trt__GetVideoSources *trt__GetVideoSources, _trt__GetVideoSourcesResponse &trt__GetVideoSourcesResponse)
+int MediaBindingService::GetVideoSources(
+    _trt__GetVideoSources         *trt__GetVideoSources,
+    _trt__GetVideoSourcesResponse &trt__GetVideoSourcesResponse)
 {
     UNUSED(trt__GetVideoSources);
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
@@ -53,7 +57,9 @@ int MediaBindingService::GetVideoSources(_trt__GetVideoSources *trt__GetVideoSou
 
 
 
-int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__GetProfileResponse &trt__GetProfileResponse)
+int MediaBindingService::GetProfile(
+    _trt__GetProfile         *trt__GetProfile,
+    _trt__GetProfileResponse &trt__GetProfileResponse)
 {
     DEBUG_MSG("Media: %s   get profile:%s\n", __FUNCTION__, trt__GetProfile->ProfileToken.c_str());
 
@@ -76,7 +82,9 @@ int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__Get
 
 
 
-int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__GetProfilesResponse &trt__GetProfilesResponse)
+int MediaBindingService::GetProfiles(
+    _trt__GetProfiles         *trt__GetProfiles,
+    _trt__GetProfilesResponse &trt__GetProfilesResponse)
 {
     UNUSED(trt__GetProfiles);
     DEBUG_MSG("Media: %s\n", __FUNCTION__);
@@ -98,7 +106,9 @@ int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__
 
 
 
-int MediaBindingService::GetStreamUri(_trt__GetStreamUri *trt__GetStreamUri, _trt__GetStreamUriResponse &trt__GetStreamUriResponse)
+int MediaBindingService::GetStreamUri(
+    _trt__GetStreamUri         *trt__GetStreamUri,
+    _trt__GetStreamUriResponse &trt__GetStreamUriResponse)
 {
     DEBUG_MSG("Media: %s   for profile:%s\n", __FUNCTION__, trt__GetStreamUri->ProfileToken.c_str());
 
@@ -123,7 +133,9 @@ int MediaBindingService::GetStreamUri(_trt__GetStreamUri *trt__GetStreamUri, _tr
 
 
 
-int MediaBindingService::GetSnapshotUri(_trt__GetSnapshotUri *trt__GetSnapshotUri, _trt__GetSnapshotUriResponse &trt__GetSnapshotUriResponse)
+int MediaBindingService::GetSnapshotUri(
+    _trt__GetSnapshotUri         *trt__GetSnapshotUri,
+    _trt__GetSnapshotUriResponse &trt__GetSnapshotUriResponse)
 {
     DEBUG_MSG("Media: %s   for profile:%s\n", __FUNCTION__, trt__GetSnapshotUri->ProfileToken.c_str());
 
@@ -138,6 +150,7 @@ int MediaBindingService::GetSnapshotUri(_trt__GetSnapshotUri *trt__GetSnapshotUr
     {
         trt__GetSnapshotUriResponse.MediaUri = soap_new_tt__MediaUri(this->soap);
         trt__GetSnapshotUriResponse.MediaUri->Uri = ctx->get_snapshot_uri(it->second.get_snapurl(), htonl(this->soap->ip));
+
         ret = SOAP_OK;
     }
 

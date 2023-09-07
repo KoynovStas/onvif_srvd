@@ -45,7 +45,9 @@ static int run_system_cmd(const char* cmd, unsigned int timeout_usec = 0)
 
 
 
-int PTZBindingService::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__GetPresetsResponse &tptz__GetPresetsResponse)
+int PTZBindingService::GetPresets(
+    _tptz__GetPresets         *tptz__GetPresets,
+    _tptz__GetPresetsResponse &tptz__GetPresetsResponse)
 {
     UNUSED(tptz__GetPresets);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
@@ -64,7 +66,9 @@ int PTZBindingService::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__Ge
 
 
 
-int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__GotoPresetResponse &tptz__GotoPresetResponse)
+int PTZBindingService::GotoPreset(
+    _tptz__GotoPreset         *tptz__GotoPreset,
+    _tptz__GotoPresetResponse &tptz__GotoPresetResponse)
 {
     UNUSED(tptz__GotoPresetResponse);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
@@ -172,7 +176,9 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
 
 
 
-int PTZBindingService::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse &tptz__GetNodesResponse)
+int PTZBindingService::GetNodes(
+    _tptz__GetNodes         *tptz__GetNodes,
+    _tptz__GetNodesResponse &tptz__GetNodesResponse)
 {
     UNUSED(tptz__GetNodes);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
@@ -189,7 +195,9 @@ int PTZBindingService::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodes
 
 
 
-int PTZBindingService::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse &tptz__GetNodeResponse)
+int PTZBindingService::GetNode(
+    _tptz__GetNode         *tptz__GetNode,
+    _tptz__GetNodeResponse &tptz__GetNodeResponse)
 {
     UNUSED(tptz__GetNode);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
@@ -202,7 +210,9 @@ int PTZBindingService::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResp
 
 
 
-int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomePosition, _tptz__GotoHomePositionResponse &tptz__GotoHomePositionResponse)
+int PTZBindingService::GotoHomePosition(
+    _tptz__GotoHomePosition         *tptz__GotoHomePosition,
+    _tptz__GotoHomePositionResponse &tptz__GotoHomePositionResponse)
 {
     UNUSED(tptz__GotoHomePosition);
     UNUSED(tptz__GotoHomePositionResponse);
@@ -244,7 +254,9 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
 
 
 
-int PTZBindingService::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__ContinuousMoveResponse &tptz__ContinuousMoveResponse)
+int PTZBindingService::ContinuousMove(
+    _tptz__ContinuousMove         *tptz__ContinuousMove,
+    _tptz__ContinuousMoveResponse &tptz__ContinuousMoveResponse)
 {
     UNUSED(tptz__ContinuousMoveResponse);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
@@ -285,7 +297,9 @@ int PTZBindingService::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMov
 
 
 
-int PTZBindingService::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tptz__RelativeMoveResponse &tptz__RelativeMoveResponse)
+int PTZBindingService::RelativeMove(
+    _tptz__RelativeMove         *tptz__RelativeMove,
+    _tptz__RelativeMoveResponse &tptz__RelativeMoveResponse)
 {
     UNUSED(tptz__RelativeMoveResponse);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);

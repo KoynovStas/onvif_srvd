@@ -17,7 +17,9 @@
 
 
 
-int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds__GetServicesResponse &tds__GetServicesResponse)
+int DeviceBindingService::GetServices(
+    _tds__GetServices         *tds__GetServices,
+    _tds__GetServicesResponse &tds__GetServicesResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
@@ -72,7 +74,9 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
 
 
 
-int DeviceBindingService::GetServiceCapabilities(_tds__GetServiceCapabilities *tds__GetServiceCapabilities, _tds__GetServiceCapabilitiesResponse &tds__GetServiceCapabilitiesResponse)
+int DeviceBindingService::GetServiceCapabilities(
+    _tds__GetServiceCapabilities         *tds__GetServiceCapabilities,
+    _tds__GetServiceCapabilitiesResponse &tds__GetServiceCapabilitiesResponse)
 {
     UNUSED(tds__GetServiceCapabilities);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
@@ -85,7 +89,9 @@ int DeviceBindingService::GetServiceCapabilities(_tds__GetServiceCapabilities *t
 
 
 
-int DeviceBindingService::GetDeviceInformation(_tds__GetDeviceInformation *tds__GetDeviceInformation, _tds__GetDeviceInformationResponse &tds__GetDeviceInformationResponse)
+int DeviceBindingService::GetDeviceInformation(
+    _tds__GetDeviceInformation         *tds__GetDeviceInformation,
+    _tds__GetDeviceInformationResponse &tds__GetDeviceInformationResponse)
 {
     UNUSED(tds__GetDeviceInformation);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
@@ -103,7 +109,9 @@ int DeviceBindingService::GetDeviceInformation(_tds__GetDeviceInformation *tds__
 
 
 
-int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__GetSystemDateAndTime, _tds__GetSystemDateAndTimeResponse &tds__GetSystemDateAndTimeResponse)
+int DeviceBindingService::GetSystemDateAndTime(
+    _tds__GetSystemDateAndTime         *tds__GetSystemDateAndTime,
+    _tds__GetSystemDateAndTimeResponse &tds__GetSystemDateAndTimeResponse)
 {
     UNUSED(tds__GetSystemDateAndTime);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
@@ -117,7 +125,9 @@ int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__
 
 
 
-int DeviceBindingService::GetScopes(_tds__GetScopes *tds__GetScopes, _tds__GetScopesResponse &tds__GetScopesResponse)
+int DeviceBindingService::GetScopes(
+    _tds__GetScopes         *tds__GetScopes,
+    _tds__GetScopesResponse &tds__GetScopesResponse)
 {
     UNUSED(tds__GetScopes);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
@@ -135,7 +145,9 @@ int DeviceBindingService::GetScopes(_tds__GetScopes *tds__GetScopes, _tds__GetSc
 
 
 
-int DeviceBindingService::GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsersResponse &tds__GetUsersResponse)
+int DeviceBindingService::GetUsers(
+    _tds__GetUsers         *tds__GetUsers,
+    _tds__GetUsersResponse &tds__GetUsersResponse)
 {
     UNUSED(tds__GetUsers);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
@@ -153,7 +165,9 @@ int DeviceBindingService::GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsers
 
 
 
-int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabilities, _tds__GetCapabilitiesResponse &tds__GetCapabilitiesResponse)
+int DeviceBindingService::GetCapabilities(
+    _tds__GetCapabilities         *tds__GetCapabilities,
+    _tds__GetCapabilitiesResponse &tds__GetCapabilitiesResponse)
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
@@ -209,7 +223,9 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
 
 
 
-int DeviceBindingService::GetNetworkInterfaces(_tds__GetNetworkInterfaces *tds__GetNetworkInterfaces, _tds__GetNetworkInterfacesResponse &tds__GetNetworkInterfacesResponse)
+int DeviceBindingService::GetNetworkInterfaces(
+    _tds__GetNetworkInterfaces         *tds__GetNetworkInterfaces,
+    _tds__GetNetworkInterfacesResponse &tds__GetNetworkInterfacesResponse)
 {
     UNUSED(tds__GetNetworkInterfaces);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);

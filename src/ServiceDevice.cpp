@@ -145,6 +145,21 @@ int DeviceBindingService::GetScopes(
 
 
 
+int DeviceBindingService::GetWsdlUrl(
+    _tds__GetWsdlUrl         *tds__GetWsdlUrl,
+    _tds__GetWsdlUrlResponse &tds__GetWsdlUrlResponse)
+{
+    UNUSED(tds__GetWsdlUrl);
+    DEBUG_MSG("Device: %s\n", __FUNCTION__);
+
+    std::string url = soap->endpoint;
+    tds__GetWsdlUrlResponse.WsdlUrl = url;
+
+    return SOAP_OK;
+}
+
+
+
 int DeviceBindingService::GetUsers(
     _tds__GetUsers         *tds__GetUsers,
     _tds__GetUsersResponse &tds__GetUsersResponse)
@@ -287,7 +302,6 @@ SOAP_EMPTY_HANDLER(DeviceBindingService, tds, SetRemoteUser)
 SOAP_EMPTY_HANDLER(DeviceBindingService, tds, CreateUsers)
 SOAP_EMPTY_HANDLER(DeviceBindingService, tds, DeleteUsers)
 SOAP_EMPTY_HANDLER(DeviceBindingService, tds, SetUser)
-SOAP_EMPTY_HANDLER(DeviceBindingService, tds, GetWsdlUrl)
 SOAP_EMPTY_HANDLER(DeviceBindingService, tds, SetDPAddresses)
 SOAP_EMPTY_HANDLER(DeviceBindingService, tds, GetHostname)
 SOAP_EMPTY_HANDLER(DeviceBindingService, tds, SetHostname)

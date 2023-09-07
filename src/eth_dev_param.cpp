@@ -273,7 +273,7 @@ int Eth_Dev_Param::get_mask(uint32_t *mask) const
 int Eth_Dev_Param::get_mask_prefix() const
 {
     int prefix = 0;
-    uint32_t mask;
+    uint32_t mask = 0;
     get_mask(&mask);
 
     mask = ntohl(mask);

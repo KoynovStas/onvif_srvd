@@ -38,7 +38,7 @@ std::string ServiceContext::get_time_zone() const
 
     std::ostringstream res;
     char* TZ_env;
-    const time_t  timestamp = time(NULL);
+    const time_t  timestamp = time(nullptr);
     struct tm    *now       = localtime(&timestamp);
 
 
@@ -90,7 +90,7 @@ std::string ServiceContext::get_time_zone() const
 
 tt__SystemDateTime* ServiceContext::get_SystemDateAndTime(soap* soap)
 {
-    const time_t  timestamp = time(NULL);
+    const time_t  timestamp = time(nullptr);
     struct tm    *time_info = localtime(&timestamp);
 
     auto res = soap_new_req_tt__SystemDateTime(soap,
@@ -311,9 +311,12 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 {
     trt__Capabilities *capabilities = soap_new_trt__Capabilities(soap);
 
-    auto profiles = this->get_profiles();
-    for( auto it = profiles.cbegin(); it != profiles.cend(); ++it ) {
-        if (( !it->second.get_snapurl().empty() ) && ( capabilities->SnapshotUri == NULL )) {
+    capabilities->soap_default(soap);
+    auto profiles = get_profiles();
+    for( auto& p : profiles )
+    {
+        if (( !p.second.get_snapurl().empty() ) && ( capabilities->SnapshotUri == nullptr ))
+        {
             capabilities->SnapshotUri = soap_new_ptr(soap, true);
         }
     }
@@ -421,8 +424,7 @@ tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
 
 tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 {
-    ServiceContext* ctx = (ServiceContext*)soap->user;
-
+    auto ctx             = (ServiceContext*)soap->user;
     tt__Profile* profile = soap_new_tt__Profile(soap);
 
     profile->Name  = name;

@@ -10,6 +10,7 @@
 #include "soapPTZBindingService.h"
 #include "ServiceContext.h"
 #include "smacros.h"
+#include "stools.h"
 
 
 
@@ -53,8 +54,11 @@ int PTZBindingService::GetPresets(
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    soap_default_std__vectorTemplateOfPointerTott__PTZPreset(soap, &tptz__GetPresetsResponse._tptz__GetPresetsResponse::Preset);
-    for (int i = 0; i < 8; i++) {
+    soap_default_std__vectorTemplateOfPointerTott__PTZPreset(
+        soap, &tptz__GetPresetsResponse._tptz__GetPresetsResponse::Preset);
+
+    for (int i = 0; i < 8; i++)
+    {
         tt__PTZPreset* ptzp;
         ptzp = soap_new_tt__PTZPreset(soap);
         tptz__GetPresetsResponse.Preset.push_back(ptzp);
@@ -76,21 +80,21 @@ int PTZBindingService::GotoPreset(
 
     std::string preset_cmd;
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__GotoPreset == NULL)
+    if (!tptz__GotoPreset)
         return SOAP_OK;
 
-    if (tptz__GotoPreset->ProfileToken.c_str() == NULL)
+    if (tptz__GotoPreset->ProfileToken.empty())
         return SOAP_OK;
 
-    if (tptz__GotoPreset->PresetToken.c_str() == NULL)
+    if (tptz__GotoPreset->PresetToken.empty())
         return SOAP_OK;
 
 
     if (!ctx->get_ptz_node()->get_move_preset().empty())
     {
-        preset_cmd = ctx->get_ptz_node()->get_move_preset().c_str();
+        preset_cmd = ctx->get_ptz_node()->get_move_preset();
     } else
     {
         return SOAP_OK;
@@ -168,8 +172,7 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
 
     ptzn->MaximumNumberOfPresets = 8;
     ptzn->HomeSupported          = true;
-    ptzn->FixedHomePosition      = (bool *)soap_malloc(soap, sizeof(bool));
-    soap_s2bool(soap, "true", ptzn->FixedHomePosition);
+    ptzn->FixedHomePosition      = soap_new_ptr(soap, true);
 
     return SOAP_OK;
 }
@@ -184,9 +187,10 @@ int PTZBindingService::GetNodes(
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    soap_default_std__vectorTemplateOfPointerTott__PTZNode(soap, &tptz__GetNodesResponse._tptz__GetNodesResponse::PTZNode);
-    tt__PTZNode* ptzn;
-    ptzn = soap_new_tt__PTZNode(soap);
+    soap_default_std__vectorTemplateOfPointerTott__PTZNode(
+        soap, &tptz__GetNodesResponse._tptz__GetNodesResponse::PTZNode);
+
+    tt__PTZNode* ptzn = soap_new_tt__PTZNode(soap);
     tptz__GetNodesResponse.PTZNode.push_back(ptzn);
     GetPTZNode(this->soap, ptzn);
 
@@ -220,18 +224,18 @@ int PTZBindingService::GotoHomePosition(
 
     std::string preset_cmd;
 	
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__GotoHomePosition == NULL)
+    if (!tptz__GotoHomePosition)
         return SOAP_OK;
 
-    if (tptz__GotoHomePosition->ProfileToken.c_str() == NULL)
+    if (tptz__GotoHomePosition->ProfileToken.empty())
         return SOAP_OK;
 
 
     if (!ctx->get_ptz_node()->get_move_preset().empty())
     {
-        preset_cmd = ctx->get_ptz_node()->get_move_preset().c_str();
+        preset_cmd = ctx->get_ptz_node()->get_move_preset();
     }
     else
     {
@@ -262,15 +266,15 @@ int PTZBindingService::ContinuousMove(
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__ContinuousMove == NULL)
+    if (!tptz__ContinuousMove)
         return SOAP_OK;
 
-    if (tptz__ContinuousMove->Velocity == NULL)
+    if (!tptz__ContinuousMove->Velocity)
         return SOAP_OK;
 
-    if (tptz__ContinuousMove->Velocity->PanTilt == NULL)
+    if (!tptz__ContinuousMove->Velocity->PanTilt)
         return SOAP_OK;
 
 
@@ -305,15 +309,15 @@ int PTZBindingService::RelativeMove(
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
-    if (tptz__RelativeMove == NULL)
+    if (!tptz__RelativeMove)
         return SOAP_OK;
 
-    if (tptz__RelativeMove->Translation == NULL)
+    if (!tptz__RelativeMove->Translation)
         return SOAP_OK;
 
-    if (tptz__RelativeMove->Translation->PanTilt == NULL)
+    if (!tptz__RelativeMove->Translation->PanTilt)
         return SOAP_OK;
 
 
@@ -350,7 +354,7 @@ int PTZBindingService::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse &tptz__
     UNUSED(tptz__StopResponse);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
     run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
 

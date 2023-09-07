@@ -25,10 +25,8 @@ int DeviceBindingService::GetServices(
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
-
+    auto ctx          = (ServiceContext*)this->soap->user;
     std::string XAddr = ctx->getXAddr(this->soap);
-
 
 
     //Device Service
@@ -40,7 +38,7 @@ int DeviceBindingService::GetServices(
     {
         tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
         tds__DeviceServiceCapabilities *capabilities                 = ctx->getDeviceServiceCapabilities(this->soap);
-        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "tds:Capabilities", capabilities, capabilities->soap_type());
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, nullptr, "tds:Capabilities", capabilities, capabilities->soap_type());
     }
 
 
@@ -52,7 +50,7 @@ int DeviceBindingService::GetServices(
     {
         tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
         trt__Capabilities *capabilities                              = ctx->getMediaServiceCapabilities(this->soap);
-        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "trt:Capabilities", capabilities, capabilities->soap_type());
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, nullptr, "trt:Capabilities", capabilities, capabilities->soap_type());
     }
 
 
@@ -65,7 +63,7 @@ int DeviceBindingService::GetServices(
         {
             tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
             tptz__Capabilities *capabilities                             = ctx->getPTZServiceCapabilities(this->soap);
-            tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, NULL, "tptz:Capabilities", capabilities, capabilities->soap_type());
+            tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, nullptr, "tptz:Capabilities", capabilities, capabilities->soap_type());
         }
     }
 
@@ -82,7 +80,7 @@ int DeviceBindingService::GetServiceCapabilities(
     UNUSED(tds__GetServiceCapabilities);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
     tds__GetServiceCapabilitiesResponse.Capabilities = ctx->getDeviceServiceCapabilities(this->soap);
 
     return SOAP_OK;
@@ -98,7 +96,7 @@ int DeviceBindingService::GetDeviceInformation(
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
     tds__GetDeviceInformationResponse.Manufacturer    = ctx->manufacturer;
     tds__GetDeviceInformationResponse.Model           = ctx->model;
     tds__GetDeviceInformationResponse.FirmwareVersion = ctx->firmware_version;
@@ -134,7 +132,7 @@ int DeviceBindingService::GetScopes(
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
     for(size_t i = 0; i < ctx->scopes.size(); ++i)
     {
@@ -153,7 +151,7 @@ int DeviceBindingService::GetWsdlUrl(
     UNUSED(tds__GetWsdlUrl);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    std::string url = soap->endpoint;
+    std::string url                 = soap->endpoint;
     tds__GetWsdlUrlResponse.WsdlUrl = url;
 
     return SOAP_OK;
@@ -168,7 +166,7 @@ int DeviceBindingService::GetUsers(
     UNUSED(tds__GetUsers);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
     if( !ctx->user.empty() )
     {
@@ -187,11 +185,8 @@ int DeviceBindingService::GetCapabilities(
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
-
+    auto ctx          = (ServiceContext*)this->soap->user;
     std::string XAddr = ctx->getXAddr(this->soap);
-
 
 
     tds__GetCapabilitiesResponse.Capabilities = soap_new_tt__Capabilities(this->soap);
@@ -250,12 +245,11 @@ int DeviceBindingService::GetNetworkInterfaces(
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
 
-    ServiceContext* ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)this->soap->user;
 
 
     for(size_t i = 0; i < ctx->eth_ifs.size(); ++i)
     {
-
         char tmp_buf[20];
 
         tds__GetNetworkInterfacesResponse.NetworkInterfaces.push_back(soap_new_tt__NetworkInterface(this->soap));
@@ -275,7 +269,6 @@ int DeviceBindingService::GetNetworkInterfaces(
 
         tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.back()->Address = tmp_buf;
         tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.back()->PrefixLength = ctx->eth_ifs[i].get_mask_prefix();
-
     }
 
 

@@ -512,7 +512,7 @@ void init(void *data)
 int main(int argc, char *argv[])
 {
     processing_cmd(argc, argv);
-    daemonize2(init, NULL);
+    daemonize2(init, nullptr);
 
     FOREACH_SERVICE(DECLARE_SERVICE, soap)
 

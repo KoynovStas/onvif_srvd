@@ -18,12 +18,14 @@
 
 static int GetPTZPreset(struct soap *soap, tt__PTZPreset* ptzp, int number)
 {
-    ptzp->token  = soap_new_std__string(soap);
-    *ptzp->token = std::to_string(number);
-    ptzp->Name   = soap_new_std__string(soap);
-    *ptzp->Name  = std::to_string(number);
+    ptzp->token = soap_new_std_string(soap, std::to_string(number));
+    ptzp->Name  = soap_new_std_string(soap, std::to_string(number));
 
-    ptzp->PTZPosition          = soap_new_tt__PTZVector(soap);
+
+    ptzp->PTZPosition = soap_new_req_tt__PTZVector(soap);
+    if(!ptzp->PTZPosition)
+        return SOAP_FAULT;
+
     ptzp->PTZPosition->PanTilt = soap_new_req_tt__Vector2D(soap, 0.0f, 0.0f);
     ptzp->PTZPosition->Zoom    = soap_new_req_tt__Vector1D(soap, 1.0f);
 
@@ -59,10 +61,12 @@ int PTZBindingService::GetPresets(
 
     for (int i = 0; i < 8; i++)
     {
-        tt__PTZPreset* ptzp;
-        ptzp = soap_new_tt__PTZPreset(soap);
-        tptz__GetPresetsResponse.Preset.push_back(ptzp);
-        GetPTZPreset(this->soap, ptzp, i);
+        tt__PTZPreset* ptzp = soap_new_tt__PTZPreset(soap);
+
+        if(!ptzp || GetPTZPreset(soap, ptzp, i))
+            return SOAP_FAULT;
+
+        tptz__GetPresetsResponse.Preset.emplace_back(ptzp);
     }
 
     return SOAP_OK;
@@ -80,7 +84,7 @@ int PTZBindingService::GotoPreset(
 
     std::string preset_cmd;
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
     if (!tptz__GotoPreset)
         return SOAP_OK;
@@ -118,11 +122,16 @@ int PTZBindingService::GotoPreset(
 
 int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
 {
-    ptzn->token = "PTZNodeToken";
-    ptzn->Name  = soap_new_std__string(soap);
-    *ptzn->Name = "PTZ";
+    if(!soap || !ptzn)
+        return SOAP_FAULT;
 
-    ptzn->SupportedPTZSpaces = soap_new_tt__PTZSpaces(soap);;
+    ptzn->token = "PTZNodeToken";
+    ptzn->Name  = soap_new_std_string(soap, "PTZ");
+
+    ptzn->SupportedPTZSpaces = soap_new_req_tt__PTZSpaces(soap);
+    if(!ptzn->SupportedPTZSpaces)
+        return SOAP_FAULT;
+
     soap_default_std__vectorTemplateOfPointerTott__Space2DDescription(soap, &ptzn->SupportedPTZSpaces->tt__PTZSpaces::RelativePanTiltTranslationSpace);
     soap_default_std__vectorTemplateOfPointerTott__Space1DDescription(soap, &ptzn->SupportedPTZSpaces->tt__PTZSpaces::RelativeZoomTranslationSpace);
     soap_default_std__vectorTemplateOfPointerTott__Space2DDescription(soap, &ptzn->SupportedPTZSpaces->tt__PTZSpaces::ContinuousPanTiltVelocitySpace);
@@ -132,42 +141,59 @@ int GetPTZNode(struct soap *soap, tt__PTZNode* ptzn)
 
 
     auto ptzs1 = soap_new_tt__Space2DDescription(soap);
-    ptzn->SupportedPTZSpaces->RelativePanTiltTranslationSpace.push_back(ptzs1);
+    if(ptzs1)
+    {
+        ptzs1->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";
+        ptzs1->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+        ptzs1->YRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+    }
+    ptzn->SupportedPTZSpaces->RelativePanTiltTranslationSpace.emplace_back(ptzs1);
+
 
     auto ptzs2 = soap_new_tt__Space1DDescription(soap);
-    ptzn->SupportedPTZSpaces->RelativeZoomTranslationSpace.push_back(ptzs2);
+    if(ptzs2)
+    {
+        ptzs2->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
+        ptzs2->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+    }
+    ptzn->SupportedPTZSpaces->RelativeZoomTranslationSpace.emplace_back(ptzs2);
+
 
     auto ptzs3 = soap_new_tt__Space2DDescription(soap);
-    ptzn->SupportedPTZSpaces->ContinuousPanTiltVelocitySpace.push_back(ptzs3);
+    if(ptzs3)
+    {
+        ptzs3->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
+        ptzs3->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+        ptzs3->YRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+    }
+    ptzn->SupportedPTZSpaces->ContinuousPanTiltVelocitySpace.emplace_back(ptzs3);
+
 
     auto ptzs4 = soap_new_tt__Space1DDescription(soap);
-    ptzn->SupportedPTZSpaces->ContinuousZoomVelocitySpace.push_back(ptzs4);
+    if(ptzs4)
+    {
+        ptzs4->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
+        ptzs4->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
+    }
+    ptzn->SupportedPTZSpaces->ContinuousZoomVelocitySpace.emplace_back(ptzs4);
+
 
     auto ptzs5 = soap_new_tt__Space1DDescription(soap);
-    ptzn->SupportedPTZSpaces->PanTiltSpeedSpace.push_back(ptzs5);
+    if(ptzs5)
+    {
+        ptzs5->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace";
+        ptzs5->XRange      = soap_new_req_tt__FloatRange(soap, 0.0f, 1.0f);
+    }
+    ptzn->SupportedPTZSpaces->PanTiltSpeedSpace.emplace_back(ptzs5);
+
 
     auto ptzs6 = soap_new_tt__Space1DDescription(soap);
-    ptzn->SupportedPTZSpaces->ZoomSpeedSpace.push_back(ptzs6);
-
-    ptzs1->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";
-    ptzs1->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
-    ptzs1->YRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
-
-    ptzs2->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
-    ptzs2->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
-
-    ptzs3->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
-    ptzs3->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
-    ptzs3->YRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
-
-    ptzs4->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
-    ptzs4->XRange      = soap_new_req_tt__FloatRange(soap, -1.0f, 1.0f);
-
-    ptzs5->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace";
-    ptzs5->XRange      = soap_new_req_tt__FloatRange(soap, 0.0f, 1.0f);
-
-    ptzs6->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace";
-    ptzs6->XRange      = soap_new_req_tt__FloatRange(soap, 0.0f, 1.0f);
+    if(ptzs6)
+    {
+        ptzs6->URI         = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace";
+        ptzs6->XRange      = soap_new_req_tt__FloatRange(soap, 0.0f, 1.0f);
+    }
+    ptzn->SupportedPTZSpaces->ZoomSpeedSpace.emplace_back(ptzs6);
 
 
     ptzn->MaximumNumberOfPresets = 8;
@@ -191,8 +217,8 @@ int PTZBindingService::GetNodes(
         soap, &tptz__GetNodesResponse._tptz__GetNodesResponse::PTZNode);
 
     tt__PTZNode* ptzn = soap_new_tt__PTZNode(soap);
-    tptz__GetNodesResponse.PTZNode.push_back(ptzn);
-    GetPTZNode(this->soap, ptzn);
+    GetPTZNode(soap, ptzn);
+    tptz__GetNodesResponse.PTZNode.emplace_back(ptzn);
 
     return SOAP_OK;
 }
@@ -206,8 +232,8 @@ int PTZBindingService::GetNode(
     UNUSED(tptz__GetNode);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
-    tptz__GetNodeResponse.PTZNode = soap_new_tt__PTZNode(this->soap);
-    GetPTZNode(this->soap, tptz__GetNodeResponse.PTZNode);
+    tptz__GetNodeResponse.PTZNode = soap_new_tt__PTZNode(soap);
+    GetPTZNode(soap, tptz__GetNodeResponse.PTZNode);
 
     return SOAP_OK;
 }
@@ -224,7 +250,7 @@ int PTZBindingService::GotoHomePosition(
 
     std::string preset_cmd;
 	
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
     if (!tptz__GotoHomePosition)
         return SOAP_OK;
@@ -266,7 +292,7 @@ int PTZBindingService::ContinuousMove(
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
     if (!tptz__ContinuousMove)
         return SOAP_OK;
@@ -309,7 +335,7 @@ int PTZBindingService::RelativeMove(
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
     if (!tptz__RelativeMove)
         return SOAP_OK;
@@ -354,7 +380,7 @@ int PTZBindingService::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse &tptz__
     UNUSED(tptz__StopResponse);
     DEBUG_MSG("PTZ: %s\n", __FUNCTION__);
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
     run_system_cmd(ctx->get_ptz_node()->get_move_stop().c_str());
 

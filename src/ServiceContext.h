@@ -33,6 +33,8 @@ class StreamProfile
         tt__VideoSourceConfiguration*  get_video_src_cnf(struct soap *soap) const;
         tt__VideoEncoderConfiguration* get_video_enc_cfg(struct soap *soap) const;
         tt__PTZConfiguration*          get_ptz_cfg(struct soap *soap) const;
+        tt__PanTiltLimits*             get_ptz_pan_tilt_limits(struct soap *soap) const;
+        tt__ZoomLimits*                get_ptz_zoom_limits(struct soap *soap) const;
 
 
         //methods for parsing opt from cmd
@@ -175,7 +177,6 @@ class ServiceContext
 
 
         std::string get_stream_uri(const std::string& profile_url, uint32_t client_ip) const;
-        std::string get_snapshot_uri(const std::string& profile_url, uint32_t client_ip) const;
 
 
         const std::map<std::string, StreamProfile> &get_profiles(void) { return profiles; }

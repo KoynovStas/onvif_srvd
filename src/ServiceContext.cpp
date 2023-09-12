@@ -6,7 +6,7 @@
 
 #include "ServiceContext.h"
 #include "stools.h"
-
+#include "smacros.h"
 
 
 
@@ -232,113 +232,113 @@ std::string ServiceContext::get_stream_uri(const std::string &profile_url, uint3
 
 
 
-std::string ServiceContext::get_snapshot_uri(const std::string &profile_url, uint32_t client_ip) const
-{
-    std::string uri(profile_url);
-    std::string template_str("%s");
-
-
-    auto it = uri.find(template_str, 0);
-
-    if( it != std::string::npos )
-        uri.replace(it, template_str.size(), getServerIpFromClientIp(client_ip));
-
-
-    return uri;
-}
-
-
-
 tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soap *soap)
 {
-    tds__DeviceServiceCapabilities *capabilities = soap_new_tds__DeviceServiceCapabilities(soap);
-
-    capabilities->Network = soap_new_tds__NetworkCapabilities(soap);
-
-    capabilities->Network->IPFilter            = soap_new_ptr(soap, false);
-    capabilities->Network->ZeroConfiguration   = soap_new_ptr(soap, false);
-    capabilities->Network->IPVersion6          = soap_new_ptr(soap, false);
-    capabilities->Network->DynDNS              = soap_new_ptr(soap, false);
-    capabilities->Network->Dot11Configuration  = soap_new_ptr(soap, false);
-    capabilities->Network->Dot1XConfigurations = soap_new_ptr(soap, 0);
-    capabilities->Network->HostnameFromDHCP    = soap_new_ptr(soap, false);
-    capabilities->Network->NTP                 = soap_new_ptr(soap, 0);
-    capabilities->Network->DHCPv6              = soap_new_ptr(soap, false);
-
-
-    capabilities->Security = soap_new_tds__SecurityCapabilities(soap);
-
-    capabilities->Security->TLS1_x002e0          = soap_new_ptr(soap, false);
-    capabilities->Security->TLS1_x002e1          = soap_new_ptr(soap, false);
-    capabilities->Security->TLS1_x002e2          = soap_new_ptr(soap, false);
-    capabilities->Security->OnboardKeyGeneration = soap_new_ptr(soap, false);
-    capabilities->Security->AccessPolicyConfig   = soap_new_ptr(soap, false);
-    capabilities->Security->DefaultAccessPolicy  = soap_new_ptr(soap, false);
-    capabilities->Security->Dot1X                = soap_new_ptr(soap, false);
-    capabilities->Security->RemoteUserHandling   = soap_new_ptr(soap, false);
-    capabilities->Security->X_x002e509Token      = soap_new_ptr(soap, false);
-    capabilities->Security->SAMLToken            = soap_new_ptr(soap, false);
-    capabilities->Security->KerberosToken        = soap_new_ptr(soap, false);
-    capabilities->Security->UsernameToken        = soap_new_ptr(soap, false);
-    capabilities->Security->HttpDigest           = soap_new_ptr(soap, false);
-    capabilities->Security->RELToken             = soap_new_ptr(soap, false);
-    capabilities->Security->MaxUsers             = soap_new_ptr(soap, 0);
-    capabilities->Security->MaxUserNameLength    = soap_new_ptr(soap, 0);
-    capabilities->Security->MaxPasswordLength    = soap_new_ptr(soap, 0);
+    auto net_caps = soap_new_req_tds__NetworkCapabilities(soap);
+    if(net_caps)
+    {
+        net_caps->IPFilter            = soap_new_ptr(soap, false);
+        net_caps->ZeroConfiguration   = soap_new_ptr(soap, false);
+        net_caps->IPVersion6          = soap_new_ptr(soap, false);
+        net_caps->DynDNS              = soap_new_ptr(soap, false);
+        net_caps->Dot11Configuration  = soap_new_ptr(soap, false);
+        net_caps->Dot1XConfigurations = soap_new_ptr(soap, 0);
+        net_caps->HostnameFromDHCP    = soap_new_ptr(soap, false);
+        net_caps->NTP                 = soap_new_ptr(soap, 0);
+        net_caps->DHCPv6              = soap_new_ptr(soap, false);
+    }
 
 
-    capabilities->System = soap_new_tds__SystemCapabilities(soap);
+    auto sec_caps = soap_new_req_tds__SecurityCapabilities(soap);
+    if(sec_caps)
+    {
+        sec_caps->TLS1_x002e0          = soap_new_ptr(soap, false);
+        sec_caps->TLS1_x002e1          = soap_new_ptr(soap, false);
+        sec_caps->TLS1_x002e2          = soap_new_ptr(soap, false);
+        sec_caps->OnboardKeyGeneration = soap_new_ptr(soap, false);
+        sec_caps->AccessPolicyConfig   = soap_new_ptr(soap, false);
+        sec_caps->DefaultAccessPolicy  = soap_new_ptr(soap, false);
+        sec_caps->Dot1X                = soap_new_ptr(soap, false);
+        sec_caps->RemoteUserHandling   = soap_new_ptr(soap, false);
+        sec_caps->X_x002e509Token      = soap_new_ptr(soap, false);
+        sec_caps->SAMLToken            = soap_new_ptr(soap, false);
+        sec_caps->KerberosToken        = soap_new_ptr(soap, false);
+        sec_caps->UsernameToken        = soap_new_ptr(soap, false);
+        sec_caps->HttpDigest           = soap_new_ptr(soap, false);
+        sec_caps->RELToken             = soap_new_ptr(soap, false);
+        sec_caps->MaxUsers             = soap_new_ptr(soap, 0);
+        sec_caps->MaxUserNameLength    = soap_new_ptr(soap, 0);
+        sec_caps->MaxPasswordLength    = soap_new_ptr(soap, 0);
+    }
 
-    capabilities->System->DiscoveryResolve       = soap_new_ptr(soap, true);
-    capabilities->System->DiscoveryBye           = soap_new_ptr(soap, true);
-    capabilities->System->RemoteDiscovery        = soap_new_ptr(soap, true);
-    capabilities->System->SystemBackup           = soap_new_ptr(soap, false);
-    capabilities->System->SystemLogging          = soap_new_ptr(soap, false);
-    capabilities->System->FirmwareUpgrade        = soap_new_ptr(soap, false);
-    capabilities->System->HttpFirmwareUpgrade    = soap_new_ptr(soap, false);
-    capabilities->System->HttpSystemBackup       = soap_new_ptr(soap, false);
-    capabilities->System->HttpSystemLogging      = soap_new_ptr(soap, false);
-    capabilities->System->HttpSupportInformation = soap_new_ptr(soap, false);
-    capabilities->System->StorageConfiguration   = soap_new_ptr(soap, false);
+
+    auto sys_caps = soap_new_req_tds__SystemCapabilities(soap);
+    if(sys_caps)
+    {
+        sys_caps->DiscoveryResolve       = soap_new_ptr(soap, true);
+        sys_caps->DiscoveryBye           = soap_new_ptr(soap, true);
+        sys_caps->RemoteDiscovery        = soap_new_ptr(soap, true);
+        sys_caps->SystemBackup           = soap_new_ptr(soap, false);
+        sys_caps->SystemLogging          = soap_new_ptr(soap, false);
+        sys_caps->FirmwareUpgrade        = soap_new_ptr(soap, false);
+        sys_caps->HttpFirmwareUpgrade    = soap_new_ptr(soap, false);
+        sys_caps->HttpSystemBackup       = soap_new_ptr(soap, false);
+        sys_caps->HttpSystemLogging      = soap_new_ptr(soap, false);
+        sys_caps->HttpSupportInformation = soap_new_ptr(soap, false);
+        sys_caps->StorageConfiguration   = soap_new_ptr(soap, false);
+    }
 
 
-    return capabilities;
+    return soap_new_req_tds__DeviceServiceCapabilities(soap, net_caps, sec_caps, sys_caps);
 }
 
 
 
 trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 {
-    trt__Capabilities *capabilities = soap_new_trt__Capabilities(soap);
+    auto prof_caps = soap_new_req_trt__ProfileCapabilities(soap);
+    if(prof_caps)
+        prof_caps->MaximumNumberOfProfiles = soap_new_ptr(soap, 1);
 
-    capabilities->soap_default(soap);
-    auto profiles = get_profiles();
-    for( auto& p : profiles )
+
+    auto str_caps = soap_new_req_trt__StreamingCapabilities(soap);
+    if(str_caps)
     {
-        if (( !p.second.get_snapurl().empty() ) && ( capabilities->SnapshotUri == nullptr ))
-        {
-            capabilities->SnapshotUri = soap_new_ptr(soap, true);
-        }
+        str_caps->RTPMulticast             = soap_new_ptr(soap, false);
+        str_caps->RTP_USCORETCP            = soap_new_ptr(soap, false);
+        str_caps->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
     }
 
-    capabilities->ProfileCapabilities = soap_new_trt__ProfileCapabilities(soap);
-    capabilities->ProfileCapabilities->MaximumNumberOfProfiles = soap_new_ptr(soap, 1);
 
-    capabilities->StreamingCapabilities = soap_new_trt__StreamingCapabilities(soap);
-    capabilities->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
-    capabilities->StreamingCapabilities->RTP_USCORETCP = soap_new_ptr(soap, false);
-    capabilities->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
+    auto caps = soap_new_req_trt__Capabilities(soap, prof_caps, str_caps);
+    if(caps)
+    {
+        auto& profiles = get_profiles();
+        for( auto& p : profiles )
+        {
+            if (( !p.second.get_snapurl().empty() ) && ( caps->SnapshotUri == nullptr ))
+            {
+                caps->SnapshotUri = soap_new_ptr(soap, true);
+            }
+        }
 
-    return capabilities;
+        caps->Rotation        = soap_new_ptr(soap, false);
+        caps->VideoSourceMode = soap_new_ptr(soap, false);
+        caps->OSD             = soap_new_ptr(soap, false);
+        caps->EXICompression  = soap_new_ptr(soap, false);
+    }
+
+
+    return caps;
 }
 
 
 
 tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
 {
-    tptz__Capabilities *capabilities = soap_new_tptz__Capabilities(soap);
+    auto caps = soap_new_req_tptz__Capabilities(soap);
 
-    return capabilities;
+    return caps;
 }
 
 
@@ -351,11 +351,16 @@ tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
 
 tt__VideoSourceConfiguration* StreamProfile::get_video_src_cnf(struct soap *soap) const
 {
-    tt__VideoSourceConfiguration* src_cfg = soap_new_tt__VideoSourceConfiguration(soap);
+    auto src_cfg = soap_new_tt__VideoSourceConfiguration(soap);
 
-    src_cfg->token       = name;
-    src_cfg->SourceToken = name;
-    src_cfg->Bounds      = soap_new_req_tt__IntRectangle(soap, 0, 0, width, height);
+    if(src_cfg)
+    {
+        src_cfg->UseCount    = 1;
+        src_cfg->Name        = name;
+        src_cfg->token       = name;
+        src_cfg->SourceToken = name;
+        src_cfg->Bounds      = soap_new_req_tt__IntRectangle(soap, 0, 0, width, height);
+    }
 
     return src_cfg;
 }
@@ -364,15 +369,24 @@ tt__VideoSourceConfiguration* StreamProfile::get_video_src_cnf(struct soap *soap
 
 tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soap) const
 {
-    tt__VideoEncoderConfiguration* enc_cfg = soap_new_tt__VideoEncoderConfiguration(soap);
+    auto enc_cfg = soap_new_tt__VideoEncoderConfiguration(soap);
 
-    enc_cfg->Name               = name;
-    enc_cfg->token              = name;
-    enc_cfg->Resolution         = soap_new_req_tt__VideoResolution(soap, width, height);
-    enc_cfg->RateControl        = soap_new_req_tt__VideoRateControl(soap, 0, 0, 0);
-    enc_cfg->Multicast          = soap_new_tt__MulticastConfiguration(soap);
-    enc_cfg->Multicast->Address = soap_new_tt__IPAddress(soap);
-    enc_cfg->Encoding           = static_cast<tt__VideoEncoding>(type);
+    if(enc_cfg)
+    {
+        enc_cfg->soap_default(soap);
+        enc_cfg->UseCount           = 1;
+        enc_cfg->Name               = name;
+        enc_cfg->token              = name;
+        enc_cfg->Resolution         = soap_new_req_tt__VideoResolution(soap, width, height);
+        enc_cfg->RateControl        = soap_new_req_tt__VideoRateControl(soap, 0, 0, 0);
+        enc_cfg->Encoding           = static_cast<tt__VideoEncoding>(type);
+        enc_cfg->Multicast          = soap_new_tt__MulticastConfiguration(soap);
+        if(enc_cfg->Multicast)
+        {
+            enc_cfg->Multicast->soap_default(soap);
+            enc_cfg->Multicast->Address = soap_new_req_tt__IPAddress(soap, tt__IPType::IPv4);
+        }
+    }
 
     return enc_cfg;
 }
@@ -381,59 +395,77 @@ tt__VideoEncoderConfiguration* StreamProfile::get_video_enc_cfg(struct soap *soa
 
 tt__PTZConfiguration* StreamProfile::get_ptz_cfg(struct soap *soap) const
 {
-    tt__PTZConfiguration* ptz_cfg = soap_new_tt__PTZConfiguration(soap);
+    auto ptz_cfg = soap_new_tt__PTZConfiguration(soap);
+    if(!ptz_cfg)
+        return nullptr;
 
-    ptz_cfg->Name               = "PTZ";
-    ptz_cfg->token              = "PTZToken";
-    ptz_cfg->NodeToken          = "PTZNodeToken";
 
-    ptz_cfg->DefaultAbsolutePantTiltPositionSpace    = soap_new_std__string(soap);
-    *ptz_cfg->DefaultAbsolutePantTiltPositionSpace   = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
-    ptz_cfg->DefaultAbsoluteZoomPositionSpace        = soap_new_std__string(soap);
-    *ptz_cfg->DefaultAbsoluteZoomPositionSpace       = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
-    ptz_cfg->DefaultRelativePanTiltTranslationSpace  = soap_new_std__string(soap);
-    *ptz_cfg->DefaultRelativePanTiltTranslationSpace = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace";
-    ptz_cfg->DefaultRelativeZoomTranslationSpace     = soap_new_std__string(soap);
-    *ptz_cfg->DefaultRelativeZoomTranslationSpace    = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace";
-    ptz_cfg->DefaultContinuousPanTiltVelocitySpace   = soap_new_std__string(soap);
-    *ptz_cfg->DefaultContinuousPanTiltVelocitySpace  = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
-    ptz_cfg->DefaultContinuousZoomVelocitySpace      = soap_new_std__string(soap);
-    *ptz_cfg->DefaultContinuousZoomVelocitySpace     = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
+    ptz_cfg->soap_default(soap);
+    ptz_cfg->Name      = "PTZ";
+    ptz_cfg->token     = "PTZToken";
+    ptz_cfg->NodeToken = "PTZNodeToken";
 
-    ptz_cfg->DefaultPTZSpeed                   = soap_new_tt__PTZSpeed(soap);
-    ptz_cfg->DefaultPTZSpeed->PanTilt          = soap_new_req_tt__Vector2D(soap, 0.1f, 0.1f);
-    ptz_cfg->DefaultPTZSpeed->Zoom             = soap_new_req_tt__Vector1D(soap, 1.0f);
+    ptz_cfg->DefaultAbsolutePantTiltPositionSpace   = soap_new_std_string(soap, "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace");
+    ptz_cfg->DefaultAbsoluteZoomPositionSpace       = soap_new_std_string(soap, "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace");
+    ptz_cfg->DefaultRelativePanTiltTranslationSpace = soap_new_std_string(soap, "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace");
+    ptz_cfg->DefaultRelativeZoomTranslationSpace    = soap_new_std_string(soap, "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace");
+    ptz_cfg->DefaultContinuousPanTiltVelocitySpace  = soap_new_std_string(soap, "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace");
+    ptz_cfg->DefaultContinuousZoomVelocitySpace     = soap_new_std_string(soap, "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace");
 
-    ptz_cfg->DefaultPTZTimeout                 = soap_new_ptr(soap, (LONG64)1000);
+    auto pan_tilt              = soap_new_req_tt__Vector2D(soap, 0.1f, 0.1f);
+    auto zoom                  = soap_new_req_tt__Vector1D(soap, 1.0f);
+    ptz_cfg->DefaultPTZSpeed   = soap_new_set_tt__PTZSpeed(soap, pan_tilt, zoom);
 
-    ptz_cfg->PanTiltLimits                     = soap_new_tt__PanTiltLimits(soap);
-    ptz_cfg->PanTiltLimits->Range              = soap_new_tt__Space2DDescription(soap);
-    ptz_cfg->PanTiltLimits->Range->URI         = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
-    ptz_cfg->PanTiltLimits->Range->XRange      = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
-    ptz_cfg->PanTiltLimits->Range->YRange      = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
+    ptz_cfg->DefaultPTZTimeout = soap_new_ptr(soap, (LONG64)1000);
+    ptz_cfg->PanTiltLimits     = get_ptz_pan_tilt_limits(soap);
+    ptz_cfg->ZoomLimits        = get_ptz_zoom_limits(soap);
 
-    ptz_cfg->ZoomLimits                        = soap_new_tt__ZoomLimits(soap);
-    ptz_cfg->ZoomLimits->Range                 = soap_new_tt__Space1DDescription(soap);
-    ptz_cfg->ZoomLimits->Range->URI            = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
-    ptz_cfg->ZoomLimits->Range->XRange         = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
 
     return ptz_cfg;
 }
 
 
 
+tt__PanTiltLimits *StreamProfile::get_ptz_pan_tilt_limits(struct soap *soap) const
+{
+    auto URI    = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace";
+    auto XRange = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
+    auto YRange = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
+    auto Range  = soap_new_req_tt__Space2DDescription(soap, URI, XRange, YRange);
+
+    return soap_new_req_tt__PanTiltLimits(soap, Range);
+}
+
+
+
+tt__ZoomLimits *StreamProfile::get_ptz_zoom_limits(struct soap *soap) const
+{
+    auto URI    = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace";
+    auto XRange = soap_new_req_tt__FloatRange(soap, -INFINITY, INFINITY);
+    auto Range  = soap_new_req_tt__Space1DDescription(soap, URI, XRange);
+
+    return soap_new_req_tt__ZoomLimits(soap, Range);
+}
+
+
+
 tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 {
-    auto ctx             = (ServiceContext*)soap->user;
-    tt__Profile* profile = soap_new_tt__Profile(soap);
+    auto ctx     = (ServiceContext*)soap->user;
+    auto profile = soap_new_tt__Profile(soap);
 
+    if(!profile)
+        return nullptr;
+
+    profile->soap_default(soap);
     profile->Name  = name;
     profile->token = name;
     profile->fixed = soap_new_ptr(soap, true);
 
     profile->VideoSourceConfiguration  = get_video_src_cnf(soap);
     profile->VideoEncoderConfiguration = get_video_enc_cfg(soap);
-    if (ctx->get_ptz_node()->enable) {
+    if (ctx->get_ptz_node()->enable)
+    {
         profile->PTZConfiguration = get_ptz_cfg(soap);
     }
 
@@ -444,11 +476,15 @@ tt__Profile* StreamProfile::get_profile(struct soap *soap) const
 
 tt__VideoSource* StreamProfile::get_video_src(soap *soap) const
 {
-    tt__VideoSource* video_src = soap_new_tt__VideoSource(soap);
+    auto video_src = soap_new_tt__VideoSource(soap);
+    if(!video_src)
+        return nullptr;
 
+    video_src->soap_default(soap);
     video_src->token      = name;
+    video_src->Framerate  = 25;
     video_src->Resolution = soap_new_req_tt__VideoResolution(soap, width, height);
-    video_src->Imaging    = soap_new_tt__ImagingSettings(soap);
+    video_src->Imaging    = soap_new_req_tt__ImagingSettings(soap);
 
     return video_src;
 }

@@ -24,46 +24,45 @@ int DeviceBindingService::GetServices(
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-
-    auto ctx          = (ServiceContext*)this->soap->user;
-    std::string XAddr = ctx->getXAddr(this->soap);
+    auto ctx   = (ServiceContext*)soap->user;
+    auto XAddr = ctx->getXAddr(soap);
 
 
     //Device Service
-    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
+    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(soap));
     tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/device/wsdl";
     tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
-    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 5);
+    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(soap, 2, 5);
     if( tds__GetServices->IncludeCapability )
     {
-        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
-        tds__DeviceServiceCapabilities *capabilities                 = ctx->getDeviceServiceCapabilities(this->soap);
-        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, nullptr, "tds:Capabilities", capabilities, capabilities->soap_type());
+        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(soap);
+        tds__DeviceServiceCapabilities *capabilities                 = ctx->getDeviceServiceCapabilities(soap);
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(soap, nullptr, "tds:Capabilities", capabilities, capabilities->soap_type());
     }
 
 
-    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
+    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(soap));
     tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/media/wsdl";
     tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
-    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 6);
+    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(soap, 2, 6);
     if (tds__GetServices->IncludeCapability)
     {
-        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
-        trt__Capabilities *capabilities                              = ctx->getMediaServiceCapabilities(this->soap);
-        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, nullptr, "trt:Capabilities", capabilities, capabilities->soap_type());
+        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(soap);
+        trt__Capabilities *capabilities                              = ctx->getMediaServiceCapabilities(soap);
+        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(soap, nullptr, "trt:Capabilities", capabilities, capabilities->soap_type());
     }
 
 
     if (ctx->get_ptz_node()->enable) {
-        tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(this->soap));
+        tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(soap));
         tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver20/ptz/wsdl";
         tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
-        tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(this->soap, 2, 4);
+        tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(soap, 2, 4);
         if (tds__GetServices->IncludeCapability)
         {
-            tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(this->soap);
-            tptz__Capabilities *capabilities                             = ctx->getPTZServiceCapabilities(this->soap);
-            tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(this->soap, nullptr, "tptz:Capabilities", capabilities, capabilities->soap_type());
+            tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(soap);
+            tptz__Capabilities *capabilities                             = ctx->getPTZServiceCapabilities(soap);
+            tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(soap, nullptr, "tptz:Capabilities", capabilities, capabilities->soap_type());
         }
     }
 
@@ -80,8 +79,8 @@ int DeviceBindingService::GetServiceCapabilities(
     UNUSED(tds__GetServiceCapabilities);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    auto ctx = (ServiceContext*)this->soap->user;
-    tds__GetServiceCapabilitiesResponse.Capabilities = ctx->getDeviceServiceCapabilities(this->soap);
+    auto ctx = (ServiceContext*)soap->user;
+    tds__GetServiceCapabilitiesResponse.Capabilities = ctx->getDeviceServiceCapabilities(soap);
 
     return SOAP_OK;
 }
@@ -96,7 +95,7 @@ int DeviceBindingService::GetDeviceInformation(
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
     tds__GetDeviceInformationResponse.Manufacturer    = ctx->manufacturer;
     tds__GetDeviceInformationResponse.Model           = ctx->model;
     tds__GetDeviceInformationResponse.FirmwareVersion = ctx->firmware_version;
@@ -115,9 +114,9 @@ int DeviceBindingService::GetSystemDateAndTime(
     UNUSED(tds__GetSystemDateAndTime);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
-    tds__GetSystemDateAndTimeResponse.SystemDateAndTime = ctx->get_SystemDateAndTime(this->soap);
+    tds__GetSystemDateAndTimeResponse.SystemDateAndTime = ctx->get_SystemDateAndTime(soap);
 
     return SOAP_OK;
 }
@@ -131,12 +130,11 @@ int DeviceBindingService::GetScopes(
     UNUSED(tds__GetScopes);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
+    auto ctx = (ServiceContext*)soap->user;
 
-    auto ctx = (ServiceContext*)this->soap->user;
-
-    for(size_t i = 0; i < ctx->scopes.size(); ++i)
+    for(auto& scope : ctx->scopes)
     {
-        tds__GetScopesResponse.Scopes.push_back(soap_new_req_tt__Scope(soap, tt__ScopeDefinition::Fixed, ctx->scopes[i]));
+        tds__GetScopesResponse.Scopes.push_back(soap_new_req_tt__Scope(soap, tt__ScopeDefinition::Fixed, scope));
     }
 
     return SOAP_OK;
@@ -151,8 +149,7 @@ int DeviceBindingService::GetWsdlUrl(
     UNUSED(tds__GetWsdlUrl);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    std::string url                 = soap->endpoint;
-    tds__GetWsdlUrlResponse.WsdlUrl = url;
+    tds__GetWsdlUrlResponse.WsdlUrl = soap->endpoint;
 
     return SOAP_OK;
 }
@@ -166,12 +163,12 @@ int DeviceBindingService::GetUsers(
     UNUSED(tds__GetUsers);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
     if( !ctx->user.empty() )
     {
-        tds__GetUsersResponse.User.push_back(soap_new_tt__User(this->soap));
-        tds__GetUsersResponse.User.back()->Username = ctx->user;
+        auto rsp_user = soap_new_req_tt__User(soap, ctx->user, tt__UserLevel::User);
+        tds__GetUsersResponse.User.push_back(rsp_user);
     }
 
     return SOAP_OK;
@@ -185,11 +182,11 @@ int DeviceBindingService::GetCapabilities(
 {
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-    auto ctx          = (ServiceContext*)this->soap->user;
-    std::string XAddr = ctx->getXAddr(this->soap);
+    auto ctx   = (ServiceContext*)soap->user;
+    auto XAddr = ctx->getXAddr(soap);
 
 
-    tds__GetCapabilitiesResponse.Capabilities = soap_new_tt__Capabilities(this->soap);
+    tds__GetCapabilitiesResponse.Capabilities = soap_new_tt__Capabilities(soap);
     std::vector<tt__CapabilityCategory>& categories(tds__GetCapabilities->Category);
     if(categories.empty())
     {
@@ -197,25 +194,25 @@ int DeviceBindingService::GetCapabilities(
     }
 
 
-    for(tt__CapabilityCategory category : categories)
+    for(auto category : categories)
     {
         if(!tds__GetCapabilitiesResponse.Capabilities->Device && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Device) ) )
         {
-            tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(soap);
             tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = XAddr;
-            tds__GetCapabilitiesResponse.Capabilities->Device->System = soap_new_tt__SystemCapabilities(this->soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(this->soap, 2, 0));
-            tds__GetCapabilitiesResponse.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(this->soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(this->soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->IO = soap_new_tt__IOCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->System = soap_new_tt__SystemCapabilities(soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(soap, 2, 0));
+            tds__GetCapabilitiesResponse.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device->IO = soap_new_tt__IOCapabilities(soap);
         }
 
 
         if(!tds__GetCapabilitiesResponse.Capabilities->Media && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Media) ) )
         {
-            tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(soap);
             tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
-            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(this->soap);
+            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(soap);
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_ptr(soap, false);
             tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
@@ -224,7 +221,7 @@ int DeviceBindingService::GetCapabilities(
         if (ctx->get_ptz_node()->enable) {
             if(!tds__GetCapabilitiesResponse.Capabilities->PTZ && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::PTZ) ) )
             {
-                tds__GetCapabilitiesResponse.Capabilities->PTZ  = soap_new_tt__PTZCapabilities(this->soap);
+                tds__GetCapabilitiesResponse.Capabilities->PTZ  = soap_new_tt__PTZCapabilities(soap);
                 tds__GetCapabilitiesResponse.Capabilities->PTZ->XAddr = XAddr;
             }
         }
@@ -245,25 +242,25 @@ int DeviceBindingService::GetNetworkInterfaces(
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
 
-    auto ctx = (ServiceContext*)this->soap->user;
+    auto ctx = (ServiceContext*)soap->user;
 
 
     for(size_t i = 0; i < ctx->eth_ifs.size(); ++i)
     {
         char tmp_buf[20];
 
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.push_back(soap_new_tt__NetworkInterface(this->soap));
+        tds__GetNetworkInterfacesResponse.NetworkInterfaces.push_back(soap_new_tt__NetworkInterface(soap));
         tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Enabled = true;
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info = soap_new_tt__NetworkInterfaceInfo(this->soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->Name = soap_new_std__string(this->soap);
+        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info = soap_new_tt__NetworkInterfaceInfo(soap);
+        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->Name = soap_new_std__string(soap);
         tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->Name->assign(ctx->eth_ifs[i].dev_name());
 
         ctx->eth_ifs[i].get_hwaddr(tmp_buf);
         tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->HwAddress = tmp_buf;
 
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4 = soap_new_tt__IPv4NetworkInterface(this->soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config = soap_new_tt__IPv4Configuration(this->soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.push_back(soap_new_tt__PrefixedIPv4Address(this->soap));
+        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4 = soap_new_tt__IPv4NetworkInterface(soap);
+        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config = soap_new_tt__IPv4Configuration(soap);
+        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.push_back(soap_new_tt__PrefixedIPv4Address(soap));
 
         ctx->eth_ifs[i].get_ip(tmp_buf);
 

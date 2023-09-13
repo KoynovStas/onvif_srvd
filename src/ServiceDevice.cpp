@@ -254,33 +254,15 @@ int DeviceBindingService::GetNetworkInterfaces(
     UNUSED(tds__GetNetworkInterfaces);
     DEBUG_MSG("Device: %s\n", __FUNCTION__);
 
-
     auto ctx = (ServiceContext*)soap->user;
 
-
-    for(size_t i = 0; i < ctx->eth_ifs.size(); ++i)
+    for(const auto& eth_if : ctx->eth_ifs)
     {
-        char tmp_buf[20];
+        auto net_if = ctx->getNetworkInterface(soap, eth_if);
 
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.push_back(soap_new_tt__NetworkInterface(soap));
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Enabled = true;
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info = soap_new_tt__NetworkInterfaceInfo(soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->Name = soap_new_std__string(soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->Name->assign(ctx->eth_ifs[i].dev_name());
-
-        ctx->eth_ifs[i].get_hwaddr(tmp_buf);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->Info->HwAddress = tmp_buf;
-
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4 = soap_new_tt__IPv4NetworkInterface(soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config = soap_new_tt__IPv4Configuration(soap);
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.push_back(soap_new_tt__PrefixedIPv4Address(soap));
-
-        ctx->eth_ifs[i].get_ip(tmp_buf);
-
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.back()->Address = tmp_buf;
-        tds__GetNetworkInterfacesResponse.NetworkInterfaces.back()->IPv4->Config->Manual.back()->PrefixLength = ctx->eth_ifs[i].get_mask_prefix();
+        if(net_if)
+            tds__GetNetworkInterfacesResponse.NetworkInterfaces.push_back(net_if);
     }
-
 
     return SOAP_OK;
 }

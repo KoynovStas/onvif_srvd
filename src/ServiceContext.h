@@ -200,6 +200,8 @@ class ServiceContext
         tt__MediaCapabilities*  getMediaCapabilities (struct soap* soap, const std::string &XAddr) const;
         tt__PTZCapabilities*    getPTZCapabilities   (struct soap* soap, const std::string &XAddr) const;
 
+        tt__NetworkInterface*   getNetworkInterface(struct soap* soap, const Eth_Dev_Param& eth_param) const;
+
     private:
 
         std::map<std::string, StreamProfile> profiles;

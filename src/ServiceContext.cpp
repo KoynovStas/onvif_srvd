@@ -88,7 +88,7 @@ std::string ServiceContext::get_time_zone() const
 
 
 
-tt__SystemDateTime* ServiceContext::get_SystemDateAndTime(soap* soap)
+tt__SystemDateTime* ServiceContext::get_SystemDateAndTime(struct soap* soap)
 {
     const time_t  timestamp = time(nullptr);
     struct tm    *time_info = localtime(&timestamp);
@@ -111,7 +111,7 @@ tt__SystemDateTime* ServiceContext::get_SystemDateAndTime(soap* soap)
 
 
 
-tt__DateTime* ServiceContext::get_DateTime(soap* soap, tm* time_info)
+tt__DateTime* ServiceContext::get_DateTime(struct soap* soap, tm* time_info)
 {
     return soap_new_req_tt__DateTime(
                soap,
@@ -182,7 +182,7 @@ std::string ServiceContext::getServerIpFromClientIp(uint32_t client_ip) const
 
 
 
-std::string ServiceContext::getXAddr(soap *soap) const
+std::string ServiceContext::getXAddr(struct soap *soap) const
 {
     std::ostringstream os;
 
@@ -232,7 +232,7 @@ std::string ServiceContext::get_stream_uri(const std::string &profile_url, uint3
 
 
 
-tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soap *soap)
+tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(struct soap *soap)
 {
     auto net_caps = soap_new_req_tds__NetworkCapabilities(soap);
     if(net_caps)
@@ -294,7 +294,7 @@ tds__DeviceServiceCapabilities *ServiceContext::getDeviceServiceCapabilities(soa
 
 
 
-trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
+trt__Capabilities *ServiceContext::getMediaServiceCapabilities(struct soap *soap)
 {
     auto prof_caps = soap_new_req_trt__ProfileCapabilities(soap);
     if(prof_caps)
@@ -334,7 +334,7 @@ trt__Capabilities *ServiceContext::getMediaServiceCapabilities(soap *soap)
 
 
 
-tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
+tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(struct soap *soap)
 {
     auto caps = soap_new_req_tptz__Capabilities(soap);
 
@@ -343,7 +343,7 @@ tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
 
 
 
-tt__DeviceCapabilities *ServiceContext::getDeviceCapabilities(soap *soap, const std::string &XAddr) const
+tt__DeviceCapabilities *ServiceContext::getDeviceCapabilities(struct soap *soap, const std::string &XAddr) const
 {
     auto dev_caps = soap_new_req_tt__DeviceCapabilities(soap, XAddr);
     if(!dev_caps)
@@ -373,7 +373,7 @@ tt__DeviceCapabilities *ServiceContext::getDeviceCapabilities(soap *soap, const 
 
 
 
-tt__MediaCapabilities *ServiceContext::getMediaCapabilities(soap *soap, const std::string &XAddr) const
+tt__MediaCapabilities *ServiceContext::getMediaCapabilities(struct soap *soap, const std::string &XAddr) const
 {
     auto str_caps = soap_new_req_tt__RealTimeStreamingCapabilities(soap);
     if(str_caps)
@@ -388,12 +388,46 @@ tt__MediaCapabilities *ServiceContext::getMediaCapabilities(soap *soap, const st
 
 
 
-tt__PTZCapabilities *ServiceContext::getPTZCapabilities(soap *soap, const std::string &XAddr) const
+tt__PTZCapabilities *ServiceContext::getPTZCapabilities(struct soap *soap, const std::string &XAddr) const
 {
     if(ptz_node.enable)
         return soap_new_req_tt__PTZCapabilities(soap, XAddr);
 
     return nullptr;
+}
+
+
+
+tt__NetworkInterface *ServiceContext::getNetworkInterface(struct soap *soap, const Eth_Dev_Param &eth_param) const
+{
+    char tmp_buf[20] = {0};
+    eth_param.get_hwaddr(tmp_buf);
+    std::string HwAddress(tmp_buf);
+
+    tmp_buf[0] = 0;
+    eth_param.get_ip(tmp_buf);
+    std::string IPv4Address(tmp_buf);
+
+
+    auto net_if = soap_new_req_tt__NetworkInterface(soap, true, eth_param.dev_name());
+    if(!net_if)
+        return nullptr;
+
+    net_if->Info = soap_new_req_tt__NetworkInterfaceInfo(soap, HwAddress);
+    if(net_if->Info)
+        net_if->Info->Name = soap_new_std_string(soap, eth_param.dev_name());
+
+
+    auto IPv4_prefix = soap_new_req_tt__PrefixedIPv4Address(soap, IPv4Address, eth_param.get_mask_prefix());
+    auto IPv4_config = soap_new_req_tt__IPv4Configuration(soap, false);
+    if(IPv4_config && IPv4_prefix)
+        IPv4_config->Manual.push_back(IPv4_prefix);
+
+
+    net_if->IPv4 = soap_new_req_tt__IPv4NetworkInterface(soap, true, IPv4_config);
+
+
+    return net_if;
 }
 
 

@@ -29,42 +29,72 @@ int DeviceBindingService::GetServices(
 
 
     //Device Service
-    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(soap));
-    tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/device/wsdl";
-    tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
-    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(soap, 2, 5);
-    if( tds__GetServices->IncludeCapability )
+    auto dev_svc = soap_new_tds__Service(soap);
+    if(dev_svc)
     {
-        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(soap);
-        tds__DeviceServiceCapabilities *capabilities                 = ctx->getDeviceServiceCapabilities(soap);
-        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(soap, nullptr, "tds:Capabilities", capabilities, capabilities->soap_type());
-    }
+        dev_svc->soap_default(soap);
+        dev_svc->Namespace = SOAP_NAMESPACE_OF_tds;
+        dev_svc->XAddr     = XAddr;
+        dev_svc->Version   = soap_new_req_tt__OnvifVersion(soap, 16, 12);
 
-
-    tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(soap));
-    tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver10/media/wsdl";
-    tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
-    tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(soap, 2, 6);
-    if (tds__GetServices->IncludeCapability)
-    {
-        tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(soap);
-        trt__Capabilities *capabilities                              = ctx->getMediaServiceCapabilities(soap);
-        tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(soap, nullptr, "trt:Capabilities", capabilities, capabilities->soap_type());
-    }
-
-
-    if (ctx->get_ptz_node()->enable) {
-        tds__GetServicesResponse.Service.push_back(soap_new_tds__Service(soap));
-        tds__GetServicesResponse.Service.back()->Namespace  = "http://www.onvif.org/ver20/ptz/wsdl";
-        tds__GetServicesResponse.Service.back()->XAddr      = XAddr;
-        tds__GetServicesResponse.Service.back()->Version    = soap_new_req_tt__OnvifVersion(soap, 2, 4);
-        if (tds__GetServices->IncludeCapability)
+        if( tds__GetServices->IncludeCapability )
         {
-            tds__GetServicesResponse.Service.back()->Capabilities        = soap_new__tds__Service_Capabilities(soap);
-            tptz__Capabilities *capabilities                             = ctx->getPTZServiceCapabilities(soap);
-            tds__GetServicesResponse.Service.back()->Capabilities->__any = soap_dom_element(soap, nullptr, "tptz:Capabilities", capabilities, capabilities->soap_type());
+            auto dev_caps         = ctx->getDeviceServiceCapabilities(soap);
+            auto svc_caps         = soap_new_req__tds__GetServiceCapabilitiesResponse(soap, dev_caps);
+            dev_svc->Capabilities = soap_new_req__tds__Service_Capabilities(soap);
+
+            if(dev_svc->Capabilities)
+                dev_svc->Capabilities->__any.set(svc_caps, SOAP_TYPE_tds__DeviceServiceCapabilities);
         }
     }
+    tds__GetServicesResponse.Service.emplace_back(dev_svc);
+
+
+    //Media Service
+    auto med_svc = soap_new_tds__Service(soap);
+    if(med_svc)
+    {
+        med_svc->soap_default(soap);
+        med_svc->Namespace = SOAP_NAMESPACE_OF_trt;
+        med_svc->XAddr     = XAddr;
+        med_svc->Version   = soap_new_req_tt__OnvifVersion(soap, 2, 6);
+
+        if( tds__GetServices->IncludeCapability )
+        {
+            auto med_caps         = ctx->getMediaServiceCapabilities(soap);
+            auto svc_caps         = soap_new_req__trt__GetServiceCapabilitiesResponse(soap, med_caps);
+            med_svc->Capabilities = soap_new_req__tds__Service_Capabilities(soap);
+
+            if(med_svc->Capabilities)
+                med_svc->Capabilities->__any.set(svc_caps, SOAP_TYPE_tds__DeviceServiceCapabilities);
+        }
+    }
+    tds__GetServicesResponse.Service.emplace_back(med_svc);
+
+
+    if(ctx->get_ptz_node()->enable)
+        return SOAP_OK;
+
+    //PTZ Service
+    auto ptz_svc = soap_new_tds__Service(soap);
+    if(ptz_svc)
+    {
+        ptz_svc->soap_default(soap);
+        ptz_svc->Namespace = SOAP_NAMESPACE_OF_tptz;
+        ptz_svc->XAddr     = XAddr;
+        ptz_svc->Version   = soap_new_req_tt__OnvifVersion(soap, 2, 4);
+
+        if( tds__GetServices->IncludeCapability )
+        {
+            auto ptz_caps         = ctx->getPTZServiceCapabilities(soap);
+            auto svc_caps         = soap_new_req__tptz__GetServiceCapabilitiesResponse(soap, ptz_caps);
+            ptz_svc->Capabilities = soap_new_req__tds__Service_Capabilities(soap);
+
+            if(ptz_svc->Capabilities)
+                ptz_svc->Capabilities->__any.set(svc_caps, SOAP_TYPE_tds__DeviceServiceCapabilities);
+        }
+    }
+    tds__GetServicesResponse.Service.emplace_back(ptz_svc);
 
 
     return SOAP_OK;

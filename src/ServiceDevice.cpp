@@ -220,6 +220,9 @@ int DeviceBindingService::GetCapabilities(
     if(!tds__GetCapabilitiesResponse.Capabilities)
         return SOAP_FAULT;
 
+    if(tds__GetCapabilities->Category.empty())
+        tds__GetCapabilities->Category.push_back(tt__CapabilityCategory::All); //ONVIF TestTool can skip it
+
 
     for(auto category : tds__GetCapabilities->Category)
     {
@@ -240,7 +243,15 @@ int DeviceBindingService::GetCapabilities(
         {
             tds__GetCapabilitiesResponse.Capabilities->PTZ = ctx->getPTZCapabilities(soap, XAddr);
         }
+
+        if( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Events) )
+        {
+            tds__GetCapabilitiesResponse.Capabilities->Events = soap_new_req_tt__EventCapabilities(
+                soap, XAddr, false, true, false);
+        }
     }
+
+
 
     return SOAP_OK;
 }

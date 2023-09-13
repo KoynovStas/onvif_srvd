@@ -185,7 +185,7 @@ class ServiceContext
         // service capabilities
         tds__DeviceServiceCapabilities* getDeviceServiceCapabilities(struct soap* soap);
         trt__Capabilities*  getMediaServiceCapabilities    (struct soap* soap);
-        tptz__Capabilities*  getPTZServiceCapabilities     (struct soap* soap);
+        tptz__Capabilities* getPTZServiceCapabilities      (struct soap* soap);
 //        timg__Capabilities* getImagingServiceCapabilities  (struct soap* soap);
 //        trc__Capabilities*  getRecordingServiceCapabilities(struct soap* soap);
 //        tse__Capabilities*  getSearchServiceCapabilities   (struct soap* soap);
@@ -194,6 +194,11 @@ class ServiceContext
 //        tev__Capabilities*  getEventServiceCapabilities    (struct soap* soap);
 //        tls__Capabilities*  getDisplayServiceCapabilities  (struct soap* soap);
 //        tmd__Capabilities*  getDeviceIOServiceCapabilities (struct soap* soap);
+
+        // capabilities
+        tt__DeviceCapabilities* getDeviceCapabilities(struct soap* soap, const std::string &XAddr) const;
+        tt__MediaCapabilities*  getMediaCapabilities (struct soap* soap, const std::string &XAddr) const;
+        tt__PTZCapabilities*    getPTZCapabilities   (struct soap* soap, const std::string &XAddr) const;
 
     private:
 

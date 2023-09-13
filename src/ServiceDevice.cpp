@@ -216,48 +216,31 @@ int DeviceBindingService::GetCapabilities(
     auto XAddr = ctx->getXAddr(soap);
 
 
-    tds__GetCapabilitiesResponse.Capabilities = soap_new_tt__Capabilities(soap);
-    std::vector<tt__CapabilityCategory>& categories(tds__GetCapabilities->Category);
-    if(categories.empty())
+    tds__GetCapabilitiesResponse.Capabilities = soap_new_req_tt__Capabilities(soap);
+    if(!tds__GetCapabilitiesResponse.Capabilities)
+        return SOAP_FAULT;
+
+
+    for(auto category : tds__GetCapabilities->Category)
     {
-        categories.push_back(tt__CapabilityCategory::All);
-    }
 
-
-    for(auto category : categories)
-    {
-        if(!tds__GetCapabilitiesResponse.Capabilities->Device && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Device) ) )
+        if( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Device) )
         {
-            tds__GetCapabilitiesResponse.Capabilities->Device = soap_new_tt__DeviceCapabilities(soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->XAddr = XAddr;
-            tds__GetCapabilitiesResponse.Capabilities->Device->System = soap_new_tt__SystemCapabilities(soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(soap, 2, 0));
-            tds__GetCapabilitiesResponse.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(soap);
-            tds__GetCapabilitiesResponse.Capabilities->Device->IO = soap_new_tt__IOCapabilities(soap);
+            tds__GetCapabilitiesResponse.Capabilities->Device = ctx->getDeviceCapabilities(soap, XAddr);
         }
 
 
-        if(!tds__GetCapabilitiesResponse.Capabilities->Media && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Media) ) )
+        if( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::Media) )
         {
-            tds__GetCapabilitiesResponse.Capabilities->Media  = soap_new_tt__MediaCapabilities(soap);
-            tds__GetCapabilitiesResponse.Capabilities->Media->XAddr = XAddr;
-            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(soap);
-            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_ptr(soap, false);
-            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_ptr(soap, false);
-            tds__GetCapabilitiesResponse.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
+            tds__GetCapabilitiesResponse.Capabilities->Media = ctx->getMediaCapabilities(soap, XAddr);
         }
 
-        if (ctx->get_ptz_node()->enable) {
-            if(!tds__GetCapabilitiesResponse.Capabilities->PTZ && ( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::PTZ) ) )
-            {
-                tds__GetCapabilitiesResponse.Capabilities->PTZ  = soap_new_tt__PTZCapabilities(soap);
-                tds__GetCapabilitiesResponse.Capabilities->PTZ->XAddr = XAddr;
-            }
-        }
 
+        if( (category == tt__CapabilityCategory::All) || (category == tt__CapabilityCategory::PTZ) )
+        {
+            tds__GetCapabilitiesResponse.Capabilities->PTZ = ctx->getPTZCapabilities(soap, XAddr);
+        }
     }
-
 
     return SOAP_OK;
 }

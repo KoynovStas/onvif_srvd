@@ -343,6 +343,61 @@ tptz__Capabilities *ServiceContext::getPTZServiceCapabilities(soap *soap)
 
 
 
+tt__DeviceCapabilities *ServiceContext::getDeviceCapabilities(soap *soap, const std::string &XAddr) const
+{
+    auto dev_caps = soap_new_req_tt__DeviceCapabilities(soap, XAddr);
+    if(!dev_caps)
+        return nullptr;
+
+    auto sys_caps = soap_new_tt__SystemCapabilities(soap);
+    if(sys_caps)
+    {
+        sys_caps->DiscoveryResolve = false;
+        sys_caps->DiscoveryBye     = false;
+        sys_caps->RemoteDiscovery  = false;
+        sys_caps->SystemBackup     = false;
+        sys_caps->SystemLogging    = false;
+        sys_caps->FirmwareUpgrade  = false;
+        sys_caps->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(soap, 2, 4));
+
+        dev_caps->System = sys_caps;
+    }
+
+
+    dev_caps->IO       = soap_new_req_tt__IOCapabilities(soap);
+    dev_caps->Network  = soap_new_req_tt__NetworkCapabilities(soap);
+    dev_caps->Security = soap_new_tt__SecurityCapabilities(soap);
+
+    return dev_caps;
+}
+
+
+
+tt__MediaCapabilities *ServiceContext::getMediaCapabilities(soap *soap, const std::string &XAddr) const
+{
+    auto str_caps = soap_new_req_tt__RealTimeStreamingCapabilities(soap);
+    if(str_caps)
+    {
+        str_caps->RTPMulticast             = soap_new_ptr(soap, false);
+        str_caps->RTP_USCORETCP            = soap_new_ptr(soap, false);
+        str_caps->RTP_USCORERTSP_USCORETCP = soap_new_ptr(soap, true);
+    }
+
+    return soap_new_req_tt__MediaCapabilities(soap, XAddr, str_caps);
+}
+
+
+
+tt__PTZCapabilities *ServiceContext::getPTZCapabilities(soap *soap, const std::string &XAddr) const
+{
+    if(ptz_node.enable)
+        return soap_new_req_tt__PTZCapabilities(soap, XAddr);
+
+    return nullptr;
+}
+
+
+
 
 // ------------------------------- StreamProfile -------------------------------
 
